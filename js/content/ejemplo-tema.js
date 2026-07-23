@@ -18,7 +18,7 @@
     render(el) {
       el.innerHTML = `
         <div class="page-head">
-          <div class="page-kicker">TODO Materia</div>
+          <div class="page-kicker">Diseño de Sistemas de Información</div>
           <h1>Título del tema</h1>
           <p class="lead">Bajada del tema en una línea.</p>
         </div>

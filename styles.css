@@ -7,9 +7,9 @@
   --ink-soft: #475569;
   --muted: #94a3b8;
   --line: #e2e8f0;
-  --brand: #0d9488;
-  --brand-2: #0e7490;
-  --brand-soft: #d6f5f0;
+  --brand: #a4133c;
+  --brand-2: #6a0f2a;
+  --brand-soft: #ffe4e9;
   --ok: #059669;
   --ok-soft: #ecfdf5;
   --warn: #d97706;
@@ -35,7 +35,7 @@
   text-decoration: none;
 }
 .skip-link:focus { left: 0; }
-:focus-visible { outline: 3px solid rgba(13, 148, 136, 0.55); outline-offset: 2px; }
+:focus-visible { outline: 3px solid rgba(164, 19, 60, 0.55); outline-offset: 2px; }
 .content:focus { outline: none; }
 
 html { scroll-behavior: smooth; }
@@ -78,9 +78,9 @@ body {
   border-radius: 15px;
   background: linear-gradient(135deg, var(--brand), var(--brand-2));
   display: grid; place-items: center;
-  font-weight: 800; font-size: 1.3rem; color: white;
+  font-weight: 800; font-size: 1rem; color: white;
   letter-spacing: -0.02em;
-  box-shadow: 0 8px 22px rgba(13, 148, 136, 0.4);
+  box-shadow: 0 8px 22px rgba(164, 19, 60, 0.4);
 }
 .sidebar-titles h1 {
   font-size: 1rem; margin: 0; line-height: 1.2;

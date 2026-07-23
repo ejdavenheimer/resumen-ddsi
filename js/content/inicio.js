@@ -10,9 +10,9 @@
     render(el) {
       el.innerHTML = `
         <div class="page-head">
-          <div class="page-kicker">TODO Materia · UTN.BA</div>
-          <h1>Resumen de la materia</h1>
-          <p class="lead">TODO: una frase que explique de qué va este resumen y para qué sirve.</p>
+          <div class="page-kicker">Diseño de Sistemas de Información · UTN.BA</div>
+          <h1>Resumen de Diseño de Sistemas de Información</h1>
+          <p class="lead">Apuntes interactivos de DDSI: teoría, ideas clave, ejemplos y preguntas para practicar.</p>
         </div>
 
         <div class="callout key">

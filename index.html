@@ -4,11 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- ╔══════════════════════════════════════════════════════════════╗
-       ║  PERSONALIZÁ ESTO POR MATERIA (buscá los "TODO")              ║
-       ╚══════════════════════════════════════════════════════════════╝ -->
   <title>Diseño de Sistemas de Información · Resumen (UTN.BA)</title>
-  <meta name="description" content="Resumen interactivo de Diseño de Sistemas de Información (DDSI) — UTN.BA FRBA." />
+  <meta name="description" content="Sitio de estudio de Diseño de Sistemas de Información (DDSI) — UTN.BA FRBA, Plan 23. Teoría, patrones de diseño, práctica interactiva y finales resueltos." />
   <meta name="author" content="ejdavenheimer" />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#a4133c" />
@@ -17,6 +14,9 @@
   <link rel="apple-touch-icon" href="favicon.svg" />
 
   <link rel="stylesheet" href="styles.css" />
+
+  <!-- Syntax highlighting (Prism) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
 </head>
 <body>
   <a class="skip-link" href="#content">Saltar al contenido</a>
@@ -35,9 +35,10 @@
         <div class="logo">DDSI</div>
         <div class="sidebar-titles">
           <h1>Diseño de Sistemas de Información</h1>
-          <span>Resumen · UTN.BA</span>
+          <span>UTN.BA · Plan 23</span>
         </div>
       </div>
+
       <div class="sidebar-links">
         <a href="https://www.linkedin.com/in/ejdavenheimer/" target="_blank" rel="noopener" data-tip="LinkedIn" aria-label="LinkedIn">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
@@ -48,7 +49,15 @@
         <a href="https://planutn.dhem.tech/" target="_blank" rel="noopener" data-tip="Ver plan de estudio" aria-label="Plan de estudio">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>
         </a>
+        <button class="theme-btn" id="themeBtn" data-tip="Tema" aria-label="Cambiar tema">🌗</button>
       </div>
+
+      <div class="sidebar-search">
+        <input type="search" id="navSearch" placeholder="Buscar tema…  (tecla /)" aria-label="Buscar tema" autocomplete="off" />
+      </div>
+
+      <div class="progress-chip" id="progressChip" aria-live="polite"></div>
+
       <div class="sidebar-sep"></div>
       <nav id="nav" aria-label="Temas"></nav>
     </aside>
@@ -56,16 +65,115 @@
     <main class="content" id="content" tabindex="-1"></main>
   </div>
 
+  <!-- Librerías (CDN, sin build) -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-java.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-sql.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-http.min.js"></script>
+
   <!-- Núcleo -->
   <script src="js/core.js"></script>
-  <!-- Widget de cuestionario -->
+
+  <!-- Datos de los interactivos -->
+  <script src="js/data/detector-casos.js"></script>
+  <script src="js/data/solid-casos.js"></script>
+  <script src="js/data/flashcards.js"></script>
+  <script src="js/data/diagramas.js"></script>
+  <script src="js/data/comparaciones.js"></script>
+  <script src="js/data/escritura-casos.js"></script>
+
+  <!-- Widgets -->
   <script src="js/widgets/quiz.js"></script>
-  <!-- ┌─ Contenido: agregá un <script> por cada tema/sección.
-         El ORDEN de estos <script> es el orden del menú lateral. ─┐ -->
+  <script src="js/widgets/pattern-page.js"></script>
+  <script src="js/widgets/detector.js"></script>
+  <script src="js/widgets/flashcards.js"></script>
+  <script src="js/widgets/diagrama.js"></script>
+  <script src="js/widgets/comparador.js"></script>
+  <script src="js/widgets/uml-ejercicios.js"></script>
+  <script src="js/widgets/escritura.js"></script>
+
+  <!-- ┌─ Contenido: el ORDEN de estos <script> es el orden del menú lateral ─┐ -->
   <script src="js/content/inicio.js"></script>
-  <script src="js/content/ejemplo-tema.js"></script>
+
+  <!-- 📚 Fundamentos -->
+  <script src="js/content/poo.js"></script>
+  <script src="js/content/cliente-servidor.js"></script>
+  <script src="js/content/arquitectura-web.js"></script>
+  <script src="js/content/http.js"></script>
+  <script src="js/content/api-rest.js"></script>
+  <script src="js/content/biblioteca-framework.js"></script>
+  <script src="js/content/sdk.js"></script>
+  <script src="js/content/capas.js"></script>
+  <script src="js/content/entities-vo.js"></script>
+
+  <!-- 📐 Diagramas UML -->
+  <script src="js/content/uml-clases.js"></script>
+  <script src="js/content/uml-secuencia.js"></script>
+  <script src="js/content/uml-componentes.js"></script>
+  <script src="js/content/uml-despliegue.js"></script>
+
+  <!-- 🎯 Principios -->
+  <script src="js/content/solid.js"></script>
+  <script src="js/content/cualidades.js"></script>
+  <script src="js/content/code-smells.js"></script>
+  <script src="js/content/inyeccion-dependencias.js"></script>
+  <script src="js/content/seguridad.js"></script>
+
+  <!-- 🎨 Patrones de Diseño -->
+  <script src="js/content/patrones-intro.js"></script>
+  <script src="js/content/adapter.js"></script>
+  <script src="js/content/builder.js"></script>
+  <script src="js/content/composite.js"></script>
+  <script src="js/content/facade.js"></script>
+  <script src="js/content/strategy.js"></script>
+  <script src="js/content/factory.js"></script>
+  <script src="js/content/observer.js"></script>
+  <script src="js/content/state.js"></script>
+  <script src="js/content/template-method.js"></script>
+  <script src="js/content/command.js"></script>
+
+  <!-- 🔗 Integración y comunicación -->
+  <script src="js/content/sincronismo.js"></script>
+  <script src="js/content/cron.js"></script>
+  <script src="js/content/orquestacion.js"></script>
+  <script src="js/content/pubsub.js"></script>
+  <script src="js/content/broker.js"></script>
+  <script src="js/content/edge.js"></script>
+
+  <!-- 🧪 Testing -->
+  <script src="js/content/testing.js"></script>
+
+  <!-- 🎮 Práctica interactiva -->
+  <script src="js/content/p-detector.js"></script>
+  <script src="js/content/p-solid.js"></script>
+  <script src="js/content/p-diagrama.js"></script>
+  <script src="js/content/p-justificacion.js"></script>
+  <script src="js/content/p-vf.js"></script>
+  <script src="js/content/p-pseudocodigo.js"></script>
+  <script src="js/content/p-flashcards.js"></script>
+  <script src="js/content/p-comparador.js"></script>
   <script src="js/content/preguntas.js"></script>
-  <!-- └──────────────────────────────────────────────────────────┘ -->
+  <script src="js/content/p-simulacro.js"></script>
+
+  <!-- 📝 Finales resueltos -->
+  <script src="js/content/f-protegepro.js"></script>
+  <script src="js/content/f-libros.js"></script>
+  <script src="js/content/f-turnoagil.js"></script>
+  <script src="js/content/f-talentia.js"></script>
+  <script src="js/content/f-scalo.js"></script>
+  <script src="js/content/f-gtv.js"></script>
+
+  <!-- 🃏 Cheatsheets -->
+  <script src="js/content/cs-patrones.js"></script>
+  <script src="js/content/cs-solid.js"></script>
+  <script src="js/content/cs-http.js"></script>
+  <script src="js/content/cs-uml.js"></script>
+  <script src="js/content/cs-frases.js"></script>
+  <!-- └──────────────────────────────────────────────────────────────────┘ -->
+
   <!-- Arranque -->
   <script src="js/app.js"></script>
 </body>

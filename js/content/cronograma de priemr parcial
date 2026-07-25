@@ -1,0 +1,61 @@
+Clase	Fecha	Eje temático	Temas a desarrollar	Práctica de clase	Lectura previa | Video previo	¿Presencial?	TPA
+1° Cuatrimestre							
+1	25/03/2026	Arquitectura de Software	"- Parte I: Introducción a la Asignatura: ¿Qué es ""Diseño de Sistemas de Información""? TPA. Tecnologías a utilizar.
+
+- Parte II: Introducción a la Arquitectura de Software. Niveles de la Arquitectura de Software. Requerimientos no funcionales como entrada de la Arquitectura. Otras entradas de la Arquitectura. Componentes típicos de los Sistemas de Información: Frontend, Backend, DB.  Diagramas de Componentes y Despliegue.
+ 
+"		"- Presentación de ""Repaso de Paradigma Orientado a Objetos""
+
+- Ejercicio ""SmartLife - Cálculo de suscripción mensual """	"Si
+
+
+
+"	Confección de equipos
+2	01/04/2026	Arquitectura de Software	"- Parte I: Patrón Cliente - Servidor. Protocolo HTTP.  Arquitectura Web. Concepto de APIs y API REST.
+
+- Parte II: Implementación de proyecto Java para consumir API REST de servicio externo."	"- Consumiendo API REST desde Java & Postman.
+- Presentación Entrega 1"	"- Video de introducción a Java + Testing unitario con JUnit
+
+- Entrega 1 TPA"	No	Entrega 1
+3	08/04/2026	Modelado de Dominio - Objetos | Arquitectura de Software	"- Parte I: Puesta en común de lectura asíncrona: Cualidades de Diseño y atributos de calidad que apliquen al Diseño de Software. Concepto de Patrones de Diseño. Clasificación de Patrones de Diseño. 
+
+- Parte II: Modelado e implementación de objetos polimórficos con utilización de interfaces y/o herencia. Patrón observer."	"- Ejercicio ""SmartLife - Servicio de Ventas"" (sólo capa de dominio)
+"	"- Cualidades de Diseño y atributos de calidad que apliquen al Diseño de Software.
+
+- SmartLife - Caso práctico: secciones 1, 2 y 3."	No	
+4	15/04/2026	Arquitectura de Software	"- Parte I: Orquestación de CU: capas, repositorios, modelado de usuarios + roles + permisos.
+
+- Parte II: Exposición de APIs desde proyecto Java sobre framework SpringBoot."	- Finalización del ejercicio "SmartLife - Servicio de Ventas"	"- Video sobre Mocking  
+- Implementación Mocking
+
+- Inyección de dependencias
+- Resumen Inyección de dependencias
+
+- Lectura de Biblioteca vs Framework."	No	
+5	22/04/2026	Entrega 1 TPA				*	
+6	29/04/2026	Modelado de Dominio - Objetos	"- Parte I: Principios SOLID.  
+
+- Parte II: Cosificación del comportamiento con Patrón State. Patrón template method. Diagramas de secuencias."	- Ejercicio "SmartLife - Servicio de Tendencias de consumo"	"- Lectura Entities vs Value Objects
+
+- Entrega 2 TPA"	No	Entrega 2
+7	06/05/2026	Arquitectura de Software	"Integración de Sistemas: Interfaces entrantes & salientes. 
+Tipos de ejecución: Cuestiones de Sincronismo/Asincronismo. Cron Task."	- Implementación de Cron Task en ejercicio "SmartLife - Servicio de Tendencias de consumo"	"- Scheduling Tasks en SpringBoot
+- ""@Scheduled"" en SpringBoot"	No	
+8	13/05/2026	Modelado de Dominio - Objetos	"- Componentes embebidos. SDKs
+- Patrón Strategy. Patrón Adapter. Patrón Facade. Patrón Builder. Patrón Factory Method & Simple Factory."	- Ejercicio "SmartLife - Servicio Logging Centralizado"	- ¿Qué es un SDK?	No	
+9	20/05/2026	Sin actividad - Turno de examen final MAYO– 1 llamado 					
+10	27/05/2026	Entrega 2 TPA				*	
+11	03/06/2026	Arquitectura de Software	Caso de estudio "Sistema de Ingreso a Eventos"		Atributos de calidad (Arquitectónicos) y sus tradeoffs.	Sí	Entrega 3
+12	10/06/2026	Arquitectura de Software	"- Parte I: Patrón Subscripción de Eventos, Patrón Publicación - Subscripción. Broker como componente que implementa el Patrón Publicación - Subscripción.
+
+- Parte II: Implementación de Broker."	- Implementación de Broker "RabbitMQ" en Servicios de  SmartLife	"- Instalación de Docker
+- Instalación de RabbitMQ en Docker"	No	
+13	17/06/2026	Modelado de Dominio - Objetos | Arquitectura de Software	"- Patrón Command
+- Discusión sobre Disponibilidad. Concepto de ""Edge computing"" "	- Ejercicio "SmartLife - Servicio de Seguridad Inteligente"		No	
+14	24/06/2026	Arquitectura de Software	Concepto de Seguridad de la Información. Tríada de la Seguridad: Confidencialidad, Integridad, Disponibilidad. Conceptos de Diseño y Desarrollo Seguro. Autenticación. Autorización. Mecanismos de Seguridad para Sistemas de Información. Modelos de control de acceso (RBAC, ABAC, etc.). Componentes vinculados a la Seguridad de la Información. SSO. IDM. WAF.			No	
+15	01/07/2026	Entrega 3 TPA				*	
+16	08/07/2026	Repaso pre-parcial				Sí	
+	15/07/2026	RECESO INVERNAL					
+	22/07/2026	RECESO INVERNAL					
+	29/07/2026	RECESO INVERNAL					
+2° Cuatrimestre							

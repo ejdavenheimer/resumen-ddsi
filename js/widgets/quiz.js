@@ -159,4 +159,52 @@
     updateScore();
     renderList();
   };
+
+  /* =====================================================================
+     Rúbrica autoadministrada — APP.rubrica(container, id, items)
+     items = [{t: "criterio", p: puntos}]
+     El estado de cada check se guarda en localStorage por rúbrica.
+     ===================================================================== */
+  APP.rubrica = function (container, id, items) {
+    const SET = "rubrica:" + id;
+    const total = items.reduce(function (a, i) { return a + (i.p || 0); }, 0);
+
+    const ul = document.createElement("ul");
+    ul.className = "rubrica";
+    const score = document.createElement("div");
+    score.className = "rubrica-score";
+
+    function actualizar() {
+      const hechos = APP.store.ejerciciosDe(SET);
+      const puntos = items.reduce(function (a, it, k) {
+        return a + (hechos[String(k)] ? (it.p || 0) : 0);
+      }, 0);
+      const pct = total ? Math.round((puntos / total) * 100) : 0;
+      score.innerHTML = "Tu autoevaluación: <b>" + puntos + " / " + total + "</b> puntos (" + pct + "%) · " +
+        (pct >= 60 ? "✅ aprobado" : "⚠️ por debajo del 60%");
+    }
+
+    items.forEach(function (it, k) {
+      const marcado = !!APP.store.ejercicio(SET, k);
+      const li = document.createElement("li");
+      if (marcado) li.classList.add("done");
+      const cb = document.createElement("input");
+      cb.type = "checkbox"; cb.checked = marcado;
+      cb.id = SET + "-" + k;
+      const lb = document.createElement("label");
+      lb.setAttribute("for", cb.id);
+      lb.innerHTML = it.t + (it.p ? ' <span class="pill gray">' + it.p + " pts</span>" : "");
+      cb.addEventListener("change", function () {
+        APP.store.marcarEjercicio(SET, k, cb.checked);
+        li.classList.toggle("done", cb.checked);
+        actualizar();
+      });
+      li.appendChild(cb); li.appendChild(lb);
+      ul.appendChild(li);
+    });
+
+    container.appendChild(ul);
+    container.appendChild(score);
+    actualizar();
+  };
 })();

@@ -101,7 +101,11 @@
       let resolved = false;
       const chosen = new Set();
 
-      q.options.forEach((o, i) => {
+      // Barajar las opciones para que la correcta no quede siempre primera.
+      // (Para Verdadero/Falso se respeta el orden V→F, que es lo esperable.)
+      const optList = q.type === "vf" ? q.options.slice() : APP.shuffle(q.options.slice());
+
+      optList.forEach((o, i) => {
         const b = document.createElement("button");
         b.className = "q-opt";
         b.innerHTML = '<span class="mk">' + (o.ok ? "✓" : "✗") + '</span><span>' + o.t + '</span>';
@@ -128,7 +132,7 @@
         resolved = true;
         const buttons = Array.from(opts.children);
         let allRight = true;
-        q.options.forEach((o, i) => {
+        optList.forEach((o, i) => {
           const picked = selected.indexOf(i) !== -1;
           if (o.ok) buttons[i].classList.add("correct");
           if (picked && !o.ok) { buttons[i].classList.add("wrong"); allRight = false; }

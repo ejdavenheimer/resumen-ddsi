@@ -93,11 +93,11 @@
             <p>Ya viste todo y querés fijar. Pasá por los cheatsheets, después metete de lleno en el detector de patrones y las flashcards.</p>
             <div class="pasos">Cheatsheets → Detector → Flashcards</div>
           </div>
-          <div class="ruta" data-go="p-vf">
-            <div class="emo">📝</div>
-            <h3>Faltan días (modo escrito)</h3>
-            <p>Modo emergencia para el examen escrito. Machacá V/F y “escribí la justificación”, leé dos finales resueltos y hacé un simulacro en papel contra reloj.</p>
-            <div class="pasos">V/F + Justificación → Finales resueltos → Simulacro en papel</div>
+          <div class="ruta" data-go="hidra-intro">
+            <div class="emo">💧</div>
+            <h3>Parcial HIDRA (5/8)</h3>
+            <p>El contexto real que dio la cátedra. Estrategia para las 2:30 hs, cómo mapear HIDRA a los patrones, 3 modelos de práctica y el resumen para imprimir.</p>
+            <div class="pasos">Estrategia → 3 modelos → Resumen imprimible</div>
           </div>
         </div>
 

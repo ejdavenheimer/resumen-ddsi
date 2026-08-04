@@ -40,7 +40,25 @@
           </tbody>
         </table></div>
 
-        <h2>Ejemplo (Mermaid usa <code>graph</code> con subgrafos)</h2>
+        <div class="callout warn">
+          <div class="callout-title">⚠️ La notación real: el nodo es un CUBO, no una caja</div>
+          <p>En un diagrama de despliegue cada nodo (servidor, contenedor, dispositivo) se dibuja como un
+          <b>cubo 3D</b>, y adentro van los <b>artefactos</b> que se despliegan ahí (un <code>.jar</code>, un contenedor,
+          una imagen). Mermaid dibuja cajas planas, así que acá va cómo se ve de verdad:</p>
+        </div>
+        <div class="uml-svg-wrap">
+          <span class="cap">Nodo (cubo 3D) con un artefacto adentro</span>
+          ${APP.svgNodo("device", "Servidor de Aplicaciones", "hidra-api.jar")}
+          ${APP.svgNodo("executionEnvironment", "Contenedor Docker", "medidor-svc")}
+        </div>
+        <div class="callout tip">
+          <p><b>Cómo dibujar el cubo rápido:</b> hacé un rectángulo, y arriba y a la derecha agregale dos paralelogramos
+          (la tapa y el costado) para darle profundidad. Adentro, un rectángulo con el ícono de componente = el artefacto.
+          Entre nodos, una línea con el <b>protocolo</b> escrito (HTTPS, AMQP, JDBC, MQTT).</p>
+        </div>
+
+        <h2>Esquema de topología (Mermaid)</h2>
+        <p>Este esquema sirve para pensar <b>qué corre dónde y con qué protocolo</b>; en papel, cada caja es un nodo-cubo:</p>
         ${APP.uml(`graph TB
     subgraph Cliente
         NAV["Navegador Web"]

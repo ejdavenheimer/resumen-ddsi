@@ -41,19 +41,49 @@
             <tr><td><b>Dependencia</b></td><td>Flecha punteada</td><td>Un componente usa a otro.</td></tr>
           </tbody>
         </table></div>
-        <p>El chupetín de uno encaja en el enchufe de otro: así se lee que un componente <b>provee</b> lo que otro
-        <b>requiere</b>.</p>
+        <div class="callout warn">
+          <div class="callout-title">⚠️ La notación real (así se dibuja en el parcial)</div>
+          <p>Un componente <b>no es un rectángulo común</b>: es un rectángulo con el <b>ícono de componente</b> (dos
+          “pestañas” a la izquierda). Y las conexiones no son flechas cualquiera: se usa <b>bola-y-socket</b>.
+          Mermaid no sabe dibujar esto, así que acá va la notación de verdad:</p>
+        </div>
 
+        <div class="uml-svg-wrap">
+          <span class="cap">Símbolo de componente</span>
+          ${APP.svgComponente("Facturación")}
+        </div>
+
+        <h3>Interfaz provista vs requerida (el círculo y el semicírculo)</h3>
+        <p>Esta es la parte que más se olvida y que el enunciado necesita para mostrar <b>quién consume a quién</b>:</p>
+        <div class="uml-svg-wrap">
+          <span class="cap">El que <b>consume</b> el servicio ── el que lo <b>provee</b></span>
+          ${APP.svgBallSocket("Facturación", "Pasarela de Pago", "IPago")}
+        </div>
+        <div class="table-wrap"><table class="data">
+          <thead><tr><th>Símbolo</th><th>Se llama</th><th>Quién es</th></tr></thead>
+          <tbody>
+            <tr><td><b>Bolita ●──</b> (lollipop)</td><td>Interfaz <b>provista</b></td><td>El componente que <b>ofrece / dispone</b> el servicio o endpoint. Ej: la Pasarela de Pago provee <code>IPago</code>.</td></tr>
+            <tr><td><b>Semicírculo ─( </b> (socket)</td><td>Interfaz <b>requerida</b></td><td>El componente que <b>consume / necesita</b> el servicio. Ej: Facturación requiere <code>IPago</code>.</td></tr>
+          </tbody>
+        </table></div>
+        <div class="callout tip">
+          <p><b>Cómo se lee:</b> el <b>semicírculo del que consume</b> abraza la <b>bolita del que provee</b>. Se lee
+          “Facturación <b>requiere</b> IPago, que <b>provee</b> la Pasarela de Pago”. La bolita apunta al dueño del
+          servicio/endpoint; el socket, al que lo usa.</p>
+        </div>
+
+        <p style="margin-top:1.4rem">Para ver la <b>topología</b> del sistema (qué componente depende de cuál) sirve un esquema
+        como este —pero recordá que en papel cada caja lleva el ícono de componente y las conexiones son bola-socket:</p>
         ${APP.uml(`graph LR
-    FE["&lt;&lt;component&gt;&gt;<br/>Frontend Web"] --> GW["&lt;&lt;component&gt;&gt;<br/>API Gateway"]
-    GW --> S1["&lt;&lt;component&gt;&gt;<br/>Servicio Ejemplares"]
-    GW --> S2["&lt;&lt;component&gt;&gt;<br/>Servicio Operaciones"]
-    GW --> S3["&lt;&lt;component&gt;&gt;<br/>Servicio Personas"]
+    FE["Frontend Web"] --> GW["API Gateway"]
+    GW --> S1["Servicio Ejemplares"]
+    GW --> S2["Servicio Operaciones"]
+    GW --> S3["Servicio Personas"]
     S2 -.->|requiere| S1
     S2 -.->|requiere| S3
-    S3 -.->|requiere| REN["&lt;&lt;component&gt;&gt;<br/>RENAPER (externo)"]
+    S3 -.->|requiere| REN["RENAPER (externo)"]
     style GW fill:#ffe4e9,stroke:#a4133c,color:#0f172a
-    style REN fill:#f1f5f9,stroke:#64748b,color:#0f172a`, "Componentes de Libros Circulares")}
+    style REN fill:#f1f5f9,stroke:#64748b,color:#0f172a`, "Topología (esquema, no la notación final)")}
 
         <div class="callout key">
           <div class="callout-title">✏️ Cómo dibujarlo rápido a mano</div>

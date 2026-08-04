@@ -384,6 +384,36 @@ blockquote.just-modelo {
 .esc-vf { display: flex; gap: .6rem; margin: .8rem 0; }
 .esc-vf .det-opt { flex: 1; }
 
+/* Resumen imprimible por hojas */
+.hoja {
+  border: 1px solid var(--line); border-radius: 12px; padding: 1.2rem 1.4rem; margin: 1.2rem 0;
+  background: var(--panel);
+}
+.hoja > h2:first-child { margin-top: 0; }
+.hoja-num {
+  display: inline-block; font-size: .72rem; font-weight: 800; color: var(--brand);
+  border: 1px solid var(--brand-line); border-radius: 999px; padding: .1rem .6rem; margin-bottom: .4rem;
+}
+.hoja table.data { font-size: .82rem; }
+.hoja table.data th, .hoja table.data td { padding: .32rem .5rem; }
+.hoja ul { margin: .4rem 0; }
+.hoja .mini { font-size: .82rem; }
+@media print {
+  .hoja { border: none; padding: 0; margin: 0; page-break-after: always; break-after: page; }
+  .hoja:last-child { page-break-after: auto; }
+  .hoja table.data { font-size: 9pt; }
+  .resumen-intro, .resumen-print-btn { display: none !important; }
+}
+
+/* Notación UML dibujada (SVG) */
+.uml-svg { max-width: 100%; height: auto; color: var(--ink); }
+.uml-svg-wrap {
+  display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: center;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+  padding: 1rem; margin: 1.1rem 0;
+}
+.uml-svg-wrap .cap { flex-basis: 100%; text-align: center; font-size: .82rem; color: var(--ink-soft); font-weight: 600; }
+
 /* Ordenar secuencia */
 .seq-armada { display: flex; flex-direction: column; gap: .35rem; margin: .6rem 0; }
 .seq-step {

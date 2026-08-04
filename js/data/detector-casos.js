@@ -561,6 +561,35 @@
       },
     },
 
+    /* ---------------------------- SINGLETON --------------------------- */
+    {
+      id: 44, tema: "Singleton",
+      enunciado: 'El sistema debe tener una <b class="kw">única instancia</b> de la configuración global, <b class="kw">compartida por todos</b> los componentes, con un <b class="kw">punto de acceso común</b>.',
+      opciones: ["Singleton", "Simple Factory", "Facade", "Builder"],
+      correcta: "Singleton",
+      patron: "singleton",
+      porque: "“Una única instancia compartida” + “punto de acceso común” = Singleton: constructor privado + instancia estática + <code>getInstance()</code>. Idealmente, esa instancia única se <b>inyecta</b> en vez de accederse globalmente.",
+      descartes: {
+        "Simple Factory": "La fábrica decide <i>qué</i> crear; acá no hay variantes, hay <i>una sola</i> instancia.",
+        "Facade": "No estamos simplificando un subsistema.",
+        "Builder": "No hay un objeto complejo que armar por partes.",
+      },
+      nota: "Ojo: Singleton es el patrón más criticado (estado global, difícil de testear). Si podés, lográ la unicidad con una instancia inyectada.",
+    },
+    {
+      id: 45, tema: "Singleton",
+      enunciado: 'Se necesita un <b class="kw">único pool de conexiones</b> a la base de datos para toda la aplicación, y un <b class="kw">logger central</b> al que todos escriban.',
+      opciones: ["Singleton (mejor si es inyectado)", "Factory Method", "Observer", "Strategy"],
+      correcta: "Singleton (mejor si es inyectado)",
+      patron: "singleton",
+      porque: "Recursos de los que debe existir <b>uno solo</b> en todo el sistema (pool, logger): es Singleton. En un framework como Spring se logra con un bean único inyectado, que da la misma unicidad sin el estado global.",
+      descartes: {
+        "Factory Method": "No hay decisión de qué subclase crear.",
+        "Observer": "No hay notificación uno-a-muchos.",
+        "Strategy": "No hay algoritmos alternativos.",
+      },
+    },
+
     /* ------------------ NINGUNO (no sobreingeniería) ------------------ */
     {
       id: 41, tema: "Ninguno",

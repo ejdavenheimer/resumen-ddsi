@@ -42,6 +42,7 @@
               <tr><td><b>Template Method</b><br>(Método plantilla)</td><td>“mismo proceso con variantes”, “esqueleto fijo, algunos pasos cambian”</td><td>“Usé Template Method: el esqueleto es fijo y sólo varían algunos pasos; la clase base define el orden y las subclases los pasos, sin duplicar.”</td></tr>
               <tr><td><b>Simple Factory / Factory Method</b><br>(Fábrica)</td><td>“según el tipo se crea”, “instanciar según”, “cada sucursal crea su producto”</td><td>“Usé una Fábrica: centralizo la decisión de qué objeto crear según el tipo; el resto depende de la abstracción, no de clases concretas.”</td></tr>
               <tr><td><b>Builder</b><br>(Constructor)</td><td>“muchos atributos opcionales”, “se arma paso a paso”, “el usuario elige qué incluir”</td><td>“Usé Builder: el objeto tiene muchos atributos opcionales; lo construyo paso a paso y valido antes de crearlo, evitando el constructor telescópico.”</td></tr>
+              <tr><td><b>Singleton</b><br>(Instancia única)</td><td>“una única instancia”, “compartida por todos”, “punto de acceso global”, “un único pool/logger/config”</td><td>“Usé Singleton: debe existir una única instancia compartida (constructor privado + getInstance). Mejor aún: una instancia única inyectada, sin estado global.”</td></tr>
             </tbody>
           </table></div>
           <p class="mini"><b>Regla de oro:</b> si no podés señalar la frase del enunciado que justifica el patrón, sacalo (meter uno de más = sobreingeniería = resta).</p>

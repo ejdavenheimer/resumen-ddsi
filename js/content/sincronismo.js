@@ -20,6 +20,18 @@
           <p class="lead">Los dos modelos de comunicación entre componentes, y cómo darse cuenta de cuál pide el enunciado.</p>
         </div>
 
+        <div class="callout key">
+          <div class="callout-title">🔌 Antes: interfaces entrantes y salientes</div>
+          <p>Todo sistema se comunica con otros a través de <b>interfaces</b>. Según la dirección:</p>
+          <ul>
+            <li><b>Interfaz entrante</b> (inbound): algo <b>nos llama a nosotros</b>. Ej.: el endpoint REST que expone HIDRA,
+            o el <b>webhook</b> que la pasarela de pago invoca para avisarnos.</li>
+            <li><b>Interfaz saliente</b> (outbound): <b>nosotros llamamos a otro</b>. Ej.: HIDRA le pega a la API del ente
+            regulador o a la pasarela de pago. Estas se resuelven con un <a class="inline" data-go="adapter">Adapter</a>.</li>
+          </ul>
+          <p>Cada interfaz (entrante o saliente) puede ser <b>sincrónica o asincrónica</b> — que es de lo que trata esta página.</p>
+        </div>
+
         <div class="analogia">
           <div class="emo">📞</div>
           <div class="txt">

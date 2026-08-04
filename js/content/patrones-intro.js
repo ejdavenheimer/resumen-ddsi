@@ -16,10 +16,12 @@
       ],
     },
     creacional: {
-      q: "¿Quién decide qué clase concreta se instancia?",
+      q: "¿Qué necesitás al crear?",
       ops: [
-        { t: "Un solo punto, según un parámetro o un dato (“según el tipo, se crea…”)", go: "r-simple-factory" },
-        { t: "Cada variante del creador produce su propio producto (sucursales, países, marcas)", go: "r-factory-method" },
+        { t: "Elegir la clase concreta según un parámetro (“según el tipo, se crea…”)", go: "r-simple-factory" },
+        { t: "Que cada variante del creador produzca su propio producto (sucursales, países)", go: "r-factory-method" },
+        { t: "Armar un objeto complejo paso a paso, con muchas opciones opcionales", go: "r-builder" },
+        { t: "Que exista una única instancia compartida en todo el sistema", go: "r-singleton" },
         { t: "Hay un solo tipo de objeto y ninguna decisión que tomar", go: "r-nada-creacional" },
       ],
     },
@@ -59,6 +61,8 @@
     "r-composite": { r: "Composite", id: "composite", txt: "Hoja y compuesto comparten interfaz; el compuesto delega recursivamente en sus hijos.", alt: "Verificá que sea un <b>árbol</b> de verdad. Si es una lista plana sin anidamiento, no hace falta." },
     "r-simple-factory": { r: "Simple Factory", id: "factory", txt: "Un punto único que concentra la decisión de qué instanciar.", alt: "No es un patrón GoF, pero se usa muchísimo y se acepta perfectamente en el parcial." },
     "r-factory-method": { r: "Factory Method", id: "factory", txt: "El creador declara la operación de creación y cada subclase decide qué producto concreto devolver.", alt: "Suele ir de la mano de <b>Template Method</b>: el algoritmo general en la base, la creación delegada a la subclase." },
+    "r-builder": { r: "Builder", id: "builder", txt: "Construís el objeto paso a paso, eligiendo qué incluir, y validás antes de crearlo.", alt: "Sólo vale la pena con muchos atributos opcionales. Para 2-3 obligatorios, un constructor normal alcanza." },
+    "r-singleton": { r: "Singleton", id: "singleton", txt: "Constructor privado + instancia estática + <code>getInstance()</code>: una sola instancia compartida.", alt: "Es el patrón más criticado (estado global, difícil de testear). Preferí una instancia única <b>inyectada</b>." },
     "r-nada-creacional": { r: "Ningún patrón", id: "patrones-intro", txt: "Si hay un solo tipo de objeto y ninguna decisión que tomar, <code>new MiClase()</code> está perfecto.", alt: "Meter una factory “por las dudas” es sobreingeniería y resta puntos." },
   };
 
@@ -159,7 +163,7 @@
         <p>Respondé 2 o 3 preguntas sobre tu problema y te sugiero uno o dos candidatos.</p>
         <div class="widget" id="patArbol"></div>
 
-        <h2>Los 10 patrones del temario, de un vistazo</h2>
+        <h2>Los patrones del temario, de un vistazo</h2>
         <div class="table-wrap"><table class="data">
           <thead><tr><th>Patrón</th><th>Intención en una línea</th><th>Frase que lo dispara</th></tr></thead>
           <tbody>
@@ -169,6 +173,8 @@
             <tr><td><a class="inline" data-go="strategy">Strategy</a></td><td>Algoritmos intercambiables</td><td>“distintas formas de calcular… pueden agregarse más”</td></tr>
             <tr><td><a class="inline" data-go="factory">Simple Factory</a></td><td>Centralizar la decisión de qué instanciar</td><td>“según el tipo, se crea”</td></tr>
             <tr><td><a class="inline" data-go="factory">Factory Method</a></td><td>La subclase decide qué producto crear</td><td>“cada sucursal genera su propio comprobante”</td></tr>
+            <tr><td><a class="inline" data-go="builder">Builder</a></td><td>Construir un objeto complejo paso a paso</td><td>“muchos atributos opcionales”, “se arma de a poco”</td></tr>
+            <tr><td><a class="inline" data-go="singleton">Singleton</a></td><td>Una única instancia con acceso global</td><td>“una sola instancia compartida”, “config global”</td></tr>
             <tr><td><a class="inline" data-go="observer">Observer</a></td><td>Notificación automática uno-a-muchos</td><td>“varios componentes deben enterarse”</td></tr>
             <tr><td><a class="inline" data-go="state">State</a></td><td>El comportamiento cambia con el estado</td><td>“ciclo de vida”, “según el estado se puede o no”</td></tr>
             <tr><td><a class="inline" data-go="template-method">Template Method</a></td><td>Esqueleto fijo, pasos variables</td><td>“todos siguen el mismo proceso con variantes”</td></tr>

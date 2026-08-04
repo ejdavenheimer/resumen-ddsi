@@ -27,6 +27,36 @@
           demoras, picos de tráfico o múltiples canales de acceso. Si dominás esta página, tenés casi la mitad del final.</p>
         </div>
 
+        <h2>¿Qué es la arquitectura de software?</h2>
+        <p>Las <b>decisiones estructurales importantes</b> de un sistema: qué componentes hay, cómo se relacionan y qué
+        tecnologías se usan. Son las decisiones <b>caras de cambiar</b> más adelante, por eso se piensan al principio.</p>
+
+        <h3>Niveles de la arquitectura</h3>
+        <div class="table-wrap"><table class="data">
+          <thead><tr><th>Nivel</th><th>De qué se ocupa</th></tr></thead>
+          <tbody>
+            <tr><td><b>Arquitectura de aplicación</b></td><td>La estructura interna de <i>una</i> aplicación: capas, módulos, patrones.</td></tr>
+            <tr><td><b>Arquitectura de solución</b></td><td>Cómo se combinan varias aplicaciones/servicios para resolver un problema de negocio.</td></tr>
+            <tr><td><b>Arquitectura empresarial</b></td><td>La visión de todos los sistemas de la organización y cómo se alinean con el negocio.</td></tr>
+          </tbody>
+        </table></div>
+
+        <h3>Entradas para diseñar la arquitectura</h3>
+        <p>La arquitectura no se saca de la galera: se diseña a partir de <b>tres entradas</b>.</p>
+        <div class="table-wrap"><table class="data">
+          <thead><tr><th>Entrada</th><th>Qué es</th><th>Ejemplo (HIDRA)</th></tr></thead>
+          <tbody>
+            <tr><td><b>Requerimientos funcionales</b></td><td>Qué debe <i>hacer</i> el sistema</td><td>“facturar según el consumo”, “cortar el suministro remoto”</td></tr>
+            <tr><td><b>Requerimientos no funcionales</b><br>(atributos de calidad)</td><td>Cómo debe <i>comportarse</i></td><td>“soportar los picos de todos los medidores”, “datos personales confidenciales”</td></tr>
+            <tr><td><b>Restricciones técnicas y de negocio</b></td><td>Límites impuestos, no negociables</td><td>Técnica: “el ente expone su propia API”. Negocio: “presupuesto”, “normativa del ente regulador”</td></tr>
+          </tbody>
+        </table></div>
+        <div class="callout tip">
+          <p><b>Para el parcial:</b> los <b>no funcionales</b> (atributos de calidad) son la entrada que <i>más</i> guía la
+          arquitectura. Cuando el enunciado dice “picos de tráfico” (escalabilidad) o “puede tardar minutos” (usabilidad),
+          te está dando un requerimiento no funcional que define tu diseño. Ver <a class="inline" data-go="cualidades">Atributos de Calidad</a>.</p>
+        </div>
+
         <h2>Los tres bloques clásicos</h2>
         ${APP.uml(`graph LR
     U["👤 Usuario"] --> F["Frontend<br/>(SPA / server-rendered)"]

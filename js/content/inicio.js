@@ -93,11 +93,11 @@
             <p>Ya viste todo y querés fijar. Pasá por los cheatsheets, después metete de lleno en el detector de patrones y las flashcards.</p>
             <div class="pasos">Cheatsheets → Detector → Flashcards</div>
           </div>
-          <div class="ruta" data-go="hidra-intro">
+          <div class="ruta" data-go="resumen-imprimible">
             <div class="emo">💧</div>
-            <h3>Parcial HIDRA (5/8)</h3>
-            <p>El contexto real que dio la cátedra. Estrategia para las 2:30 hs, cómo mapear HIDRA a los patrones, 3 modelos de práctica y el resumen para imprimir.</p>
-            <div class="pasos">Estrategia → 3 modelos → Resumen imprimible</div>
+            <h3>Parcial (5/8)</h3>
+            <p>Directo a lo que sirve: el resumen imprimible con todas las definiciones y soluciones, y los 3 modelos de parcial resueltos y descargables.</p>
+            <div class="pasos">Resumen imprimible → 3 modelos resueltos</div>
           </div>
         </div>
 

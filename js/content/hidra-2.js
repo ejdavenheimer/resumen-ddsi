@@ -82,16 +82,19 @@
           <p class="lead">Acá conviven varios patrones: <b>motor de reglas (Strategy)</b>, <b>State</b>, <b>Pub-Sub</b> y <b>Command</b>.</p>
         </div>
 
-        <details class="qa" open>
-          <summary>📄 Enunciado completo</summary>
+        <div class="controls no-print"><button class="btn js-print" type="button">📥 Descargar este modelo (PDF)</button><span style="color:var(--ink-soft);font-size:.85rem">Con la solución completa, por si el examen toma algo parecido.</span></div>
+
+
+
+        <details class="qa">
+          <summary>📄 Ver el enunciado del modelo</summary>
           <div class="enunciado">${ENUNCIADO}</div>
         </details>
 
-        <div class="callout tip"><p>💡 Resolvelo en papel primero (con el <a class="inline" data-go="p-simulacro">simulacro</a>) y después compará.</p></div>
-
-        <h2>1 · Análisis del enunciado</h2>
+        <h2>1 · Solución rápida — qué problema resuelve cada parte</h2>
+        <p style="color:var(--ink-soft)">No hace falta que interpretes nada: acá está, para cada requerimiento, <b>qué patrón/decisión</b> lo resuelve y por qué.</p>
         <div class="table-wrap"><table class="data">
-          <thead><tr><th>Frase</th><th>Qué dispara</th></tr></thead>
+          <thead><tr><th>Lo que pide (el problema)</th><th>La solución (qué usar)</th></tr></thead>
           <tbody>
             <tr><td>“reglas de detección… <b>combinadas</b>… <b>pueden agregarse más</b>”</td><td><b>Strategy en colección</b> (motor de reglas)</td></tr>
             <tr><td>“ciclo de vida: Detectada → Asignada → … → Resuelta”</td><td><b>State</b> (Estado) de la orden de trabajo</td></tr>

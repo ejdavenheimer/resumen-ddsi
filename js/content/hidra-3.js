@@ -79,16 +79,19 @@
           <p class="lead">El modelo más “de arquitectura”: <b>Command + State</b>, <b>BFF</b>, <b>cron + Adapter</b> y <b>seguridad</b>.</p>
         </div>
 
-        <details class="qa" open>
-          <summary>📄 Enunciado completo</summary>
+        <div class="controls no-print"><button class="btn js-print" type="button">📥 Descargar este modelo (PDF)</button><span style="color:var(--ink-soft);font-size:.85rem">Con la solución completa, por si el examen toma algo parecido.</span></div>
+
+
+
+        <details class="qa">
+          <summary>📄 Ver el enunciado del modelo</summary>
           <div class="enunciado">${ENUNCIADO}</div>
         </details>
 
-        <div class="callout tip"><p>💡 Resolvelo en papel primero (con el <a class="inline" data-go="p-simulacro">simulacro</a>) y después compará.</p></div>
-
-        <h2>1 · Análisis del enunciado</h2>
+        <h2>1 · Solución rápida — qué problema resuelve cada parte</h2>
+        <p style="color:var(--ink-soft)">No hace falta que interpretes nada: acá está, para cada requerimiento, <b>qué patrón/decisión</b> lo resuelve y por qué.</p>
         <div class="table-wrap"><table class="data">
-          <thead><tr><th>Frase</th><th>Qué dispara</th></tr></thead>
+          <thead><tr><th>Lo que pide (el problema)</th><th>La solución (qué usar)</th></tr></thead>
           <tbody>
             <tr><td>“ciclo de vida… según el estado se permite/no”</td><td><b>State</b> (Estado) del suministro</td></tr>
             <tr><td>“cortar/reponer/limitar… <b>programar</b>… <b>encolan</b>… <b>auditadas</b>”</td><td><b>Command</b> (Comando)</td></tr>

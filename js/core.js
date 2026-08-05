@@ -214,6 +214,11 @@
     );
   };
 
+  /* Botón de imprimir/descargar PDF: cualquier elemento con clase .js-print */
+  document.addEventListener("click", function (e) {
+    if (e.target.closest && e.target.closest(".js-print")) window.print();
+  });
+
   document.addEventListener("click", function (e) {
     const btn = e.target.closest && e.target.closest(".code-copy");
     if (!btn) return;

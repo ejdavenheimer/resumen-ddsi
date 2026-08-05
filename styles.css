@@ -435,6 +435,21 @@ blockquote.just-modelo {
 }
 @page { size: A4 portrait; margin: 11mm 10mm; }
 
+/* Marco con todos los patrones dibujados (resumen) */
+.patrones-marco { border: 2px solid var(--brand); border-radius: 12px; padding: .7rem; margin: 1rem 0; }
+.patrones-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; }
+.patrones-grid .pd { border: 1px solid var(--line); border-radius: 8px; padding: .3rem .4rem; background: var(--panel-soft); }
+.patrones-grid .pd b { display: block; font-size: .78rem; color: var(--brand); text-align: center; margin-bottom: .1rem; }
+.patrones-grid .pd .uml { margin: 0; padding: 0; border: none; box-shadow: none; background: none; }
+@media (max-width: 700px) { .patrones-grid { grid-template-columns: repeat(2, 1fr); } }
+@media print {
+  .hoja .patrones-marco { padding: 2mm; border-width: 1pt; }
+  .hoja .patrones-grid { gap: 2mm; }
+  .hoja .patrones-grid .pd { padding: 1mm; }
+  .hoja .patrones-grid .pd b { font-size: 6.6pt; }
+  .hoja .patrones-grid .uml pre.mermaid svg { max-height: 26mm !important; }
+}
+
 /* Notación UML dibujada (SVG) */
 .uml-svg { max-width: 100%; height: auto; color: var(--ink); }
 .uml-svg-wrap {

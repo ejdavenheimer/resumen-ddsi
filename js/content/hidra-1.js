@@ -260,6 +260,7 @@
         </div>
 
         <h2>5 · Punto 4 — Modelo de datos</h2>
+        <div class="callout bad"><p><b>❓ Ojo:</b> bases de datos <b>no está en el listado de contenidos</b> que viste. Si esta sección entra, será un <b>DER básico</b>. El de abajo es completo por si acaso; en el parcial hacé la versión simple (entidades, PK, FK, cardinalidad).</p></div>
         ${APP.uml(`erDiagram
     CUENTA {
         bigint  id_cuenta    PK

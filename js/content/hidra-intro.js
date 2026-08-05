@@ -51,6 +51,15 @@
           entregás 50% en modelo de datos, <b>recuperás datos</b>. Repartí el tiempo para que ninguna sección quede floja.</p>
         </div>
 
+        <div class="callout bad">
+          <div class="callout-title">❓ Sobre “Modelo de Datos”</div>
+          <p>En el <b>listado de contenidos</b> del parcial <b>no figuran bases de datos</b>, pero la convocatoria del examen
+          igual lista “Modelo de Datos” como una de las 4 secciones. <b>Confirmalo con la cátedra o un compañero.</b>
+          Si entra, y como todavía no vieron bases de datos, seguramente sea un <b>DER básico</b> (entidades, atributos,
+          clave primaria, relaciones con cardinalidad), no algo avanzado (nada de NoSQL, series temporales, etc.). En los
+          modelos de práctica dejé un DER, pero tratalo como “por si acaso”, en su versión simple.</p>
+        </div>
+
         <h2>Cómo se mapea HIDRA a lo que estudiaste</h2>
         <p>El dominio es nuevo, pero los <b>disparadores son los de siempre</b>. Tenelos en la cabeza:</p>
         <div class="table-wrap"><table class="data">

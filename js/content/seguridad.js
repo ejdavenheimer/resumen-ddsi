@@ -231,6 +231,33 @@ bcrypt('gatito123', salt) = '$2b$12$Xy9...'`, { lang: "sql", label: "Hashing de 
           </tbody>
         </table></div>
 
+        <h2>Clasificación de mecanismos de seguridad</h2>
+        <p>Un <b>mecanismo de seguridad</b> es una técnica o herramienta para fortalecer la confidencialidad, integridad
+        y/o disponibilidad. Según cuándo actúan (definición de la cátedra):</p>
+        <div class="table-wrap"><table class="data">
+          <thead><tr><th>Tipo</th><th>Cuándo actúa</th><th>Ejemplos</th></tr></thead>
+          <tbody>
+            <tr><td><b>Preventivos</b></td><td><b>Antes</b> del hecho: detienen agentes no deseados</td><td>Cifrado, control de acceso, firewall/WAF, validación de entradas</td></tr>
+            <tr><td><b>Detectivos</b></td><td>Revelan la presencia de agentes no deseados: <b>avisan y registran</b></td><td>Logs y auditoría, monitoreo, alertas, detección de intrusos</td></tr>
+            <tr><td><b>Correctivos</b></td><td><b>Después</b> del hecho: corrigen las consecuencias</td><td>Backups/restauración, plan de recuperación, parches</td></tr>
+          </tbody>
+        </table></div>
+
+        <h2>OWASP Top 10 (riesgos en aplicaciones web)</h2>
+        <p>Lista de <b>OWASP</b> (Open Worldwide Application Security Project) con los 10 principales riesgos:</p>
+        <ol style="columns:2;font-size:.9rem">
+          <li>Pérdida de control de acceso</li>
+          <li>Fallos criptográficos</li>
+          <li>Inyección (SQL, etc.)</li>
+          <li>Diseño inseguro</li>
+          <li>Mala configuración de seguridad</li>
+          <li>Componentes vulnerables u obsoletos</li>
+          <li>Fallos de identificación y autenticación</li>
+          <li>Fallos de integridad de software y datos</li>
+          <li>Fallos de registro y monitoreo</li>
+          <li>Falsificación de solicitudes del lado del servidor (SSRF)</li>
+        </ol>
+
         <h2>Desarrollo seguro</h2>
         <p>Prácticas que se aplican <b>al escribir el código</b>, no sólo en la arquitectura:</p>
         <ul>

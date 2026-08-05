@@ -16,12 +16,17 @@
       el.innerHTML = `
         <div class="page-head resumen-intro">
           <div class="page-kicker">Para imprimir · el parcial permite apuntes en papel</div>
-          <h1>Resumen imprimible — 7 hojas</h1>
-          <p class="lead">Todo lo esencial condensado. Tocá imprimir y elegí “Guardar como PDF”. Cada hoja arranca en una página nueva.</p>
+          <h1>Resumen imprimible — 7 hojas (A4)</h1>
+          <p class="lead">Todo lo esencial condensado en 7 hojas A4. Descargalo en PDF y llevalo impreso.</p>
         </div>
-        <div class="controls resumen-print-btn">
-          <button class="btn" id="rpPrint" type="button">🖨️ Imprimir / Guardar PDF</button>
-          <span style="color:var(--ink-soft);font-size:.88rem">Se imprime sin el menú. Sugerencia: papel A4, márgenes normales.</span>
+        <div class="callout key resumen-print-btn">
+          <div class="callout-title">📥 Cómo bajarlo en PDF</div>
+          <ol style="margin:.3rem 0 .6rem">
+            <li>Tocá <b>“Descargar PDF (A4)”</b>.</li>
+            <li>En el diálogo, elegí destino <b>“Guardar como PDF”</b> y tamaño <b>A4</b>.</li>
+            <li>Activá <b>“Gráficos de fondo”</b> (o “Background graphics”) para que se vean los recuadros de color.</li>
+          </ol>
+          <button class="btn" id="rpPrint" type="button">📥 Descargar PDF (A4)</button>
         </div>
 
         <!-- ================= HOJA 1 ================= -->

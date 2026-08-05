@@ -399,11 +399,41 @@ blockquote.just-modelo {
 .hoja ul { margin: .4rem 0; }
 .hoja .mini { font-size: .82rem; }
 @media print {
-  .hoja { border: none; padding: 0; margin: 0; page-break-after: always; break-after: page; }
+  /* El resumen imprime en A4 con márgenes chicos */
+  .resumen-intro, .resumen-print-btn, .pager { display: none !important; }
+
+  .hoja {
+    border: none; padding: 0; margin: 0;
+    page-break-after: always; break-after: page;
+    page-break-inside: auto;
+    font-size: 8.3pt; line-height: 1.32; color: #000;
+  }
   .hoja:last-child { page-break-after: auto; }
-  .hoja table.data { font-size: 9pt; }
-  .resumen-intro, .resumen-print-btn { display: none !important; }
+  .hoja .hoja-num { font-size: 7pt; border-color: #999; color: #000; }
+  .hoja h2 { font-size: 11.5pt; margin: 0 0 2mm; border: none; padding: 0; }
+  .hoja h3 { font-size: 9.5pt; margin: 2.5mm 0 1mm; }
+  .hoja p, .hoja li { margin: .6mm 0; }
+  .hoja .mini { font-size: 7.4pt; }
+  .hoja table.data { font-size: 7.4pt; }
+  .hoja table.data th, .hoja table.data td { padding: .6mm 1.2mm; }
+  .hoja .callout, .hoja .card { padding: 1.5mm 2.5mm; margin: 1.5mm 0; border-width: 1px; }
+
+  /* Diagramas: chicos y con tope de altura (esto es lo que los agrandaba) */
+  .hoja .uml {
+    border: none; box-shadow: none; padding: 0; margin: 1.5mm auto;
+    max-width: 78mm; break-inside: avoid;
+  }
+  .hoja .uml-cap { font-size: 6.8pt; margin-bottom: .5mm; }
+  .hoja .uml pre.mermaid { margin: 0; }
+  .hoja .uml pre.mermaid svg { max-height: 34mm !important; width: auto !important; max-width: 100% !important; }
+  .hoja .uml-svg-wrap { background: none; border: none; padding: 0; margin: 1.5mm 0; gap: 3mm; }
+  .hoja .uml-svg-wrap .cap { font-size: 6.8pt; }
+  .hoja .uml-svg { max-height: 26mm; width: auto; max-width: 100%; }
+  .hoja .grid-2 { gap: 3mm; }
+
+  @page { size: A4 portrait; margin: 11mm 10mm; }
 }
+@page { size: A4 portrait; margin: 11mm 10mm; }
 
 /* Notación UML dibujada (SVG) */
 .uml-svg { max-width: 100%; height: auto; color: var(--ink); }

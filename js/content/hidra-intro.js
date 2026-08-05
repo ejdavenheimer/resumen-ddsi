@@ -65,7 +65,7 @@
             <tr><td>Avisar a <b>varios interesados</b> cuando se detecta una fuga (usuario, cuadrilla, ente)</td><td><a class="inline" data-go="observer">Observer</a> / <a class="inline" data-go="pubsub">Pub-Sub</a></td></tr>
             <tr><td><b>Reportes periódicos</b> al ente regulador</td><td><a class="inline" data-go="cron">Cron task</a> + Adapter</td></tr>
             <tr><td><b>Lecturas</b> (muchísimas, por tiempo)</td><td>Persistencia <b>no relacional</b> de series temporales (time-series)</td></tr>
-            <tr><td>Portal del <b>ciudadano</b> + app del <b>inspector</b></td><td>API Gateway + <b>BFF</b> por canal</td></tr>
+            <tr><td>Portal del <b>ciudadano</b> + app del <b>inspector</b></td><td>Varios clientes sobre la misma <b>API REST</b> (Cliente-Servidor). <span class="pill gray">Gateway/BFF = plus fuera del temario</span></td></tr>
             <tr><td>Datos personales, <b>roles</b> (ciudadano, operador, inspector, ente)</td><td><a class="inline" data-go="seguridad">Seguridad</a>: RBAC/ABAC, IDM, cifrado</td></tr>
           </tbody>
         </table></div>

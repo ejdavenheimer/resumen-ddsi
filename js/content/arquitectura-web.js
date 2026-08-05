@@ -95,20 +95,29 @@
 
         <h2>Componentes de infraestructura que tenés que saber nombrar</h2>
 
-        <h3>API Gateway</h3>
+        <div class="callout warn">
+          <div class="callout-title">📋 Ojo con el temario del parcial</div>
+          <p><b>API Gateway y BFF NO están en el temario de este parcial.</b> Los dejamos porque aparecen en los finales
+          y son cultura general útil, pero <b>no los necesitás</b>: un escenario multi-canal (web + mobile) se resuelve
+          perfecto con lo del temario — <b>varios clientes que consumen la misma API REST</b>
+          (<a class="inline" data-go="cliente-servidor">Cliente-Servidor</a> + Arquitectura Web). Si dibujás un gateway no
+          está mal, pero no es obligatorio.</p>
+        </div>
+
+        <h3>API Gateway <span class="pill gray">fuera del temario</span></h3>
         <p>Puerta de entrada <b>única</b> a un sistema de microservicios. Rutea al servicio que corresponde y centraliza
         preocupaciones transversales: autenticación, rate limiting, logging, versionado, CORS.</p>
         <p>Conceptualmente es un <a class="inline" data-go="facade">Facade</a> a nivel arquitectura: un punto de entrada
         simple que esconde la complejidad de adentro.</p>
 
-        <h3>BFF — Backend For Frontend</h3>
+        <h3>BFF — Backend For Frontend <span class="pill gray">fuera del temario</span></h3>
         <p>Un backend por <b>canal</b> (uno para web, otro para mobile) que compone las respuestas que ese canal necesita.</p>
         <div class="callout tip">
-          <div class="callout-title">✅ Frase de final</div>
-          <p>Cuando el enunciado dice <i>“se prevé incorporar una aplicación mobile […] y los contratos de los microservicios
-          no deben cambiar por necesidades de las interfaces gráficas”</i> (TurnoÁgil, La Scalo), la respuesta esperada es
-          <b>API Gateway + BFF por canal</b>, con la lógica de negocio quedándose en los servicios y sólo la
-          <b>composición y adaptación de la respuesta</b> en el BFF.</p>
+          <div class="callout-title">✅ Frase de final (no de este parcial)</div>
+          <p>Cuando un enunciado dice <i>“se prevé incorporar una aplicación mobile […] y los contratos de los microservicios
+          no deben cambiar por necesidades de las interfaces gráficas”</i> (TurnoÁgil, La Scalo — <b>finales</b>), la respuesta
+          es <b>API Gateway + BFF por canal</b>. En un parcial alineado al temario, la versión simple —
+          <b>web y mobile consumiendo la misma API REST</b>— ya resuelve el multi-canal.</p>
         </div>
 
         <h3>Balanceador de carga</h3>
@@ -193,7 +202,7 @@
             con un identificador, el trabajo se encola y el resultado llega por notificación, webhook o polling.</li>
             <li><b>¿Hay picos de tráfico?</b> → cola que amortigua + escalado horizontal de los consumidores + balanceador
             adelante + caché de lecturas.</li>
-            <li><b>¿Hay múltiples canales (web + mobile)?</b> → API Gateway + BFF, sin tocar los contratos de los servicios.</li>
+            <li><b>¿Hay múltiples canales (web + mobile)?</b> → en el temario, varios clientes consumiendo la misma API REST (Cliente-Servidor). <span class="pill gray">Como plus fuera del temario: API Gateway + BFF.</span></li>
           </ol>
         </div>
 

@@ -136,7 +136,7 @@
             <tbody>
               <tr><td>“puede tardar minutos” / “picos de tráfico”</td><td><b>Asíncrono con cola/broker</b> (amortigua) + responder <b>202</b> + escalar consumidores</td></tr>
               <tr><td>“varios servicios deben enterarse” (separados)</td><td><b>Publicación-Suscripción</b> sobre broker</td></tr>
-              <tr><td>“web + mobile, contratos no deben cambiar por la UI”</td><td><b>API Gateway + BFF</b> (Backend for Frontend) por canal</td></tr>
+              <tr><td>“web + mobile” (multi-canal)</td><td>Varios <b>clientes sobre la misma API REST</b> (Cliente-Servidor). <i>Plus fuera del temario: API Gateway + BFF.</i></td></tr>
               <tr><td>“gestión de usuarios / roles”</td><td><b>IDM</b> (gestor de identidades) + SSO; token validado en el gateway</td></tr>
               <tr><td>“servir imágenes/videos, bajar transferencia”</td><td><b>Object storage + CDN</b> (URLs firmadas; nunca binarios en la base)</td></tr>
               <tr><td>“se consulta mucho lo mismo, sin cambios”</td><td><b>Caché</b> (con tiempo de vida / invalidación por evento)</td></tr>
@@ -256,7 +256,7 @@
               <tr><td>Pasarela de pago · ente regulador (no son nuestros)</td><td><b>Adapter</b> + asíncrono (webhook) + idempotencia</td></tr>
               <tr><td>Avisar a usuario/cuadrilla/ente (servicios separados)</td><td><b>Publicación-Suscripción</b></td></tr>
               <tr><td>Reportes periódicos al ente</td><td><b>Cron</b> + Adapter</td></tr>
-              <tr><td>Portal ciudadano + app inspector, más canales</td><td>Gateway + <b>BFF</b> por canal</td></tr>
+              <tr><td>Portal ciudadano + app inspector, más canales</td><td>Clientes sobre la misma <b>API REST</b> (temario). <i>Plus: gateway/BFF</i></td></tr>
               <tr><td>Datos personales sensibles</td><td>Cifrado en reposo (AES por columna) + claves en KMS + TLS + roles</td></tr>
             </tbody>
           </table></div>

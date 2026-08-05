@@ -52,7 +52,7 @@
     { t: "Modelé la <b>auditoría / historial</b> de acciones por suministro", p: 5 },
     { t: "Usuarios con <b>roles</b> (RBAC): ciudadano, operador, inspector, ente", p: 6 },
     { t: "Justifiqué State y Command citando el enunciado (encolan/auditan/según estado)", p: 5 },
-    { t: "Arq I: <b>API Gateway + BFF por canal</b> (portal ciudadano / app inspector), sin cambiar contratos", p: 8 },
+    { t: "Arq I: multi-canal resuelto (web y mobile sobre la misma API REST; gateway/BFF es plus fuera del temario)", p: 8 },
     { t: "Arq I: contemplé el trabajo <b>offline</b> del inspector (sincronización diferida)", p: 5 },
     { t: "Arq I: componente de identidad (<b>IDM</b>) y autenticación en el borde", p: 5 },
     { t: "Arq II: reportería con <b>Cron</b> (periódica) + <b>Adapter</b> al ente (API externa no propia)", p: 8 },
@@ -177,12 +177,20 @@
     Q --> AG["Gateway IoT"] -->|MQTT| MED["🔧 Medidores"]
     style GW fill:#ffe4e9,stroke:#a4133c,color:#0f172a
     style Q fill:#fffbeb,stroke:#b45309,color:#0f172a`, "Gateway + BFF por canal + seguridad")}
+        <div class="callout warn">
+          <div class="callout-title">📋 Nota de temario</div>
+          <p><b>Gateway y BFF no están en el temario de tu parcial.</b> La respuesta alineada al temario es más simple:
+          <b>el portal web y la app del inspector consumen la misma API REST del backend</b> (Cliente-Servidor +
+          Arquitectura Web); la seguridad se centraliza en el backend con roles. Dejamos abajo la versión “con gateway/BFF”
+          como plus, pero no la necesitás para aprobar.</p>
+        </div>
         <div class="callout key">
-          <div class="callout-title">📝 Respuesta modelo</div>
+          <div class="callout-title">📝 Respuesta modelo (versión completa, con el plus fuera del temario)</div>
           <ul>
-            <li><b>API Gateway + BFF por canal:</b> uno para el portal ciudadano y otro para la app del inspector. Cada BFF
-            compone lo que su canal necesita, sin cambiar los contratos de los servicios (lo pide el enunciado). Sumar un
-            canal nuevo = otro BFF.</li>
+            <li><b>Versión temario:</b> web y mobile son dos <b>clientes</b> que consumen la misma <b>API REST</b>; el backend
+            expone los endpoints y valida la seguridad. Alcanza para el multi-canal.</li>
+            <li><span class="pill gray">plus</span> <b>API Gateway + BFF por canal:</b> uno para el portal ciudadano y otro para la app del inspector. Cada BFF
+            compone lo que su canal necesita, sin cambiar los contratos de los servicios. Sumar un canal nuevo = otro BFF.</li>
             <li><b>Offline del inspector:</b> la app guarda las inspecciones localmente y <b>sincroniza</b> cuando recupera
             conexión (con operaciones idempotentes para no duplicar al reintentar).</li>
             <li><b>Seguridad en el borde:</b> un <b>IDM</b> gestiona identidades y el gateway valida el token; los permisos
@@ -247,7 +255,8 @@
     SUMINISTRO   ||--o{ ACCION_EJECUTADA : "1..N historial"`, "DER usuarios/roles + acciones")}
 
         <h2>6 · Trampas</h2>
-        <div class="trampa"><b>“Contratos no deben cambiar por la UI”.</b> Es BFF. Si agregás endpoints “para mobile” en
+        <div class="trampa"><b>“Contratos no deben cambiar por la UI”.</b> En el temario alcanza con que web y mobile usen la
+        misma API REST. (Fuera del temario, la respuesta “fina” es BFF.) Si agregás endpoints “para mobile” en
         cada servicio, hacés justo lo que el enunciado prohíbe.</div>
         <div class="trampa"><b>Confidencialidad de datos personales.</b> Es cifrado <b>en reposo</b> (no TLS solo, no hash).
         Y decí dónde viven las claves (KMS).</div>

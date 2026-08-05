@@ -273,6 +273,26 @@
             <li><b>Circuit breaker</b> (“cortacircuitos”): cuando un servicio externo falla repetido, deja de llamarlo un rato (falla rápido) para no arrastrar todo el sistema; después reintenta.</li>
             <li><b>Punto único de falla</b>: un componente que, si se cae, tira todo. Se elimina <b>duplicándolo</b> (redundancia) con reemplazo automático (failover).</li>
           </ul>
+          <h2>Cómo se dibuja un Broker / Publicación-Suscripción</h2>
+          <p class="mini">El <b>publicador</b> emite un evento; el <b>broker</b> lo entrega a todos los <b>suscriptores</b>. El publicador NO conoce a los suscriptores (por eso desacopla y se pueden sumar más sin tocarlo). Se usa entre <b>servicios separados</b>.</p>
+          <div class="grid-2">
+            <div class="uml">${APP.uml(`graph LR
+    P["Publicador"] -->|publica evento| B[("Broker")]
+    B -->|entrega| S1["Suscriptor 1"]
+    B -->|entrega| S2["Suscriptor 2"]
+    B -->|entrega| S3["Suscriptor 3"]
+    style B fill:#fffbeb,stroke:#b45309,color:#0f172a`, "Broker / Pub-Sub (entre servicios)")}</div>
+            <div class="uml">${APP.uml(`classDiagram
+    class Sujeto
+    class Observador { <<interface>> }
+    class ObsA
+    class ObsB
+    Sujeto o-- Observador : notifica a
+    Observador <|.. ObsA : implementa
+    Observador <|.. ObsB : implementa`, "Observer (misma app)")}</div>
+          </div>
+          <p class="mini"><b>Diferencia:</b> <b>Observer</b> = misma aplicación, el sujeto tiene la lista de observadores (en memoria). <b>Publicación-Suscripción (broker)</b> = servicios separados, con un broker en el medio, asincrónico, con reintentos. Misma idea (avisar a varios), distinta escala.</p>
+
           <h2>Sincronismo vs Asincronismo</h2>
           <ul class="mini">
             <li><b>Sincrónico</b> (HTTP directo): simple e inmediato, pero acopla en el tiempo (si el otro está lento/caído, te arrastra). Para lecturas rápidas.</li>

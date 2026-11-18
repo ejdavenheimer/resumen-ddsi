@@ -30,8 +30,10 @@
           caché y TTL</b>, <b>diagrama de despliegue</b> y una decisión de <b>monolito vs. servicios</b> con sus
           restricciones de equipo y plazo.</p>
           <p><b>Tenés los dos modelos armados con esa estructura exacta y resueltos:</b>
-          <a class="inline" data-go="p2-m1-paquered">Modelo 1 · PaqueRed</a> (tu contexto) y
-          <a class="inline" data-go="p2-m2-voltared">Modelo 2 · VoltaRed</a>. <b>Son la práctica de mayor rendimiento
+          <a class="inline" data-go="p2-m1-paquered">Modelo 1</a> y
+          <a class="inline" data-go="p2-m2-paquered-b">Modelo 2</a>, los dos <b>sobre tu contexto de lockers</b> y con
+          <b>tres servicios distintos cada uno</b> (son seis dominios resueltos), más el
+          <a class="inline" data-go="p2-m2-voltared">Modelo 3</a> sobre otro contexto. <b>Son la práctica de mayor rendimiento
           que podés hacer ahora:</b> resolvelos en papel con el reloj corriendo antes de abrir las soluciones.</p>
         </div>
 
@@ -60,8 +62,8 @@
             </tr>
             <tr>
               <td><b>2 · 60 min<br>Hacer un DER y auditar otro</b></td>
-              <td><b>Con lápiz y papel</b>, resolvé los tres puntos de datos del <b>Modelo 1 (PaqueRed)</b> —tu contexto— <b>antes</b> de mirar la solución: el DER del servicio de envíos, la auditoría del DER dado contra las 3FN y el punto de desnormalización. Después compará y repetí con el <b>Modelo 2 (VoltaRed)</b>.</td>
-              <td><a class="inline" data-go="p2-m1-paquered">Modelo 1 · PaqueRed</a> · <a class="inline" data-go="p2-m2-voltared">Modelo 2 · VoltaRed</a> · <a class="inline" data-go="p2-der">DER paso a paso</a></td>
+              <td><b>Con lápiz y papel</b>, resolvé los tres puntos de datos del <b>Modelo 1 (PaqueRed)</b> —tu contexto— <b>antes</b> de mirar la solución: el DER del servicio de envíos, la auditoría del DER dado contra las 3FN y el punto de desnormalización. Después compará y repetí con el <b>Modelo 2</b>, que tiene otros tres servicios del mismo contexto.</td>
+              <td><a class="inline" data-go="p2-m1-paquered">Modelo 1</a> · <a class="inline" data-go="p2-m2-paquered-b">Modelo 2</a> · <a class="inline" data-go="p2-der">DER paso a paso</a></td>
             </tr>
             <tr>
               <td><b>3 · 40 min<br>ORM e Hibernate</b></td>

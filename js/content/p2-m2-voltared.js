@@ -7,17 +7,25 @@
 
   APP.register({
     id: "p2-m2-voltared",
-    title: "Modelo 2 · VoltaRed (carga eléctrica)",
+    title: "Modelo 3 · VoltaRed (otro contexto)",
     tag: "⚡",
     group: "Parcial 2 (práctica)",
-    resumen: "Mismo formato, otro dominio: DER + 3FN + desnormalización + arquitectura",
+    resumen: "Extra: el contexto del otro turno, mismo formato de parcial",
     keywords: ["voltared", "estacion de carga", "conector", "vehiculo electrico", "reserva", "sesion de carga", "modelo", "simulacro", "der", "formas normales", "desnormalizacion"],
     render(el) {
+      el.classList.add("modelo-print");
       el.innerHTML = `
         <div class="page-head">
-          <div class="page-kicker">Modelo 2 · el contexto del otro turno</div>
+          <div class="page-kicker">Modelo 3 · extra, otro contexto</div>
           <h1>VoltaRed — red de estaciones de carga</h1>
-          <p class="lead">El contexto que le tomaron a tu compañero, con <b>la misma estructura de puntos</b>. Hacelo <b>después</b> de PaqueRed: el valor está en repetir el método sobre un dominio distinto, porque el enunciado de mañana no va a ser ninguno de los dos.</p>
+          <p class="lead">El contexto que le tomaron a tu compañero, con <b>la misma estructura de puntos</b>. Hacelo <b>al final</b>, después de los dos modelos de PaqueRed: sirve para comprobar que el método funciona <b>sobre un dominio que no venís practicando</b>, que es exactamente lo que va a pasar en el parcial.</p>
+        </div>
+
+        <div class="callout key no-print-modelo">
+          <div class="callout-title">🖨️ Llevátelo impreso</div>
+          <p>Este modelo <b>se imprime con las soluciones desplegadas</b>: los diagramas salen grandes y en una sola
+          página cada uno. Destino <b>“Guardar como PDF”</b>, tamaño <b>A4</b>, y activá <b>“Gráficos de fondo”</b>.</p>
+          <button class="btn js-print" type="button">📥 Imprimir este modelo resuelto (A4)</button>
         </div>
 
         <h2>Enunciado</h2>

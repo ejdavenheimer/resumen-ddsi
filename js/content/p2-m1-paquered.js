@@ -13,6 +13,7 @@
     resumen: "Tu contexto: DER + auditar 3FN + desnormalización + arquitectura, resuelto",
     keywords: ["paquered", "locker", "casillero", "paquete", "modelo", "parcial", "simulacro", "der", "formas normales", "desnormalizacion", "monolito", "microservicios", "cdn", "ttl", "circuit breaker"],
     render(el) {
+      el.classList.add("modelo-print");
       el.innerHTML = `
         <div class="page-head">
           <div class="page-kicker">Modelo 1 · tu contexto</div>
@@ -20,7 +21,15 @@
           <p class="lead">Armado sobre el <b>contexto real que te dieron</b> y la estructura que reportaron los turnos anteriores: un <b>DER con justificación</b>, un <b>DER dado para auditar contra las 3FN</b>, un punto de <b>desnormalización</b> y arquitectura con <b>métricas/logs, circuit breaker, CDN y caché con TTL, diagrama de despliegue</b> y la decisión <b>monolito vs. servicios</b>.</p>
         </div>
 
-        <div class="callout warn">
+        <div class="callout key no-print-modelo">
+          <div class="callout-title">🖨️ Llevátelo impreso</div>
+          <p>Este modelo <b>se imprime con las soluciones desplegadas</b>: los diagramas salen grandes y en
+          una sola página cada uno. Destino <b>“Guardar como PDF”</b>, tamaño <b>A4</b>, y activá
+          <b>“Gráficos de fondo”</b> para que se vean los recuadros.</p>
+          <button class="btn js-print" type="button">📥 Imprimir este modelo resuelto (A4)</button>
+        </div>
+
+        <div class="callout warn no-print-modelo">
           <div class="callout-title">⚠️ Cómo usar esta página</div>
           <p><b>Resolvé cada punto en papel ANTES de abrir la solución.</b> Leer la respuesta sin haberla intentado no entrena nada, y mañana vas a tener que producirla de cero. Tiempo sugerido: <b>40 min</b> el modelo de datos, <b>45 min</b> arquitectura.</p>
         </div>

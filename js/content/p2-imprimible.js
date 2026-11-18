@@ -36,7 +36,8 @@
             <thead><tr><th style="width:52%">Si te preguntan…</th><th>Andá a</th></tr></thead>
             <tbody>
               <tr><td><b>Cómo encarar el parcial, cómo repartir el tiempo</b></td><td><b>HOJA 0 BIS</b></td></tr>
-              <tr><td><b>Preguntas de parciales viejos, ya respondidas</b></td><td><b>HOJA 0 TER</b></td></tr>
+              <tr><td><b>Preguntas de parciales viejos, ya respondidas</b> (18 por tema)</td><td><b>HOJA 0 TER</b></td></tr>
+              <tr><td><b>Más preguntas reales con su origen</b> · tiempo real · cron · <b>especificar una API REST</b> · diagnóstico</td><td><b>HOJA 0 QUATER</b></td></tr>
               <tr><td>Qué es persistencia · las 6 estrategias · Repositorio y DAO</td><td>HOJA 1</td></tr>
               <tr><td>Relación, tupla, grado · PK, FK, índices · <b>cardinalidad y modalidad</b> · N:M</td><td>HOJA 1</td></tr>
               <tr><td><b>¿Cumple las 3 formas normales?</b> · qué problema hay · <b>frases para responder</b></td><td><b>HOJA 2</b></td></tr>
@@ -155,6 +156,89 @@
               <tr><td><b>“¿Conviene pasar a cliente pesado / SPA?”</b></td><td><b>Depende del caso de uso.</b> Si hay <b>alta interactividad</b> o <b>varios clientes sobre la misma API</b>, sí. Si es sólo visualización y no se prevén otros clientes, <b>no</b>: agrega costo de construir y versionar una app aparte, primera carga más lenta y <b>SEO más difícil</b>. Camino intermedio: <b>cliente liviano desacoplado</b>, que deja el contrato estable para cambiar la vista después.</td></tr>
               <tr><td><b>“Equipo chico y plazo corto, pero un servicio recibe mucho más tráfico: ¿monolito o microservicios?”</b></td><td><b>Monolito modular</b>, con el módulo de alta demanda <b>identificado como candidato a extracción</b> (Strangler). Razones: equipo chico, plazo corto, <b>límites todavía inciertos</b>, consistencia transaccional simple y <b>menor costo operativo</b> (“Monolith First”). <b>Y el tráfico se resuelve igual:</b> un monolito <b>stateless escala horizontalmente</b> con N réplicas detrás de un balanceador; lo que <b>no</b> puede es escalar partes por separado, y ese costo es menor que la complejidad de distribuir todo. <b>Decí qué evidencia cambiaría la decisión.</b></td></tr>
               <tr><td><b>“Hay que cambiar el esquema sin downtime”</b></td><td><b>Expand and Contract:</b> ① <b>agregar</b> lo nuevo manteniendo lo viejo · ② desplegar la versión que <b>escribe en ambos</b> y migrar en segundo plano · ③ <b>eliminar</b> lo viejo cuando nadie lo consulta. Despliegue <b>rolling</b> (conviven dos versiones, por eso hacía falta el paso 1), y el release detrás de un <b>feature flag</b>.</td></tr>
+            </tbody>
+          </table></div>
+        </section>
+
+        <!-- ===================== HOJA 0 QUATER ===================== -->
+        <section class="hoja">
+          <span class="hoja-num">HOJA 0 QUATER · MÁS PREGUNTAS REALES, CON SU ORIGEN</span>
+          <p>Estas aparecieron <b>textualmente</b> en los finales y parciales de la carpeta. La columna de la derecha
+          dice en cuál.</p>
+
+          <h3>Tiempo real y procesos periódicos</h3>
+          <div class="table-wrap"><table class="data">
+            <thead><tr><th style="width:34%">Pregunta</th><th>Respuesta</th><th style="width:12%">Visto en</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><b>“Al terminar el proceso, mostrarle al usuario una burbuja emergente <u>sólo si está navegando la plataforma</u>. Describa el proceso completo.”</b></td>
+                <td>El backend <b>no puede llamar al navegador</b>, así que hace falta un canal abierto: cuando el usuario entra, el cliente abre un <b>WebSocket</b> (o un <b>SSE</b>, que alcanza si es de ida nada más) contra un <b>servicio de notificaciones</b> y se <b>suscribe a su propio canal</b> (identificado por el id de usuario del JWT). Cuando el proceso termina, el servicio que lo resolvió <b>publica un evento</b> en el broker; el servicio de notificaciones lo consume y, <b>si ese usuario tiene una conexión abierta</b>, le empuja el mensaje y aparece la burbuja. <b>Si no está conectado</b>, no se envía nada por ese canal: queda el mail/push y la notificación guardada para cuando entre. <b>Alternativa más pobre</b> (mencionala y descartala): <b>polling</b> cada N segundos, que funciona pero <b>genera carga inútil</b> y no es instantáneo.</td>
+                <td>final</td>
+              </tr>
+              <tr>
+                <td><b>“Se necesita un dashboard en tiempo real con la posición GPS de los camiones. ¿Qué patrón arquitectónico propone?”</b></td>
+                <td><b>Publicación-suscripción de punta a punta.</b> El dispositivo del camión publica por <b>MQTT</b> (liviano, tolera conectividad intermitente) contra un <b>broker</b>; un servicio de <b>ingesta</b> valida y guarda en una <b>base de series temporales</b> (escritura masiva + consulta por rango de tiempo) y a la vez <b>publica en un topic</b>; el <b>dashboard</b> recibe las posiciones por <b>WebSocket</b>. <b>Por qué no REST:</b> el camión no necesita respuesta y una llamada sincrónica acoplaría el sistema a cientos de dispositivos. <b>Atributos:</b> escalabilidad (se escalan consumidores), disponibilidad (si cae la ingesta, los mensajes esperan) y performance.</td>
+                <td>final 25-09-25</td>
+              </tr>
+              <tr>
+                <td><b>“El cálculo se debe hacer de forma diaria / las publicaciones deben cambiar de estado automáticamente. ¿Qué propone?”</b></td>
+                <td><b>Tarea programada (cron / scheduler)</b> que dispara el proceso. <b>Los tres detalles que piden:</b> ① con varias instancias hay que garantizar <b>ejecución única</b> (un lock distribuido o un scheduler centralizado), si no el proceso corre N veces; ② si el trabajo es pesado, el cron <b>sólo encola</b> y el procesamiento lo hacen <b>workers</b> que escalan; ③ el proceso debe ser <b>idempotente</b> y <b>reanudable</b>, para poder volver a correrlo si falló a la mitad. <b>No</b> conviene resolverlo “al consultar” (cálculo on-the-fly) si el volumen es grande.</td>
+                <td>finales 22-02-25 y otros</td>
+              </tr>
+              <tr>
+                <td><b>“El proceso nocturno tarda horas y algunos días supera las 24 h. Contratar hardware más caro es un salto de costo enorme. ¿Cómo lo resuelve? GRAFIQUE.”</b></td>
+                <td><b>Paralelizar en vez de agrandar la máquina.</b> El escalado <b>vertical</b> tiene <b>techo físico</b> y precio no lineal; el <b>horizontal</b> no. Se <b>parte el trabajo</b> en unidades independientes (por cliente, por sucursal, por rango de fechas), se publican en una <b>cola</b> y las procesan <b>N workers</b> en paralelo, que se escalan según el <b>largo de la cola</b> y se apagan al terminar (en la nube, <b>pago por uso</b>). <b>Dibujá:</b> disparador → cola → workers xN → base. <b>Atributos:</b> performance, escalabilidad y costo.</td>
+                <td>final 27-02-25</td>
+              </tr>
+            </tbody>
+          </table></div>
+
+          <h3>Especificar una API REST (pregunta concreta, respuesta concreta)</h3>
+          <p><b>“Se requiere exponer una API REST de los Eventos. Defina: protocolo, método(s), códigos de estado,
+          estructura del cuerpo de solicitud y respuesta, encabezados relevantes.”</b> <span class="mini">(final)</span></p>
+          <div class="table-wrap"><table class="data">
+            <thead><tr><th style="width:22%">Qué piden</th><th>Qué se responde</th></tr></thead>
+            <tbody>
+              <tr><td><b>Protocolo</b></td><td><b>HTTPS</b> (TLS). REST sobre HTTP, <b>stateless</b>: cada request lleva todo lo necesario.</td></tr>
+              <tr><td><b>Recurso y URI</b></td><td>Sustantivo <b>en plural</b>: <code>/eventos</code>, <code>/eventos/{id}</code>. Anidado si depende de otro: <code>/dispositivos/{id}/eventos</code>. <b>Nunca verbos en la URL</b> (<code>/crearEvento</code> está mal).</td></tr>
+              <tr><td><b>Métodos</b></td><td><b>GET</b> listar/obtener (seguro, idempotente) · <b>POST</b> crear (<b>no</b> idempotente) · <b>PUT</b> reemplazar (idempotente) · <b>PATCH</b> modificar parcial · <b>DELETE</b> borrar (idempotente).</td></tr>
+              <tr><td><b>Códigos de estado</b></td><td><b>200</b> OK · <b>201</b> Created (+ header <code>Location</code>) · <b>202</b> Accepted (lo recibí, lo proceso después: <b>la respuesta del asincronismo</b>) · <b>204</b> No Content · <b>400</b> request mal armado · <b>401</b> no autenticado · <b>403</b> autenticado sin permiso · <b>404</b> no existe · <b>409</b> conflicto (duplicado) · <b>422</b> no pasa una regla de negocio · <b>429</b> rate limit · <b>500</b> error del servidor · <b>503</b> no disponible.</td></tr>
+              <tr><td><b>Cuerpo de la solicitud</b></td><td><b>JSON</b>. Ej.: <code>{ "id_dispositivo": 7, "tipo": "APERTURA", "fecha_hora": "2026-11-18T09:12:00-03:00", "valor": 12.5 }</code>. Fechas en <b>ISO 8601 con zona</b>.</td></tr>
+              <tr><td><b>Cuerpo de la respuesta</b></td><td>El recurso creado con su <b>id</b>, o la colección <b>paginada</b>: <code>{ "items": [...], "page": 1, "size": 50, "total": 1234 }</code>. En el error, un cuerpo uniforme: <code>{ "codigo": "...", "mensaje": "...", "detalles": [...] }</code>.</td></tr>
+              <tr><td><b>Encabezados</b></td><td><b>Request:</b> <code>Content-Type: application/json</code> · <code>Accept</code> · <code>Authorization: Bearer &lt;JWT&gt;</code> · <code>Idempotency-Key</code> en los POST que no deben duplicarse · <code>X-Correlation-Id</code>. <b>Response:</b> <code>Location</code> en el 201 · <code>ETag</code> y <code>Cache-Control</code> · <code>Retry-After</code> en 429/503.</td></tr>
+              <tr><td><b>Lo que suma</b></td><td><b>Versionado</b> (<code>/api/v1</code>) y cambios <b>aditivos</b> · <b>paginación y filtros</b> por query string (<code>?desde=&amp;hasta=&amp;page=</code>) · documentación con <b>OpenAPI</b> · <b>rate limiting</b> en el gateway.</td></tr>
+            </tbody>
+          </table></div>
+
+          <h3>Diagnóstico y arquitectura distribuida</h3>
+          <div class="table-wrap"><table class="data">
+            <thead><tr><th style="width:34%">Pregunta</th><th>Respuesta</th><th style="width:12%">Visto en</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><b>“Si el Módulo de Análisis arroja Timeout, ¿qué tipo de problema estoy teniendo? ¿Cómo lo soluciono?”</b></td>
+                <td><b>Qué problema es:</b> <b>acoplamiento temporal</b> en una llamada <b>sincrónica</b> — mi servicio depende de que el otro responda <b>justo ahora</b>, y mientras espera <b>retiene hilos y conexiones</b>, con riesgo de <b>falla en cascada</b>. <b>Cómo se soluciona:</b> <b>timeout</b> definido · <b>retry con backoff</b> (sólo si es idempotente) · <b>circuit breaker</b> que abre y <b>falla rápido</b> con un <b>fallback</b> · <b>bulkhead</b> para aislar el pool de esa dependencia · y, si <b>no necesito la respuesta para continuar</b>, convertirlo en <b>asincrónico con cola</b> y devolver <b>202</b>.</td>
+                <td>final</td>
+              </tr>
+              <tr>
+                <td><b>“Los tres componentes escalan horizontalmente bien, pero la latencia sigue alta. ¿Por qué?”</b></td>
+                <td><b>El cuello de botella está en un recurso compartido que NO escala con ellos:</b> casi siempre la <b>base de datos</b> (todas las instancias pegan a la misma), y a veces un <b>servicio externo</b> o el <b>broker</b>. Agregar instancias <b>no arregla</b> un cuello de botella aguas abajo — incluso lo empeora, porque aumentan las conexiones. <b>Qué hacer:</b> <b>medir primero</b> (plan de ejecución, p95 por dependencia, saturación del <b>pool de conexiones</b>), después <b>índices</b>, <b>caché</b>, <b>réplicas de lectura</b>, particionamiento, y recién al final desnormalizar.</td>
+                <td>final</td>
+              </tr>
+              <tr>
+                <td><b>“Elabore un diagrama de COMPONENTES de la arquitectura de microservicios.”</b></td>
+                <td>Ojo con la diferencia: el de <b>componentes</b> muestra <b>qué piezas de software hay y cómo se conectan</b> (con <b>bolita ● provista</b> y <b>semicírculo ( requerida</b>); el de <b>despliegue</b> muestra <b>en qué nodos corren</b> (cubos, con el protocolo en cada línea). Para microservicios dibujá: <b>clientes → API Gateway → un componente por servicio</b> (cada uno con <b>su propia base</b>) <b>→ broker</b> con los consumidores, más los <b>transversales</b> (IdM/SSO, observabilidad, secretos) y los <b>externos</b> marcados como tales. <b>Ver hoja 8 BIS.</b></td>
+                <td>finales</td>
+              </tr>
+              <tr>
+                <td><b>“Explique diferencias, ventajas y desventajas entre monolítica y microservicios. Elija una y justifique con atributos de calidad.”</b></td>
+                <td>La tabla comparativa está en la <b>hoja 9</b>. <b>Lo que se evalúa es la elección justificada</b>, no recitar: tomá los datos del enunciado (tamaño del equipo, plazo, si los límites del dominio están claros, si la carga es pareja o asimétrica, si hace falta consistencia transaccional) y <b>cerrá con qué evidencia te haría cambiar de opinión</b>. Si el equipo es chico y el plazo corto → <b>monolito modular</b> (“Monolith First”), aclarando que <b>igual escala horizontalmente</b> si es stateless.</td>
+                <td>final</td>
+              </tr>
+              <tr>
+                <td><b>“¿Qué atributos de calidad se ven vinculados en esta integración? Defina cada uno.”</b></td>
+                <td><b>Ojo: pide definirlos.</b> Nombrá sólo los que aplican y definilos en una línea (están en la <b>hoja 0 BIS</b>). Para una integración con un externo inestable, los tres son: <b>Disponibilidad</b> (proporción del tiempo operativo: si el externo cae, mi sistema <b>sigue</b> gracias al circuit breaker y el fallback), <b>Performance</b> (responder en el tiempo esperado: el timeout evita que su lentitud se contagie) y <b>Tolerancia a fallos</b> (seguir operando ante la falla de un componente: reintentos, degradación e idempotencia).</td>
+                <td>final 15-02-25</td>
+              </tr>
             </tbody>
           </table></div>
         </section>

@@ -84,4 +84,47 @@
       '</svg>'
     );
   };
+
+  /* Cola de mensajes: productor → [ msgs FIFO ] → consumidor, dentro del broker */
+  APP.svgCola = function (cola, productor, consumidor) {
+    cola = cola || "facturas";
+    productor = productor || "Tienda";
+    consumidor = consumidor || "Facturación";
+    return (
+      '<svg class="uml-svg" viewBox="0 0 620 190" role="img" aria-label="Cola de mensajes ' + cola + '">' +
+        // marco del broker
+        '<rect x="150" y="12" width="320" height="120" rx="6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="6 4"/>' +
+        '<text x="310" y="30" text-anchor="middle" fill="currentColor" font-size="11" font-style="italic">«broker» RabbitMQ</text>' +
+        // productor
+        '<rect x="10" y="55" width="120" height="48" rx="3" fill="var(--panel)" stroke="currentColor" stroke-width="2"/>' +
+        '<text x="70" y="78" text-anchor="middle" fill="currentColor" font-size="11.5" font-weight="700">' + APP.esc(productor) + '</text>' +
+        '<text x="70" y="93" text-anchor="middle" fill="var(--ink-soft)" font-size="9.5">productor</text>' +
+        // la cola: celdas FIFO
+        '<rect x="175" y="52" width="270" height="52" rx="3" fill="var(--panel-2)" stroke="currentColor" stroke-width="2"/>' +
+        '<line x1="242" y1="52" x2="242" y2="104" stroke="currentColor" stroke-width="1.2"/>' +
+        '<line x1="309" y1="52" x2="309" y2="104" stroke="currentColor" stroke-width="1.2"/>' +
+        '<line x1="376" y1="52" x2="376" y2="104" stroke="currentColor" stroke-width="1.2"/>' +
+        '<text x="208" y="83" text-anchor="middle" fill="currentColor" font-size="11">#103</text>' +
+        '<text x="275" y="83" text-anchor="middle" fill="currentColor" font-size="11">#102</text>' +
+        '<text x="342" y="83" text-anchor="middle" fill="currentColor" font-size="11">#101</text>' +
+        '<text x="410" y="83" text-anchor="middle" fill="var(--ink-soft)" font-size="10">sale</text>' +
+        '<text x="310" y="122" text-anchor="middle" fill="currentColor" font-size="10.5" font-weight="600">cola "' + APP.esc(cola) + '" · FIFO</text>' +
+        // consumidor
+        '<rect x="490" y="55" width="120" height="48" rx="3" fill="var(--panel)" stroke="currentColor" stroke-width="2"/>' +
+        '<text x="550" y="78" text-anchor="middle" fill="currentColor" font-size="11.5" font-weight="700">' + APP.esc(consumidor) + '</text>' +
+        '<text x="550" y="93" text-anchor="middle" fill="var(--ink-soft)" font-size="9.5">consumidor</text>' +
+        // flechas
+        '<defs><marker id="flc" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">' +
+          '<polygon points="0 0, 9 3.5, 0 7" fill="currentColor"/></marker></defs>' +
+        '<line x1="130" y1="79" x2="172" y2="79" stroke="currentColor" stroke-width="2" marker-end="url(#flc)"/>' +
+        '<text x="151" y="70" text-anchor="middle" fill="var(--ink-soft)" font-size="9">publica</text>' +
+        '<line x1="448" y1="79" x2="487" y2="79" stroke="currentColor" stroke-width="2" marker-end="url(#flc)"/>' +
+        '<text x="468" y="70" text-anchor="middle" fill="var(--ink-soft)" font-size="9">consume</text>' +
+        // ACK de vuelta
+        '<path d="M550 105 L550 152 L310 152" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="5 3" marker-end="url(#flc)"/>' +
+        '<text x="430" y="166" text-anchor="middle" fill="var(--ink-soft)" font-size="9.5">ACK · recién ahí el mensaje se borra</text>' +
+        '<text x="310" y="182" text-anchor="middle" fill="var(--ink-soft)" font-size="9.5">protocolo: AMQP (5672)</text>' +
+      '</svg>'
+    );
+  };
 })();

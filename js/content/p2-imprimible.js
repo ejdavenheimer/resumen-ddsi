@@ -1300,6 +1300,59 @@
     style GW fill:#e0f2fe,stroke:#0284c7,color:#0f172a
     style BK fill:#fffbeb,stroke:#b45309,color:#0f172a`, "Despliegue de referencia: copiá esta estructura y sacá lo que no aplique")}
 
+          <h3>Cómo se dibuja una cola y un broker (RabbitMQ)</h3>
+          <p>Es lo que más se pide después del balanceador, y donde más se equivocan.</p>
+          ${APP.svgCola("facturas", "Tienda", "Facturación")}
+          <div class="table-wrap"><table class="data">
+            <thead><tr><th style="width:26%">Qué dibujar</th><th>Cómo</th></tr></thead>
+            <tbody>
+              <tr><td><b>El broker</b></td><td>Un <b>nodo</b> aparte con su estereotipo: <code>«broker» RabbitMQ</code>. <b>No es parte de tu servicio:</b> es infraestructura, va en su propia caja (y en el despliegue, en su propio cubo).</td></tr>
+              <tr><td><b>La cola</b></td><td>Un <b>rectángulo dividido en celdas</b> (los mensajes) <b>adentro</b> del broker, <b>con su nombre</b>: <code>facturas</code>, <code>comando.actuador</code>. <b>El nombre importa:</b> una cola sin nombre no dice nada.</td></tr>
+              <tr><td><b>Las dos flechas</b></td><td><b>Productor → cola</b> rotulada <b>“publica”</b> y <b>cola → consumidor</b> rotulada <b>“consume”</b>. <b>⚠️ Nunca una flecha bidireccional al broker:</b> son dos relaciones distintas, en un solo sentido cada una.</td></tr>
+              <tr><td><b>El ACK</b></td><td>Flecha <b>punteada de vuelta</b> del consumidor a la cola. Dibujarlo demuestra que sabés que <b>el mensaje se borra al confirmar, no al entregarse</b>.</td></tr>
+              <tr><td><b>El protocolo</b></td><td>Sobre la línea: <b>AMQP</b> (RabbitMQ, puerto 5672) · <b>MQTT</b> si son dispositivos IoT · <b>JMS</b> en entornos Java clásicos.</td></tr>
+              <tr><td><b>La DLQ</b></td><td>Una <b>segunda cola</b> colgando de la principal, rotulada <code>facturas.dlq</code>, con la flecha <b>“tras N reintentos”</b>.</td></tr>
+            </tbody>
+          </table></div>
+
+          <p><b>Los tres escenarios que te pueden pedir dibujar</b></p>
+          ${APP.uml(`graph LR
+    subgraph A["① COLA · punto a punto — una ORDEN la hace UNO solo"]
+      P1["Tienda"] -->|"publica · AMQP"| Q1[("cola: facturas")]
+      Q1 -->|consume| C1["Facturación #1"]
+      Q1 -->|consume| C2["Facturación #2"]
+      Q1 -->|"tras 3 reintentos"| DLQ[("facturas.dlq")]
+      DLQ -.->|revisa| OP["Soporte"]
+    end`, "Cola: competing consumers (cada mensaje lo toma UNO) + DLQ")}
+          ${APP.uml(`graph LR
+    subgraph B["② TOPIC · publicación-suscripción — un EVENTO le interesa a VARIOS"]
+      P2["Pedidos"] -->|"publica evento<br/>PedidoCreado"| T[("topic: pedido-creado")]
+      T -->|copia| S1["Facturación"]
+      T -->|copia| S2["Stock"]
+      T -->|copia| S3["Notificaciones"]
+    end`, "Topic: cada suscriptor recibe SU COPIA del mismo evento")}
+          ${APP.uml(`graph LR
+    subgraph C["③ EN EL DIAGRAMA DE DESPLIEGUE · el broker es su propio nodo"]
+      N1["«container»<br/>Servicio Envíos xN"] -->|"AMQP 5672"| N2["«broker»<br/>RabbitMQ<br/>(replicado)"]
+      N2 -->|"AMQP 5672"| N3["«container»<br/>Workers xN"]
+      N3 -->|"HTTPS"| N4["Proveedor de mail<br/>«externo»"]
+    end`, "Despliegue: cubo propio para el broker y el protocolo en cada línea")}
+
+          <div class="callout key">
+            <div class="callout-title">CÓMO SE JUSTIFICA LA COLA (una línea, al lado del dibujo)</div>
+            <p>“Uso una cola porque <b>quien publica no necesita la respuesta para continuar</b>: desacopla en el
+            tiempo —si el consumidor está caído los mensajes esperan—, <b>amortigua los picos</b> y permite
+            <b>escalar consumidores</b> de forma independiente. <b>Costo:</b> consistencia eventual y entrega
+            <b>at-least-once</b>, por eso el consumidor es <b>idempotente</b> y los mensajes irreprocesables van a una
+            <b>DLQ</b>.”</p>
+            <p><b>Y la regla para elegir entre las dos:</b> <b>ORDEN</b> (“emitir la factura”) la tiene que hacer
+            <b>alguien, una vez</b> → <b>cola</b>. <b>EVENTO</b> (“pedido creado”) le interesa a <b>varios</b> →
+            <b>topic</b>.</p>
+          </div>
+          <p class="mini"><b>⚠️ Los 4 errores típicos al dibujarlo:</b> ① flecha <b>bidireccional</b> al broker
+          (van dos, una por sentido) · ② la cola <b>sin nombre</b> · ③ el broker dibujado <b>adentro</b> de tu servicio
+          (es infraestructura aparte) · ④ <b>no rotular el protocolo</b>.</p>
+
           <h3>Cómo se mete un balanceador (el antes y el después)</h3>
           ${APP.uml(`graph LR
     subgraph ANTES["❌ ANTES · un solo servidor = punto único de falla"]

@@ -422,18 +422,22 @@ blockquote.just-modelo {
 
   .hoja {
     border: none; padding: 0; margin: 0;
-    page-break-after: always; break-after: page;
-    page-break-inside: auto;
+    page-break-inside: auto; break-inside: auto;
     font-size: 10.6pt; line-height: 1.5; color: #000;
   }
-  .hoja:last-child { page-break-after: auto; }
+  /* El salto va ANTES de cada sección, no después: así no queda una hoja
+     en blanco al final del documento. */
+  .hoja + .hoja { page-break-before: always; break-before: page; }
   /* Título de la hoja: banda negra, se encuentra de un vistazo */
   .hoja .hoja-num {
     display: block; font-size: 13.5pt; font-weight: 800; letter-spacing: .3px;
     background: #000 !important; color: #fff !important;
     -webkit-print-color-adjust: exact; print-color-adjust: exact;
     border: none; border-radius: 0; padding: 2mm 3mm; margin: 0 0 4mm;
+    page-break-after: avoid; break-after: avoid;
   }
+  /* El título + lo que sigue viajan juntos */
+  .hoja .hoja-num + *, .hoja h2 + *, .hoja h3 + * { page-break-before: avoid; break-before: avoid; }
   .hoja h2 { font-size: 13pt; margin: 5mm 0 2mm; border: none; padding: 0 0 1mm;
              border-bottom: 1.6pt solid #000;
              page-break-after: avoid; break-after: avoid; }
@@ -449,6 +453,11 @@ blockquote.just-modelo {
   .hoja .mini { font-size: 10.2pt; }
   .hoja table.data { font-size: 9.6pt; margin: 2.5mm 0; border: 1pt solid #000; }
   .hoja table.data th, .hoja table.data td { padding: 1.7mm 2.2mm; vertical-align: top; border-color: #999; }
+  /* El índice es una lista larga: más compacto, para que entre de una */
+  .hoja-indice { font-size: 9.4pt; line-height: 1.32; }
+  .hoja-indice table.data { font-size: 8.9pt; }
+  .hoja-indice table.data th, .hoja-indice table.data td { padding: .9mm 1.6mm; }
+  .hoja-indice p, .hoja-indice li { margin: .7mm 0; }
   .hoja table.data th { background: #eee !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .hoja table.data tr:nth-child(even) td { background: #f7f7f7 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   /* Recuadros con identidad visual: barra lateral gruesa y fondo tenue */
@@ -458,6 +467,7 @@ blockquote.just-modelo {
     background: #fafafa !important;
     -webkit-print-color-adjust: exact; print-color-adjust: exact;
   }
+  .hoja .callout, .hoja .card { break-inside: auto; page-break-inside: auto; }
   .hoja .callout.key { border-left-color: #000; background: #f2f2f2 !important; }
   .hoja .callout.warn { border-left-color: #000; background: #fff !important; border-left-style: double; border-left-width: 4.5pt; }
   .hoja .callout.tip { border-left-color: #777; }
@@ -488,6 +498,9 @@ blockquote.just-modelo {
   .hoja-diag .uml { max-width: 100%; margin: 3mm 0; break-inside: avoid; }
   .hoja-diag .uml pre.mermaid svg { max-height: 95mm !important; width: auto !important; max-width: 100% !important; }
   .hoja-diag .uml-cap { font-size: 8.6pt; font-weight: 700; margin-bottom: 1mm; }
+  /* Los símbolos SVG de notación, grandes en la hoja de diagramas */
+  .hoja-diag .uml-svg { max-height: 52mm; width: auto; max-width: 100%; }
+  .hoja-diag .uml-svg-wrap { background: none; border: none; padding: 0; margin: 2mm 0; }
 
   /* Los modelos HIDRA para imprimir: diagramas más grandes (legibles) */
   .hoja-hidra .uml pre.mermaid svg { max-height: 60mm !important; }
@@ -943,7 +956,12 @@ details.qa > *:not(summary) { font-size: .95rem; }
   .app { grid-template-columns: 1fr; }
   body { background: #fff; color: #000; font-size: 11pt; line-height: 1.4; }
   .content { padding: 0; max-width: 100%; }
-  .card, .callout, .cs-tile, table.data, .uml { break-inside: avoid; page-break-inside: avoid; box-shadow: none; }
+  .card, .callout, .cs-tile, .uml { break-inside: avoid; page-break-inside: avoid; box-shadow: none; }
+  /* Una tabla más alta que una página DEBE poder partirse, si no empuja todo
+     a la página siguiente y deja media hoja vacía. Lo que no se parte es la fila. */
+  table.data { break-inside: auto; page-break-inside: auto; box-shadow: none; }
+  table.data tr, table.data td, table.data th { break-inside: avoid; page-break-inside: avoid; }
+  table.data thead { display: table-header-group; }
   h2 { page-break-after: avoid; }
   .cs-grid { grid-template-columns: repeat(2, 1fr); }
   .hero { background: none !important; color: #000; box-shadow: none; border: 1px solid #000; }

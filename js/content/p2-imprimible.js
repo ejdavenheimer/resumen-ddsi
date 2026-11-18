@@ -31,7 +31,10 @@
             <li>Abrí <b>“Más configuraciones”</b> y activá <b>“Gráficos de fondo”</b>, si no salen los recuadros en blanco.</li>
             <li><b>Guardar.</b> Ya tenés el archivo.</li>
           </ol>
-          <button class="btn" id="p2rpPrint" type="button">📥 Guardar como PDF (A4)</button>
+          <p><a class="btn" href="pdf/DDSI-2P-Resumen-imprimible.pdf" download>⬇️ Descargar el PDF ya armado</a></p>
+          <p class="mini">Ese enlace <b>baja el archivo directo</b>, sin pasar por el diálogo de impresión. Si querés
+          regenerarlo con cambios recientes, usá el botón de abajo.</p>
+          <button class="btn ghost" id="p2rpPrint" type="button">🖨️ Regenerar desde el navegador (A4)</button>
           <p class="mini" style="margin-top:.6rem"><b>Ojo:</b> este botón <b>abre todos los bloques plegados</b> antes
           de generar el PDF, así que las resoluciones salen completas.</p>
         </div>
@@ -40,59 +43,62 @@
           <div class="callout-title">📄 Los modelos de parcial también se descargan</div>
           <p>Cada uno tiene <b>su propio botón</b> adentro, con las <b>soluciones desplegadas</b> y los diagramas
           grandes. Abrí el que quieras y bajalo igual que este:</p>
-          <p><a class="inline" data-go="p2-m1-paquered"><b>📦 Modelo 1 · PaqueRed</b></a> ·
-             <a class="inline" data-go="p2-m2-paquered-b"><b>📦 Modelo 2 · PaqueRed (otro turno)</b></a> ·
-             <a class="inline" data-go="p2-m2-voltared"><b>⚡ Modelo 3 · VoltaRed</b></a></p>
-          <p class="mini">Si ya te generé los PDF, están en la carpeta <code>pdf/</code> del proyecto.</p>
+          <p><b>Descarga directa:</b>
+             <a class="btn sm" href="pdf/DDSI-2P-Modelo-1-PaqueRed.pdf" download>⬇️ Modelo 1 · PaqueRed</a>
+             <a class="btn sm" href="pdf/DDSI-2P-Modelo-2-PaqueRed.pdf" download>⬇️ Modelo 2 · PaqueRed</a>
+             <a class="btn sm" href="pdf/DDSI-2P-Modelo-3-VoltaRed.pdf" download>⬇️ Modelo 3 · VoltaRed</a></p>
+          <p>O abrilos en el sitio: <a class="inline" data-go="p2-m1-paquered"><b>Modelo 1</b></a> ·
+             <a class="inline" data-go="p2-m2-paquered-b"><b>Modelo 2</b></a> ·
+             <a class="inline" data-go="p2-m2-voltared"><b>Modelo 3</b></a></p>
         </div>
 
-        <!-- ===================== HOJA 0 · ÍNDICE ===================== -->
-        <section class="hoja">
-          <span class="hoja-num">HOJA 0 · ÍNDICE — ¿DÓNDE ESTÁ CADA COSA?</span>
+        <!-- ===================== SECCIÓN 0 · ÍNDICE ===================== -->
+        <section class="hoja hoja-indice">
+          <span class="hoja-num">SECCIÓN 0 · ÍNDICE — ¿DÓNDE ESTÁ CADA COSA?</span>
           <div class="table-wrap"><table class="data">
             <thead><tr><th style="width:52%">Si te preguntan…</th><th>Andá a</th></tr></thead>
             <tbody>
-              <tr><td><b>Cómo encarar el parcial, cómo repartir el tiempo</b></td><td><b>HOJA 0 BIS</b></td></tr>
-              <tr><td><b>Preguntas de parciales viejos, ya respondidas</b> (18 por tema)</td><td><b>HOJA 0 TER</b></td></tr>
-              <tr><td><b>Más preguntas reales con su origen</b> · tiempo real · cron · <b>especificar una API REST</b> · diagnóstico</td><td><b>HOJA 0 QUATER</b></td></tr>
-              <tr><td>Qué es persistencia · las 6 estrategias · Repositorio y DAO</td><td>HOJA 1</td></tr>
-              <tr><td>Relación, tupla, grado · PK, FK, índices · <b>cardinalidad y modalidad</b> · N:M</td><td>HOJA 1</td></tr>
-              <tr><td><b>¿Cumple las 3 formas normales?</b> · qué problema hay · <b>frases para responder</b></td><td><b>HOJA 2</b></td></tr>
-              <tr><td><b>Desnormalización:</b> por consistencia o por performance · técnicas · costos</td><td><b>HOJA 3</b></td></tr>
-              <tr><td>ORM · <b>impedance mismatch</b> · hidratación · lazy/eager · cascada · caché del ORM</td><td>HOJA 4</td></tr>
-              <tr><td>Hibernate: annotations · <b>las 4 estrategias de herencia</b></td><td>HOJA 5</td></tr>
-              <tr><td><b>¿Qué base NoSQL propone?</b> · los 6 tipos · persistencia políglota</td><td>HOJA 6</td></tr>
-              <tr><td><b>Armar el DER paso a paso</b> · disparadores · tipos de dato · siglas · justificación</td><td><b>HOJA 7</b></td></tr>
-              <tr><td>Las 6 decisiones de un DER · <b>los 7 errores</b> · checklist</td><td>HOJA 7 BIS</td></tr>
-              <tr><td><b>Qué servicio me tocó</b> (gestión / transaccional / auditoría) y qué entidades buscar</td><td>HOJA 7 TER</td></tr>
-              <tr><td>Sesiones y cookies · <b>stateless vs stateful con diagramas</b> · JWT · 401 vs 403</td><td>HOJA 8</td></tr>
-              <tr><td>Cliente liviano vs pesado · SPA · SEO · escalabilidad · balanceador · caché · CDN</td><td>HOJA 8</td></tr>
-              <tr><td><b>Cómo se dibuja el diagrama</b> · dónde va cada componente · cómo justificarlo</td><td><b>HOJA 8 BIS</b></td></tr>
-              <tr><td>Monolito vs SOA vs microservicios · falacias · Saga · Outbox · <b>nube vs on-premise</b></td><td>HOJA 9</td></tr>
-              <tr><td>Integración: API / cola / BD compartida / Kafka · REST, SOAP, gRPC, GraphQL · resiliencia</td><td>HOJA 10</td></tr>
-              <tr><td>Observabilidad · métricas · logs · trazas · alertas · SLI/SLO · despliegue · DR</td><td>HOJA 11</td></tr>
-              <tr><td><b>“El enunciado dice X, ¿qué respondo?”</b> · frases de justificación · checklist final</td><td><b>HOJA 12</b></td></tr>
-              <tr><td>Glosario de 45 términos · fórmulas · números para recordar</td><td>HOJA 13</td></tr>
+              <tr><td><b>Cómo encarar el parcial, cómo repartir el tiempo</b></td><td><b>SECCIÓN 0 BIS</b></td></tr>
+              <tr><td><b>Preguntas de parciales viejos, ya respondidas</b> (18 por tema)</td><td><b>SECCIÓN 0 TER</b></td></tr>
+              <tr><td><b>Más preguntas reales con su origen</b> · tiempo real · cron · <b>especificar una API REST</b> · diagnóstico</td><td><b>SECCIÓN 0 QUATER</b></td></tr>
+              <tr><td>Qué es persistencia · las 6 estrategias · Repositorio y DAO</td><td>SECCIÓN 1</td></tr>
+              <tr><td>Relación, tupla, grado · PK, FK, índices · <b>cardinalidad y modalidad</b> · N:M</td><td>SECCIÓN 1</td></tr>
+              <tr><td><b>¿Cumple las 3 formas normales?</b> · qué problema hay · <b>frases para responder</b></td><td><b>SECCIÓN 2</b></td></tr>
+              <tr><td><b>Desnormalización:</b> por consistencia o por performance · técnicas · costos</td><td><b>SECCIÓN 3</b></td></tr>
+              <tr><td>ORM · <b>impedance mismatch</b> · hidratación · lazy/eager · cascada · caché del ORM</td><td>SECCIÓN 4</td></tr>
+              <tr><td>Hibernate: annotations · <b>las 4 estrategias de herencia</b></td><td>SECCIÓN 5</td></tr>
+              <tr><td><b>¿Qué base NoSQL propone?</b> · los 6 tipos · persistencia políglota</td><td>SECCIÓN 6</td></tr>
+              <tr><td><b>Armar el DER paso a paso</b> · disparadores · tipos de dato · siglas · justificación</td><td><b>SECCIÓN 7</b></td></tr>
+              <tr><td>Las 6 decisiones de un DER · <b>los 7 errores</b> · checklist</td><td>SECCIÓN 7 BIS</td></tr>
+              <tr><td><b>Qué servicio me tocó</b> (gestión / transaccional / auditoría) y qué entidades buscar</td><td>SECCIÓN 7 TER</td></tr>
+              <tr><td>Sesiones y cookies · <b>stateless vs stateful con diagramas</b> · JWT · 401 vs 403</td><td>SECCIÓN 8</td></tr>
+              <tr><td>Cliente liviano vs pesado · SPA · SEO · escalabilidad · balanceador · caché · CDN</td><td>SECCIÓN 8</td></tr>
+              <tr><td><b>Cómo se dibuja el diagrama</b> · dónde va cada componente · cómo justificarlo</td><td><b>SECCIÓN 8 BIS</b></td></tr>
+              <tr><td>Monolito vs SOA vs microservicios · falacias · Saga · Outbox · <b>nube vs on-premise</b></td><td>SECCIÓN 9</td></tr>
+              <tr><td>Integración: API / cola / BD compartida / Kafka · REST, SOAP, gRPC, GraphQL · resiliencia</td><td>SECCIÓN 10</td></tr>
+              <tr><td>Observabilidad · métricas · logs · trazas · alertas · SLI/SLO · despliegue · DR</td><td>SECCIÓN 11</td></tr>
+              <tr><td><b>“El enunciado dice X, ¿qué respondo?”</b> · frases de justificación · checklist final</td><td><b>SECCIÓN 12</b></td></tr>
+              <tr><td>Glosario de 45 términos · fórmulas · números para recordar</td><td>SECCIÓN 13</td></tr>
             </tbody>
           </table></div>
           <div class="callout key">
-            <div class="callout-title">LAS 4 HOJAS QUE MÁS VAS A USAR</div>
-            <p><b>HOJA 12</b> (el enunciado dice X → respondé Y) · <b>HOJA 7</b> (armar el DER) ·
-            <b>HOJA 2</b> (formas normales) · <b>HOJA 8 BIS</b> (cómo dibujar la arquitectura).
+            <div class="callout-title">LAS 4 SECCIONES QUE MÁS VAS A USAR</div>
+            <p><b>SECCIÓN 12</b> (el enunciado dice X → respondé Y) · <b>SECCIÓN 7</b> (armar el DER) ·
+            <b>SECCIÓN 2</b> (formas normales) · <b>SECCIÓN 8 BIS</b> (cómo dibujar la arquitectura).
             <b>Marcalas con un doblez en la esquina antes de entrar.</b></p>
           </div>
         </section>
 
-        <!-- ===================== HOJA 0 BIS ===================== -->
+        <!-- ===================== SECCIÓN 0 BIS ===================== -->
         <section class="hoja">
-          <span class="hoja-num">HOJA 0 BIS · CÓMO RESPONDER EL PARCIAL</span>
+          <span class="hoja-num">SECCIÓN 0 BIS · CÓMO RESPONDER EL PARCIAL</span>
 
           <h3>Lo primero, apenas te lo dan</h3>
           <ol>
             <li><b>Leé el enunciado entero sin escribir nada.</b></li>
             <li><b>Mirá el puntaje de cada punto y repartí el tiempo.</b> Si Datos vale 40 y Arquitectura 50, no puede pasar que llegues con 10 minutos a arquitectura.</li>
             <li><b>Se exige no menos del 50% en CADA sección.</b> Una sección en blanco desaprueba el parcial entero, aunque las otras estén perfectas. <b>Mejor tres respuestas buenas que una excelente y dos vacías.</b></li>
-            <li>En la segunda lectura, <b>subrayá las frases que disparan decisiones</b> (hoja 7 y hoja 12).</li>
+            <li>En la segunda lectura, <b>subrayá las frases que disparan decisiones</b> (sección 7 y sección 12).</li>
           </ol>
 
           <h3>El molde que sirve para CUALQUIER punto de arquitectura</h3>
@@ -131,9 +137,9 @@
           </ul>
         </section>
 
-        <!-- ===================== HOJA 0 TER ===================== -->
+        <!-- ===================== SECCIÓN 0 TER ===================== -->
         <section class="hoja">
-          <span class="hoja-num">HOJA 0 TER · PREGUNTAS DE PARCIALES, YA RESPONDIDAS</span>
+          <span class="hoja-num">SECCIÓN 0 TER · PREGUNTAS DE PARCIALES, YA RESPONDIDAS</span>
           <p>Preguntas textuales de los parciales y finales de la cátedra, con la respuesta armada. <b>Buscá la que se
           parezca a la tuya y adaptá.</b></p>
 
@@ -165,7 +171,7 @@
           <div class="table-wrap"><table class="data">
             <thead><tr><th style="width:38%">Pregunta</th><th>Respuesta</th></tr></thead>
             <tbody>
-              <tr><td><b>“¿Cómo aplicaría JWT y qué ventajas tiene frente a la sesión?”</b></td><td>El usuario se autentica una vez contra el <b>IdM</b>, que devuelve un <b>JWT firmado</b> con id, roles y expiración; el cliente lo manda en <code>Authorization: Bearer</code> en cada request y el <b>API Gateway</b> valida la firma y propaga la identidad. <b>Ventajas:</b> escalado horizontal <b>sin sticky sessions</b>, sirve para web/mobile/terceros, autocontenido (sin viaje a la base), desacopla la autenticación y usa menos memoria. <b>Desventajas:</b> no se revoca fácil (expiración corta + refresh token), viaja en cada request y el payload <b>es legible</b>. <b>Ver hoja 8.</b></td></tr>
+              <tr><td><b>“¿Cómo aplicaría JWT y qué ventajas tiene frente a la sesión?”</b></td><td>El usuario se autentica una vez contra el <b>IdM</b>, que devuelve un <b>JWT firmado</b> con id, roles y expiración; el cliente lo manda en <code>Authorization: Bearer</code> en cada request y el <b>API Gateway</b> valida la firma y propaga la identidad. <b>Ventajas:</b> escalado horizontal <b>sin sticky sessions</b>, sirve para web/mobile/terceros, autocontenido (sin viaje a la base), desacopla la autenticación y usa menos memoria. <b>Desventajas:</b> no se revoca fácil (expiración corta + refresh token), viaja en cada request y el payload <b>es legible</b>. <b>Ver sección 8.</b></td></tr>
               <tr><td><b>“¿Qué componente propone para el inicio de sesión?”</b></td><td><b>IdM / IdP con SSO</b> (Keycloak, Auth0, Entra ID), con <b>MFA</b> para usuarios internos y <b>login federado por OpenID Connect</b> si los usuarios entran sólo para eso. Se delega la custodia de credenciales, se gana usabilidad y el backend queda <b>stateless</b> validando el token. <b>El IdP es crítico:</b> necesita alta disponibilidad.</td></tr>
               <tr><td><b>“¿Qué mecanismos garantizan la confidencialidad de datos sensibles?”</b></td><td><b>TLS</b> en tránsito (también interno) · <b>cifrado en reposo</b> y por columna para los campos sensibles, con claves en una <b>bóveda</b> y rotación · contraseñas <b>hasheadas con salt</b> · <b>control de acceso por roles y permisos con alcance</b>, validado en el backend · <b>minimización</b> y enmascaramiento · <b>anonimizar</b> antes de copiar a testing (Ley 25.326) · <b>auditoría</b> de accesos.</td></tr>
               <tr><td><b>“¿Y la integridad?”</b></td><td><b>Hash/checksum</b> del contenido · <b>firma digital o HMAC</b> del documento generado · constraints e <b>integridad referencial</b> en la base · transacciones · y un <b>log de auditoría append-only</b>.</td></tr>
@@ -177,9 +183,9 @@
           </table></div>
         </section>
 
-        <!-- ===================== HOJA 0 QUATER ===================== -->
+        <!-- ===================== SECCIÓN 0 QUATER ===================== -->
         <section class="hoja">
-          <span class="hoja-num">HOJA 0 QUATER · MÁS PREGUNTAS REALES, CON SU ORIGEN</span>
+          <span class="hoja-num">SECCIÓN 0 QUATER · MÁS PREGUNTAS REALES, CON SU ORIGEN</span>
           <p>Estas aparecieron <b>textualmente</b> en los finales y parciales de la carpeta. La columna de la derecha
           dice en cuál.</p>
 
@@ -243,26 +249,26 @@
               </tr>
               <tr>
                 <td><b>“Elabore un diagrama de COMPONENTES de la arquitectura de microservicios.”</b></td>
-                <td>Ojo con la diferencia: el de <b>componentes</b> muestra <b>qué piezas de software hay y cómo se conectan</b> (con <b>bolita ● provista</b> y <b>semicírculo ( requerida</b>); el de <b>despliegue</b> muestra <b>en qué nodos corren</b> (cubos, con el protocolo en cada línea). Para microservicios dibujá: <b>clientes → API Gateway → un componente por servicio</b> (cada uno con <b>su propia base</b>) <b>→ broker</b> con los consumidores, más los <b>transversales</b> (IdM/SSO, observabilidad, secretos) y los <b>externos</b> marcados como tales. <b>Ver hoja 8 BIS.</b></td>
+                <td>Ojo con la diferencia: el de <b>componentes</b> muestra <b>qué piezas de software hay y cómo se conectan</b> (con <b>bolita ● provista</b> y <b>semicírculo ( requerida</b>); el de <b>despliegue</b> muestra <b>en qué nodos corren</b> (cubos, con el protocolo en cada línea). Para microservicios dibujá: <b>clientes → API Gateway → un componente por servicio</b> (cada uno con <b>su propia base</b>) <b>→ broker</b> con los consumidores, más los <b>transversales</b> (IdM/SSO, observabilidad, secretos) y los <b>externos</b> marcados como tales. <b>Ver sección 8 BIS.</b></td>
                 <td>finales</td>
               </tr>
               <tr>
                 <td><b>“Explique diferencias, ventajas y desventajas entre monolítica y microservicios. Elija una y justifique con atributos de calidad.”</b></td>
-                <td>La tabla comparativa está en la <b>hoja 9</b>. <b>Lo que se evalúa es la elección justificada</b>, no recitar: tomá los datos del enunciado (tamaño del equipo, plazo, si los límites del dominio están claros, si la carga es pareja o asimétrica, si hace falta consistencia transaccional) y <b>cerrá con qué evidencia te haría cambiar de opinión</b>. Si el equipo es chico y el plazo corto → <b>monolito modular</b> (“Monolith First”), aclarando que <b>igual escala horizontalmente</b> si es stateless.</td>
+                <td>La tabla comparativa está en la <b>sección 9</b>. <b>Lo que se evalúa es la elección justificada</b>, no recitar: tomá los datos del enunciado (tamaño del equipo, plazo, si los límites del dominio están claros, si la carga es pareja o asimétrica, si hace falta consistencia transaccional) y <b>cerrá con qué evidencia te haría cambiar de opinión</b>. Si el equipo es chico y el plazo corto → <b>monolito modular</b> (“Monolith First”), aclarando que <b>igual escala horizontalmente</b> si es stateless.</td>
                 <td>final</td>
               </tr>
               <tr>
                 <td><b>“¿Qué atributos de calidad se ven vinculados en esta integración? Defina cada uno.”</b></td>
-                <td><b>Ojo: pide definirlos.</b> Nombrá sólo los que aplican y definilos en una línea (están en la <b>hoja 0 BIS</b>). Para una integración con un externo inestable, los tres son: <b>Disponibilidad</b> (proporción del tiempo operativo: si el externo cae, mi sistema <b>sigue</b> gracias al circuit breaker y el fallback), <b>Performance</b> (responder en el tiempo esperado: el timeout evita que su lentitud se contagie) y <b>Tolerancia a fallos</b> (seguir operando ante la falla de un componente: reintentos, degradación e idempotencia).</td>
+                <td><b>Ojo: pide definirlos.</b> Nombrá sólo los que aplican y definilos en una línea (están en la <b>sección 0 BIS</b>). Para una integración con un externo inestable, los tres son: <b>Disponibilidad</b> (proporción del tiempo operativo: si el externo cae, mi sistema <b>sigue</b> gracias al circuit breaker y el fallback), <b>Performance</b> (responder en el tiempo esperado: el timeout evita que su lentitud se contagie) y <b>Tolerancia a fallos</b> (seguir operando ante la falla de un componente: reintentos, degradación e idempotencia).</td>
                 <td>final 15-02-25</td>
               </tr>
             </tbody>
           </table></div>
         </section>
 
-        <!-- ===================== HOJA 1 ===================== -->
+        <!-- ===================== SECCIÓN 1 ===================== -->
         <section class="hoja">
-          <span class="hoja-num">HOJA 1 · PERSISTENCIA + MODELO RELACIONAL</span>
+          <span class="hoja-num">SECCIÓN 1 · PERSISTENCIA + MODELO RELACIONAL</span>
           <p class="mini"><b>Persistencia:</b> que el <b>estado del sistema sobreviva más allá del proceso que lo creó</b> (más allá de una única ejecución), almacenándolo en un medio persistente.</p>
           <div class="table-wrap"><table class="data">
             <thead><tr><th>Estrategia</th><th>Qué es</th><th>✅ / ⚠️</th></tr></thead>
@@ -320,9 +326,9 @@
           </div>
 </section>
 
-        <!-- ===================== HOJA 2 ===================== -->
+        <!-- ===================== SECCIÓN 2 ===================== -->
         <section class="hoja">
-          <span class="hoja-num">HOJA 2 · LAS 3 FORMAS NORMALES, EN CRIOLLO</span>
+          <span class="hoja-num">SECCIÓN 2 · LAS 3 FORMAS NORMALES, EN CRIOLLO</span>
           <p class="mini"><b>Normalizar</b> es acomodar las tablas para que <b>cada dato esté escrito en un solo lugar</b>. Si un dato está repetido en muchas filas, tarde o temprano alguien lo cambia en una y se olvida de las otras: ahí el sistema empieza a tener <b>dos verdades</b>. Las tres formas normales son <b>tres preguntas</b> que le hacés a cada tabla, en orden. <b>Sirve para escribir bien, no para leer rápido:</b> el precio de tener todo ordenado es más tablas y más JOINs.</p>
 
           <h3>1FN — “un solo dato por casillero”</h3>
@@ -432,7 +438,7 @@
             </table></div>
             <p class="mini"><b>Preguntale a cada columna de quién habla:</b> <code>nombre</code> habla <b>del empleado</b> ✅. <code>piso</code>… <b>no es el piso de Ana: es el piso del departamento</b> ❌. Y se nota a simple vista: “Sistemas / 3” está copiado en todas las filas. La cadena es <code>legajo → cod_depto → piso</code>: el piso depende de <b>algo que no es la clave</b>.</p>
             <p class="mini"><b>✅ BIEN:</b> <code>EMPLEADO(legajo, nombre, cod_depto)</code> + <code>DEPARTAMENTO(cod_depto, nombre, piso)</code>. El piso queda escrito <b>una sola vez</b>.</p>
-            <p class="mini"><b>El otro caso de 3FN: los datos que se pueden calcular.</b> <code>subtotal = cantidad × precio</code>, <code>total = neto + iva</code>, <code>edad</code> (sale de la fecha de nacimiento), <code>cantidad_de_items</code> (es un COUNT). <b>Si se puede calcular, no se guarda</b> — salvo que lo justifiques como desnormalización (hoja 3).</p>
+            <p class="mini"><b>El otro caso de 3FN: los datos que se pueden calcular.</b> <code>subtotal = cantidad × precio</code>, <code>total = neto + iva</code>, <code>edad</code> (sale de la fecha de nacimiento), <code>cantidad_de_items</code> (es un COUNT). <b>Si se puede calcular, no se guarda</b> — salvo que lo justifiques como desnormalización (sección 3).</p>
           </div>
 
           <h3>Qué pasa si lo dejás mal: las 3 anomalías</h3>
@@ -518,9 +524,9 @@
           <p class="mini"><b>BCNF</b>, por si la nombran: es un ajuste fino de la 3FN para tablas con <b>varias claves candidatas superpuestas</b> — pide que <b>todo lo que determina a otro dato sea una clave</b>. Prácticamente no cae en el parcial: si llegaste a 3FN limpia, decí que también cumple BCNF.</p>
         </section>
 
-        <!-- ===================== HOJA 3 ===================== -->
+        <!-- ===================== SECCIÓN 3 ===================== -->
         <section class="hoja">
-          <span class="hoja-num">HOJA 3 · DESNORMALIZACIÓN</span>
+          <span class="hoja-num">SECCIÓN 3 · DESNORMALIZACIÓN</span>
           <p class="mini"><b>Definición:</b> decisión de diseño <b>consciente</b> de introducir <b>redundancia controlada</b> en un modelo <b>previamente normalizado</b> —replicando o derivando atributos— para satisfacer un requerimiento que el modelo normalizado no puede cumplir: <b>preservar la consistencia histórica</b> o <b>alcanzar la performance</b> que el negocio exige. <b>No es un error ni un atajo:</b> se toma después de normalizar, se documenta y se justifica. <b>“Desnormalizar sin haber normalizado antes no es desnormalizar: es modelar mal.”</b></p>
           <div class="table-wrap"><table class="data">
             <thead><tr><th>Criterio</th><th>Normalizado</th><th>Desnormalizado</th></tr></thead>
@@ -562,9 +568,9 @@
           <p class="mini"><b>BUENAS PRÁCTICAS:</b> documentar la decisión y declarar la <b>fuente de verdad</b> · <b>conservar la FK</b> original · prever un <b>proceso de recálculo</b> y reconciliación (<b>todo dato derivado debe ser reconstruible</b>) · <b>monitorear la divergencia</b> · acotar y hacer explícita la ventana · <b>encapsular la actualización en un único punto</b> del código.</p>
         </section>
 
-        <!-- ===================== HOJA 4 ===================== -->
+        <!-- ===================== SECCIÓN 4 ===================== -->
         <section class="hoja">
-          <span class="hoja-num">HOJA 4 · ORM E IMPEDANCE MISMATCH</span>
+          <span class="hoja-num">SECCIÓN 4 · ORM E IMPEDANCE MISMATCH</span>
 
           <div class="callout key">
             <div class="callout-title">PRIMERO: ¿cuál es el problema? (sin palabras raras)</div>
@@ -652,9 +658,9 @@
           <p class="mini"><b>Estrategias de concurrencia (2do nivel):</b> <b>READ_ONLY</b> (entidades que nunca cambian; muy adecuada) · <b>NONSTRICT_READ_WRITE</b> (se actualiza <b>después</b> del commit; <b>pequeña ventana de datos obsoletos</b>; tolera inconsistencia mínima) · <b>READ_WRITE</b> (<b>consistencia fuerte</b> con <b>bloqueos “suaves”</b>; las transacciones concurrentes sobre registros bloqueados <b>van al medio persistente</b>). <b>Representación interna:</b> no se guardan objetos sino <b>su estado</b>; <b>no</b> se guardan atributos transitorios; <b>no</b> se guardan colecciones (salvo que se explicite); en relaciones <b>xToOne sólo el id</b>.</p>
         </section>
 
-        <!-- ===================== HOJA 5 ===================== -->
+        <!-- ===================== SECCIÓN 5 ===================== -->
         <section class="hoja">
-          <span class="hoja-num">HOJA 5 · HIBERNATE Y MAPEO DE HERENCIA</span>
+          <span class="hoja-num">SECCIÓN 5 · HIBERNATE Y MAPEO DE HERENCIA</span>
           <div class="table-wrap"><table class="data">
             <thead><tr><th>Annotation</th><th>Equivale a</th></tr></thead>
             <tbody>
@@ -720,9 +726,9 @@
           </div>
 </section>
 
-        <!-- ===================== HOJA 6 ===================== -->
+        <!-- ===================== SECCIÓN 6 ===================== -->
         <section class="hoja">
-          <span class="hoja-num">HOJA 6 · NOSQL Y PERSISTENCIA POLÍGLOTA</span>
+          <span class="hoja-num">SECCIÓN 6 · NOSQL Y PERSISTENCIA POLÍGLOTA</span>
           <h3>SQL vs NoSQL: la comparación que puede caer como pregunta</h3>
           <div class="table-wrap"><table class="data">
             <thead><tr><th style="width:19%"></th><th>RELACIONAL (SQL)</th><th>NO RELACIONAL (NoSQL)</th></tr></thead>
@@ -787,9 +793,9 @@
           </div>
 </section>
 
-        <!-- ===================== HOJA 7 ===================== -->
+        <!-- ===================== SECCIÓN 7 ===================== -->
         <section class="hoja">
-          <span class="hoja-num">HOJA 7 · CÓMO ARMAR EL MODELO DE DATOS (40 pts)</span>
+          <span class="hoja-num">SECCIÓN 7 · CÓMO ARMAR EL MODELO DE DATOS (40 pts)</span>
 
           <p><b>Lo que piden, textual, todos los años:</b> “indicando las entidades con sus respectivos campos,
           <b>claves primarias</b>, <b>foráneas</b>, <b>cardinalidad</b>, <b>modalidad</b> y <b>restricciones</b> según
@@ -905,9 +911,9 @@
           <p>Nada tachado, ninguna nota suelta al margen. <b>El corrector corrige lo que ve.</b></p>
         </section>
 
-        <!-- ===================== HOJA 7 BIS ===================== -->
+        <!-- ===================== SECCIÓN 7 BIS ===================== -->
         <section class="hoja">
-          <span class="hoja-num">HOJA 7 BIS · LAS 6 DECISIONES Y LOS 7 ERRORES</span>
+          <span class="hoja-num">SECCIÓN 7 BIS · LAS 6 DECISIONES Y LOS 7 ERRORES</span>
 
           <h3>Las 6 decisiones de un DER de gestión (es el que más se toma)</h3>
           <div class="table-wrap"><table class="data">
@@ -947,9 +953,9 @@
           </ul>
         </section>
 
-        <!-- ===================== HOJA 7 TER ===================== -->
+        <!-- ===================== SECCIÓN 7 TER ===================== -->
         <section class="hoja">
-          <span class="hoja-num">HOJA 7 TER · LOS 3 TIPOS DE SERVICIO (te toca uno de estos)</span>
+          <span class="hoja-num">SECCIÓN 7 TER · LOS 3 TIPOS DE SERVICIO (te toca uno de estos)</span>
           <p class="mini">Los enunciados describen <b>tres servicios con su propia base</b> y te piden el DER de <b>uno</b>. Siempre son las mismas tres familias. <b>Identificá cuál te tocó y ya sabés qué entidades buscar.</b></p>
           <div class="table-wrap"><table class="data">
             <thead><tr><th></th><th>① GESTIÓN / RED<br><span class="mini">infraestructura, maestros</span></th><th>② TRANSACCIONAL<br><span class="mini">la operación del negocio</span></th><th>③ OPERACIÓN / AUDITORÍA<br><span class="mini">eventos y métricas</span></th></tr></thead>
@@ -970,9 +976,9 @@
           <p class="mini"><b>Si el enunciado pide UN DIAGRAMA POR SERVICIO:</b> hacelos <b>separados</b> y marcá las referencias cruzadas como <b>ID lógico</b>, no como FK. Escribilo: “<i>no hay integridad referencial entre servicios; la validación es responsabilidad de la aplicación</i>”. Es una línea y vale puntos.</p>
         </section>
 
-        <!-- ===================== HOJA 8 ===================== -->
+        <!-- ===================== SECCIÓN 8 ===================== -->
         <section class="hoja hoja-diag">
-          <span class="hoja-num">HOJA 8 · ARQUITECTURA WEB II: SESIONES, CLIENTES, ESCALAR</span>
+          <span class="hoja-num">SECCIÓN 8 · ARQUITECTURA WEB II: SESIONES, CLIENTES, ESCALAR</span>
           <p class="mini"><b>Cookie:</b> archivo de datos <b>creado por el servidor</b> pero <b>almacenado en el cliente</b>; <b>viaja al servidor que la creó en cada request</b>; sirve para <b>identificar y reconocer</b> al usuario. (HttpOnly, Secure, SameSite.)</p>
           <div class="table-wrap"><table class="data">
             <thead><tr><th></th><th>STATELESS</th><th>STATEFUL</th></tr></thead>
@@ -1142,7 +1148,7 @@
               <tr><td><b>Compartida</b></td><td>Un <b>proxy</b> de la empresa o del ISP</td><td>Compartida entre varios usuarios de esa red</td></tr>
               <tr><td><b>Compartida administrada</b></td><td>Los nodos de una <b>CDN</b></td><td>Sirve a millones de usuarios en todo el mundo</td></tr>
               <tr><td><b>De aplicación</b></td><td><b>Redis / Memcached</b>, al lado del servicio</td><td>Evita <b>recalcular o reconsultar la base</b>; compartida por todas las instancias</td></tr>
-              <tr><td><b>Del ORM</b></td><td>Dentro de Hibernate</td><td>1er nivel = la <b>sesión</b> · 2do nivel = la <b>SessionFactory</b> (ver hoja 4)</td></tr>
+              <tr><td><b>Del ORM</b></td><td>Dentro de Hibernate</td><td>1er nivel = la <b>sesión</b> · 2do nivel = la <b>SessionFactory</b> (ver sección 4)</td></tr>
             </tbody>
           </table></div>
           <p><b>Cabeceras HTTP (si piden la especificación):</b> <code>Cache-Control: max-age=N</code> (TTL para
@@ -1212,9 +1218,9 @@
           <p class="mini"><b>Algoritmos de balanceo (lista completa):</b> <b>Round Robin</b> (uno por uno; servidores iguales) · <b>Weighted Round Robin</b> (los más potentes reciben más) · <b>Least Connections</b> (menos conexiones activas; requests de duración variable) · <b>Least Response Time</b> (al más rápido; optimizar latencia) · <b>IP Hash</b> (hash de la IP → siempre el mismo servidor; afinidad) · <b>Sticky sessions</b> (política, no algoritmo). <b>⚠️ Si hay un solo balanceador, él mismo es el punto único de falla: hay que redundarlo.</b></p>
         </section>
 
-        <!-- ===================== HOJA 8 BIS ===================== -->
+        <!-- ===================== SECCIÓN 8 BIS ===================== -->
         <section class="hoja hoja-diag">
-          <span class="hoja-num">HOJA 8 BIS · EL DIAGRAMA DE ARQUITECTURA: CÓMO SE DIBUJA</span>
+          <span class="hoja-num">SECCIÓN 8 BIS · EL DIAGRAMA DE ARQUITECTURA: CÓMO SE DIBUJA</span>
 
           <h3>Las 3 reglas que el corrector busca en el dibujo</h3>
           <ol>
@@ -1222,6 +1228,36 @@
             <li><b>Lo externo marcado como externo</b> — pasarela de pago, ARCA, proveedor de mail, IdP. Y todo lo externo entra al dominio por un <b>Adapter</b>.</li>
             <li><b>Título y leyenda:</b> el diagrama tiene que <b>poder leerse solo</b>, sin que vos lo expliques al lado.</li>
           </ol>
+
+          <h3>Los símbolos, dibujados</h3>
+          <p><b>Nodo de despliegue = cubo 3D</b>, con el estereotipo arriba y el artefacto adentro. Es lo que va en el
+          <b>diagrama de despliegue</b>:</p>
+          ${APP.svgNodo("server", "Servidor de aplicación", "paquered.jar")}
+          <p><b>Componente = rectángulo con las dos pestañas</b>. Es lo que va en el <b>diagrama de componentes</b>:</p>
+          ${APP.svgComponente("Servicio de Envíos")}
+          <p><b>Ensamble bola-socket:</b> así se dibuja quién <b>consume</b> y quién <b>provee</b> una interfaz. <b>El
+          semicírculo del que consume abraza la bolita del que provee</b>:</p>
+          ${APP.svgBallSocket("Servicio Envíos", "Servicio Red", "IConsultaCasilleros")}
+          <p class="mini"><b>Regla para no equivocarte:</b> si el enunciado pide <b>despliegue</b>, dibujá
+          <b>cubos</b> (dónde corre cada cosa) con el <b>protocolo</b> en cada línea. Si pide <b>componentes</b>,
+          dibujá <b>cajas con pestañas</b> unidas por <b>bola y socket</b> (quién usa a quién). <b>No son
+          intercambiables</b> y es un descuento clásico.</p>
+
+          <h3>Diagrama de componentes de microservicios (el otro que piden)</h3>
+          ${APP.uml(`graph LR
+    W["«component»<br/>SPA Web"] --> GW["«component»<br/>API Gateway"]
+    M["«component»<br/>App Mobile"] --> GW
+    GW -->|IEnvios| S1["«component»<br/>Servicio Envíos"]
+    GW -->|IRed| S2["«component»<br/>Servicio Red y Lockers"]
+    GW -->|IAuditoria| S3["«component»<br/>Servicio Auditoría"]
+    S1 --> D1[("BD Envíos")]
+    S2 --> D2[("BD Red")]
+    S3 --> D3[("TSDB")]
+    S1 -->|publica| BK[("Broker")]
+    BK --> N["«component»<br/>Notificaciones"]
+    N -->|ISmtp| EXT["Proveedor mail<br/>«externo»"]
+    style GW fill:#e0f2fe,stroke:#0284c7,color:#0f172a
+    style BK fill:#fffbeb,stroke:#b45309,color:#0f172a`, "Componentes: qué piezas hay y qué interfaz usa cada una")}
 
           <h3>Cómo se dibuja cada cosa (notación)</h3>
           <div class="table-wrap"><table class="data">
@@ -1312,9 +1348,9 @@
           no justificado <b>no suma</b>; y uno de más, <b>resta</b> (sobreingeniería).</p>
         </section>
 
-        <!-- ===================== HOJA 9 ===================== -->
+        <!-- ===================== SECCIÓN 9 ===================== -->
         <section class="hoja">
-          <span class="hoja-num">HOJA 9 · MONOLITO · SOA · MICROSERVICIOS · NUBE</span>
+          <span class="hoja-num">SECCIÓN 9 · MONOLITO · SOA · MICROSERVICIOS · NUBE</span>
           <p class="mini"><b>Monolito:</b> todas las responsabilidades se <b>construyen, versionan y despliegan como una única unidad</b>; módulos en <b>memoria</b>, una sola base. <b>Lo que lo define no es el tamaño, es que TODO SE DESPLIEGA JUNTO.</b> Pregunta guía: ¿puedo desplegar un cambio en Facturación sin desplegar Ventas? <b>Separar el frontend NO lo convierte en distribuido:</b> la pregunta es cuántas <b>unidades de despliegue</b> tiene el <b>backend</b>. <b>Capas ≠ despliegue:</b> las capas mejoran mantenibilidad y testeabilidad pero <b>no cambian cómo se escala ni se despliega</b>.</p>
           <div class="grid-2">
             <div class="card">
@@ -1485,9 +1521,9 @@
           licencias), no el precio del servidor.</p>
         </section>
 
-        <!-- ===================== HOJA 10 ===================== -->
+        <!-- ===================== SECCIÓN 10 ===================== -->
         <section class="hoja">
-          <span class="hoja-num">HOJA 10 · INTEGRACIÓN DE SISTEMAS</span>
+          <span class="hoja-num">SECCIÓN 10 · INTEGRACIÓN DE SISTEMAS</span>
           <p class="mini"><b>Integrar</b> = que dos sistemas se hablen: compartir datos y funcionalidades <b>sin copiar todo</b>. <b>Hay que acordar un CONTRATO</b>: qué se pide, en qué formato, qué se responde y cómo viaja. <b>Por qué:</b> no reescribir lo resuelto, <b>consultar no copiar</b>, necesidades del negocio y <b>marco legal</b> (ARCA). <b>Sincrónica</b> = llamada telefónica (A espera; ambos disponibles a la vez; si B no atiende, A falla). <b>Asincrónica</b> = WhatsApp (A deja el mensaje y sigue; B procesa cuando puede). <b>Pregunta clave: ¿quien llama NECESITA la respuesta para continuar? Si no → asincrónico.</b></p>
           <div class="table-wrap"><table class="data">
             <thead><tr><th></th><th>REST</th><th>SOAP</th><th>GraphQL</th><th>gRPC</th></tr></thead>
@@ -1580,9 +1616,9 @@
           </ul>
         </section>
 
-        <!-- ===================== HOJA 11 ===================== -->
+        <!-- ===================== SECCIÓN 11 ===================== -->
         <section class="hoja">
-          <span class="hoja-num">HOJA 11 · OBSERVABILIDAD · INFRA · DESPLIEGUE · COMPONENTES</span>
+          <span class="hoja-num">SECCIÓN 11 · OBSERVABILIDAD · INFRA · DESPLIEGUE · COMPONENTES</span>
           <div class="table-wrap"><table class="data">
             <thead><tr><th></th><th>MONITOREO</th><th>OBSERVABILIDAD</th></tr></thead>
             <tbody>
@@ -1676,9 +1712,9 @@
           <p class="mini"><b>Componentes:</b> <b>DNS</b> (nombre→IP, cacheado por <b>TTL</b>; failover, geo-routing, ponderado; TTL alto = mejor performance pero <b>conmutación más lenta</b>) · <b>Proxy directo</b> (en nombre de los <b>clientes</b>; filtrado corporativo) vs. <b>Proxy reverso</b> (en nombre de los <b>servidores</b>; terminación TLS, caché, oculta la topología; <b>base del LB, el API Gateway y el WAF</b>) · <b>IAM/IDM</b> (identidades, roles y permisos centralizados: <b>altas y bajas en un lugar</b>) · <b>SSO</b> (autenticarse <b>una vez</b> para varias apps; OAuth2/OIDC/SAML; <b>el IdP es crítico</b>) · <b>MFA</b> · <b>WAF</b> (bloquea <b>OWASP Top 10</b>, rate limiting, <b>parches virtuales</b>) · <b>Secretos</b> (<b>nunca en el repo</b>: queda en el historial; bóveda con acceso, auditoría y <b>rotación</b>; inyectados por variables de entorno).</p>
         </section>
 
-        <!-- ===================== HOJA 12 ===================== -->
+        <!-- ===================== SECCIÓN 12 ===================== -->
         <section class="hoja">
-          <span class="hoja-num">HOJA 12 · SÍNTOMA → RESPUESTA + FRASES + CHECKLIST</span>
+          <span class="hoja-num">SECCIÓN 12 · SÍNTOMA → RESPUESTA + FRASES + CHECKLIST</span>
           <div class="table-wrap"><table class="data">
             <thead><tr><th>Si el enunciado dice…</th><th>Respondé</th><th>Atributos</th></tr></thead>
             <tbody>
@@ -1716,9 +1752,9 @@
           <p class="mini"><b>CHECKLIST FINAL:</b> ☐ Repartí el tiempo <b>por puntaje</b> y <b>ninguna sección quedó en blanco</b> (se exige ≥50% en cada una) ☐ Escribí <b>supuestos</b> ☐ Todo decidido está <b>justificado por escrito</b> ☐ Nombré <b>y definí</b> los atributos de calidad ☐ Los diagramas tienen <b>título, leyenda y todas las flechas rotuladas con su protocolo</b> (HTTPS, AMQP, MQTT, JDBC) y lo <b>externo</b> marcado ☐ En el modelo de datos: <b>PK, FK, cardinalidad, modalidad, restricciones</b> ☐ N:M con <b>tabla intermedia</b> ☐ Ningún atributo <b>multivaluado</b> ☐ Herencia <b>elegida y justificada</b> ☐ Los <b>3 párrafos</b> (persistir / impedance / desnormalizar) ☐ Releí el enunciado buscando requerimientos que no aparezcan en mi solución.</p>
         </section>
 
-        <!-- ===================== HOJA 13 ===================== -->
+        <!-- ===================== SECCIÓN 13 ===================== -->
         <section class="hoja">
-          <span class="hoja-num">HOJA 13 · GLOSARIO EXPRESS · FÓRMULAS · NÚMEROS</span>
+          <span class="hoja-num">SECCIÓN 13 · GLOSARIO EXPRESS · FÓRMULAS · NÚMEROS</span>
           <div class="grid-2">
             <div class="card">
               <p class="mini"><b>ACID</b> — Atomicidad, Consistencia, Aislamiento, Durabilidad: garantías de una transacción <b>local</b>.<br>

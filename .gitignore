@@ -6,6 +6,10 @@
 *.docx
 *.key
 
+# Excepción: los PDF que generamos nosotros SÍ se publican, para poder bajarlos
+!pdf/
+!pdf/*.pdf
+
 # Fotos y audios de parciales compartidos por compañeros — NO publicar
 *.jpg
 *.jpeg

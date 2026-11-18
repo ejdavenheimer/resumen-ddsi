@@ -644,7 +644,25 @@
               <tr><td>Identificación</td><td><b>En cada solicitud</b>, con un <b>token</b> que el servidor <b>decodifica</b></td><td><b>Una sola vez</b>; el servidor crea un espacio con un <b>id</b> y lo setea en la <b>cookie</b>; luego recupera la sesión por ese id</td></tr>
             </tbody>
           </table></div>
-          <p class="mini"><b>JWT</b> = header.payload.<b>firma</b> (claims: sub, roles, iat, <b>exp</b>). Viaja en <code>Authorization: Bearer</code>. <b>Ventajas vs. sesión:</b> ① <b>escalabilidad horizontal</b> real (servidor stateless → <b>sin sticky sessions</b> ni almacén compartido) ② sirve igual para <b>web, mobile y terceros</b> ③ <b>autocontenido</b>: sin viaje extra a la base ④ <b>desacopla la autenticación</b> (SSO/IDM, microservicios) ⑤ menos memoria en el servidor. <b>Desventajas:</b> <b>no se revoca fácil</b> (vale hasta expirar → expiración corta + <b>refresh token</b> + lista de revocación), viaja en cada request, el <b>payload es legible</b> (firmado, no cifrado: sin datos sensibles), permisos viejos hasta que expire.</p>
+          <h3>JWT (JSON Web Token)</h3>
+          <p><b>Qué es:</b> <code>header . payload . firma</code>. En el payload van los <i>claims</i>:
+          <code>sub</code> (quién), <code>roles</code>, <code>iat</code> (emitido) y <code>exp</code> (expira).
+          Viaja en el header <code>Authorization: Bearer &lt;token&gt;</code> en <b>cada</b> request.</p>
+          <p><b>✅ Ventajas frente a la sesión de servidor</b></p>
+          <ol>
+            <li><b>Escalabilidad horizontal real:</b> el servidor queda <b>stateless</b>, así que cualquier instancia atiende cualquier request → <b>no hacen falta sticky sessions</b> ni un almacén de sesiones compartido.</li>
+            <li><b>Sirve igual para todos los clientes:</b> web, mobile y terceros. Las apps mobile no manejan cookies de forma natural; un token sí.</li>
+            <li><b>Es autocontenido:</b> lleva identidad y roles, así que <b>no hay un viaje extra a la base</b> en cada request.</li>
+            <li><b>Desacopla la autenticación</b> del negocio: encaja con <b>SSO / IDM</b> y con microservicios.</li>
+            <li><b>Menos memoria en el servidor:</b> no se reserva un espacio por usuario conectado.</li>
+          </ol>
+          <p><b>⚠️ Desventajas (nombralas: demuestra criterio)</b></p>
+          <ol>
+            <li><b>No se puede revocar fácil:</b> vale hasta que expira. Se mitiga con <b>expiración corta + refresh token</b> y una lista de revocación para casos críticos.</li>
+            <li><b>Viaja en cada request</b> → más bytes; y si se guarda mal en el cliente, queda expuesto a XSS.</li>
+            <li><b>El payload es legible:</b> está <b>firmado, no cifrado</b>. Nunca pongas datos sensibles.</li>
+            <li><b>Si cambian los permisos</b>, el token viejo sigue diciendo lo anterior hasta que expire.</li>
+          </ol>
           <p class="mini"><b>Sesiones mixtas:</b> <b>cookies</b> del usuario al <b>servidor frontend</b> + <b>tokens</b> del frontend al <b>servidor de aplicación</b> (cliente liviano desacoplado).</p>
           <p class="mini"><b>Recursos:</b> entidad que puede ser <b>manipulada</b> (alta, modificación, baja, listado); se identifican <b>desde los casos de uso</b>. <b>Autónomos</b> (sentido de existencia propio) vs. <b>dependientes/anidados</b> (<code>/mascotas/{id}/historial</code>: no tiene sentido listarlos sin su contenedor → <b>composición</b>). <b>Protección:</b> ① <b>autenticación</b> (visual → login; REST → <b>401</b>) ② <b>roles</b> (<b>403</b>) ③ <b>roles + permisos</b> (distintos usuarios del mismo rol acceden a distintos recursos; distintos roles pueden tener el mismo permiso) + <b>ALCANCES: propio / propios / todos</b>.</p>
           <div class="table-wrap"><table class="data">
@@ -657,7 +675,24 @@
             </tbody>
           </table></div>
           <p class="mini"><b>Por qué el liviano puntúa “−”:</b> usabilidad (cada acción = nuevo request y recarga), escalabilidad (el servidor concentra negocio <b>+</b> armado de la vista), mantenibilidad (presentación y negocio entremezcladas). <b>Son relativas:</b> con <b>renderizado híbrido</b> se mitigan.</p>
-          <p class="mini"><b>Variantes de pesado:</b> <b>Web (SPA)</b> (sin tienda, multiplataforma; ⚠️ acceso limitado al hardware salvo <b>PWA</b> con <b>Service Workers</b>) · <b>Mobile nativo</b> (SDK propio; <b>acceso total al hardware</b>, mejor performance; ⚠️ una base de código por SO) · <b>Mobile híbrido</b> (una base para todas: React Native, Flutter; ⚠️ APIs nativas vía <b>plugins</b>, algo menos de performance) · <b>Desktop</b> (Electron, Tauri). <b>SPA:</b> un único punto de entrada; las pantallas se intercambian <b>sin recargar</b>. <b>Toda SPA es cliente pesado, no al revés.</b> <b>SEO:</b> se indexa mejor HTML servido (los buscadores ejecutan JS pero <b>más lento y no garantizado</b>). <b>SSR</b> = primera respuesta del servidor + <b>hidratación</b>; <b>SSG</b> = HTML generado en <b>build</b> (ideal con caché y CDN).</p>
+          <h3>Las 4 variantes de cliente pesado</h3>
+          <div class="table-wrap"><table class="data">
+            <thead><tr><th>Variante</th><th>✅ A favor</th><th>⚠️ Costo</th></tr></thead>
+            <tbody>
+              <tr><td><b>Web (SPA)</b></td><td>Se instala solo, sin tienda; alcance multiplataforma inmediato</td><td>Acceso <b>limitado al hardware</b>, salvo con <b>PWA</b> (Service Workers → offline y push)</td></tr>
+              <tr><td><b>Mobile nativo</b></td><td><b>Acceso total al hardware</b> y a las APIs del SO; mejor performance</td><td><b>Una base de código por sistema operativo</b></td></tr>
+              <tr><td><b>Mobile híbrido</b></td><td><b>Una sola base</b> para todas (React Native, Flutter); menor costo y time-to-market</td><td>APIs nativas vía <b>plugins</b>; algo menos de performance</td></tr>
+              <tr><td><b>Desktop</b></td><td>Experiencia de escritorio (Electron, Tauri)</td><td>Distribución y actualización fuera del navegador</td></tr>
+            </tbody>
+          </table></div>
+          <h3>SPA, SEO y renderizado</h3>
+          <ul>
+            <li><b>SPA:</b> un único punto de entrada; las pantallas se intercambian <b>sin recargar</b> la página.</li>
+            <li><b>Toda SPA es cliente pesado, pero no todo cliente pesado es una SPA</b> (una app nativa también es pesada).</li>
+            <li><b>SEO:</b> se indexa mejor el <b>HTML ya servido</b>. Los buscadores ejecutan JavaScript, pero <b>más lento, más caro y sin garantía</b> (crawl budget).</li>
+            <li><b>SSR:</b> la primera respuesta la arma el servidor y después el navegador <b>hidrata</b> la página.</li>
+            <li><b>SSG:</b> el HTML se genera <b>en el build</b> → ideal para combinar con caché y CDN.</li>
+          </ul>
           <p class="mini"><b>Versionado de clientes instalables:</b> conviven <b>múltiples versiones</b> en producción → <b>versionar la API</b> (/v1,/v2), cambios <b>backward-compatible</b> (campos <b>opcionales</b>), <b>hard update</b>, actualizaciones automáticas.</p>
           <div class="table-wrap"><table class="data">
             <thead><tr><th>Escalabilidad</th><th>VERTICAL</th><th>HORIZONTAL</th></tr></thead>
@@ -668,10 +703,159 @@
             </tbody>
           </table></div>
           <p class="mini"><b>Balanceador:</b> reparte solicitudes (performance), <b>redirige si un servidor falla</b> (disponibilidad), permite sumar/quitar nodos (escalabilidad). <b>Algoritmos:</b> Round Robin · Least Connections · Weighted · <b>Sticky Sessions</b> (no es algoritmo: <b>política</b> que fuerza el mismo servidor; <b>atenta contra escalabilidad y disponibilidad</b> → mejor <b>stateless + sesión externalizada</b>). <b>L4</b> = IP y puerto, no mira el contenido; <b>L7</b> = entiende HTTP, decide por <b>URL/headers/cookies</b>. <b>Health checks:</b> <b>activo</b> (GET /health periódico, saca de rotación) y <b>pasivo</b> (observa timeouts y 5xx reales).</p>
-          <p class="mini"><b>Caché:</b> de <b>aplicación</b> (datos calculados → performance), de <b>contenido</b> (estáticos → uso de recursos), de <b>navegador</b> (→ tiempo de respuesta). Vive <b>privada</b> (navegador), <b>compartida</b> (proxy) o <b>compartida y administrada</b> (<b>CDN</b>), <b>siempre con expiración</b>. <b>Caché HTTP:</b> reutiliza la respuesta y <b>el origen no procesa la solicitud</b> (no parsea, no enruta, no consulta la base, no renderiza). <code>Cache-Control</code>, <code>ETag</code>→<b>304</b>, <code>Vary</code>. <b>CDN:</b> servidores distribuidos geográficamente; entrega HTML/JS/CSS/imágenes/video desde el nodo más cercano; <b>mitiga DDoS</b>; ✅ tiempos de carga, <b>costos de ancho de banda</b>, disponibilidad y redundancia, seguridad. <b>API Gateway:</b> <b>único punto de entrada</b>, enruta, centraliza <b>autenticación, rate limiting, logging</b>, puede ser LB L7 (sin él, cada cliente se acopla a la <b>topología interna</b>). <b>BFF:</b> un backend <b>por tipo de cliente</b>, que agrega y adapta sin tocar los contratos internos.</p>
+          <h3>Caché</h3>
+          <div class="table-wrap"><table class="data">
+            <thead><tr><th>Tipo</th><th>Qué guarda</th><th>Atributo que mejora</th></tr></thead>
+            <tbody>
+              <tr><td>De <b>aplicación</b></td><td>Datos ya calculados, consultas costosas</td><td><b>Performance</b></td></tr>
+              <tr><td>De <b>contenido</b></td><td>Estáticos: imágenes, CSS, JS</td><td><b>Uso de recursos</b></td></tr>
+              <tr><td>De <b>navegador</b></td><td>Recursos en el cliente final</td><td><b>Tiempo de respuesta</b></td></tr>
+            </tbody>
+          </table></div>
+          <p><b>Dónde vive:</b> <b>privada</b> (navegador) · <b>compartida</b> (proxy) · <b>compartida y administrada</b>
+          (<b>CDN</b>). <b>Siempre con tiempo de expiración definido.</b></p>
+          <p><b>Caché HTTP:</b> reutiliza la respuesta guardada y <b>el origen no procesa la solicitud</b> — no parsea,
+          no enruta, no consulta la base, no renderiza. <b>Eso es lo que baja su carga.</b></p>
+          <h3>CDN</h3>
+          <ul>
+            <li>Servidores <b>distribuidos geográficamente</b> que entregan HTML, JS, CSS, imágenes y video <b>desde el nodo más cercano</b> al usuario.</li>
+            <li><b>Ventajas:</b> mejores tiempos de carga · <b>reducción de los costos de ancho de banda</b> · más disponibilidad y redundancia · <b>mitiga DDoS</b>.</li>
+          </ul>
+          <h3>API Gateway y BFF</h3>
+          <ul>
+            <li><b>API Gateway:</b> <b>único punto de entrada</b>; enruta a cada servicio y centraliza <b>autenticación, rate limiting y logging</b>. Puede hacer de LB L7. <b>Sin él, cada cliente se acopla a la topología interna</b> del backend.</li>
+            <li><b>BFF:</b> un backend <b>por tipo de cliente</b> (web, mobile), que agrega y adapta las respuestas <b>sin tocar los contratos internos</b> de los servicios.</li>
+          </ul>
           <p class="mini"><b>Cabeceras de caché (por si piden la especificación):</b> <code>Cache-Control: max-age=N</code> TTL para cualquier caché · <code>s-maxage=N</code> TTL <b>sólo para cachés compartidas</b> (CDN/proxy), pisa a max-age · <code>public</code> la puede guardar cualquier caché / <code>private</code> <b>sólo el navegador del usuario</b> · <code>no-cache</code> se guarda pero <b>hay que revalidar</b> antes de usarla · <code>no-store</code> <b>no se guarda en ninguna</b> (datos sensibles) · <code>ETag</code> + <code>If-None-Match</code> → <b>304 Not Modified</b> sin cuerpo · <code>Vary</code> guarda una versión por cabecera (ej. <code>Accept-Language</code>). <b>HIT</b> = estaba válido en caché; <b>MISS</b> = no estaba o expiró y se va al <b>origin server</b>. <b>Hit ratio = HITs / (HITs + MISSes)</b>.</p>
-          <p class="mini"><b>Qué SÍ va a la CDN:</b> HTML estático, CSS, JS, imágenes, fuentes, video, bundles de la SPA, sitios SSG, vistas públicas no personalizadas. <b>Qué NO:</b> respuestas <b>JSON personalizadas por usuario</b> (carrito, perfil, saldo), <b>operaciones que modifican estado</b> (POST/PUT/DELETE) y contenido sensible sin <code>private</code>. <b>Invalidación:</b> ① <b>purge</b> explícito en la CDN; ② <b>cache busting</b> (nombre con hash, <code>app.3f9a1c.js</code>, + TTL larguísimo: al desplegar cambia el nombre y no hay que invalidar nada). <b>Compromiso del TTL:</b> largo = más HITs y menos carga pero riesgo de contenido viejo; corto = fresco pero más MISS. <b>Pull CDN</b> (trae del origen en el primer pedido, lo habitual) vs <b>Push CDN</b> (se sube de antemano); <b>origin shield</b> = capa intermedia que consolida los MISS de varios nodos antes de llegar al origen.</p>
+          <div class="grid-2">
+            <div class="card">
+              <p><b>✅ Qué SÍ va a la CDN</b></p>
+              <ul>
+                <li>HTML estático, CSS, JS, imágenes, fuentes, video</li>
+                <li>Bundles de la SPA y sitios SSG</li>
+                <li>Vistas públicas <b>no personalizadas</b></li>
+              </ul>
+            </div>
+            <div class="card">
+              <p><b>❌ Qué NO</b></p>
+              <ul>
+                <li>Respuestas JSON <b>personalizadas por usuario</b> (carrito, perfil, saldo)</li>
+                <li>Operaciones que <b>modifican estado</b> (POST, PUT, DELETE)</li>
+                <li>Contenido sensible sin <code>Cache-Control: private</code></li>
+              </ul>
+            </div>
+          </div>
+          <p><b>Invalidación — dos técnicas:</b></p>
+          <ol>
+            <li><b>Purge:</b> invalidación explícita en la CDN.</li>
+            <li><b>Cache busting:</b> nombre de archivo con hash (<code>app.3f9a1c.js</code>) + TTL larguísimo. Al desplegar cambia el nombre, así que <b>no hay que invalidar nada</b>.</li>
+          </ol>
+          <p><b>El compromiso del TTL:</b> largo → más HITs y menos carga, pero riesgo de contenido viejo. Corto →
+          contenido fresco, pero más MISS.</p>
+          <p><b>Variantes:</b> <b>Pull CDN</b> (trae del origen en el primer pedido; es lo habitual) ·
+          <b>Push CDN</b> (se sube de antemano) · <b>origin shield</b> (capa intermedia que consolida los MISS de varios
+          nodos antes de llegar al origen).</p>
           <p class="mini"><b>Algoritmos de balanceo (lista completa):</b> <b>Round Robin</b> (uno por uno; servidores iguales) · <b>Weighted Round Robin</b> (los más potentes reciben más) · <b>Least Connections</b> (menos conexiones activas; requests de duración variable) · <b>Least Response Time</b> (al más rápido; optimizar latencia) · <b>IP Hash</b> (hash de la IP → siempre el mismo servidor; afinidad) · <b>Sticky sessions</b> (política, no algoritmo). <b>⚠️ Si hay un solo balanceador, él mismo es el punto único de falla: hay que redundarlo.</b></p>
+        </section>
+
+        <!-- ===================== HOJA 8 BIS ===================== -->
+        <section class="hoja hoja-diag">
+          <span class="hoja-num">HOJA 8 BIS · EL DIAGRAMA DE ARQUITECTURA: CÓMO SE DIBUJA</span>
+
+          <h3>Las 3 reglas que el corrector busca en el dibujo</h3>
+          <ol>
+            <li><b>Cada línea rotulada con su protocolo</b> — HTTPS, MQTT, AMQP, JDBC, SOAP. Una flecha sin etiqueta es media respuesta.</li>
+            <li><b>Lo externo marcado como externo</b> — pasarela de pago, ARCA, proveedor de mail, IdP. Y todo lo externo entra al dominio por un <b>Adapter</b>.</li>
+            <li><b>Título y leyenda:</b> el diagrama tiene que <b>poder leerse solo</b>, sin que vos lo expliques al lado.</li>
+          </ol>
+
+          <h3>Cómo se dibuja cada cosa (notación)</h3>
+          <div class="table-wrap"><table class="data">
+            <thead><tr><th>Elemento</th><th>Se dibuja</th><th>Cuándo lo usás</th></tr></thead>
+            <tbody>
+              <tr><td><b>Nodo</b> (despliegue)</td><td><b>Cubo 3D</b> con el estereotipo arriba: <code>«device»</code>, <code>«server»</code>, <code>«container»</code></td><td>Una máquina, un celular, un contenedor, un locker</td></tr>
+              <tr><td><b>Componente</b></td><td>Caja con el ícono de componente, o con <b>bolita ● (interfaz provista)</b> y <b>semicírculo ( (interfaz requerida)</b>. <b>El semicírculo del que consume abraza la bolita del que provee.</b></td><td>Un servicio, un módulo dentro de un nodo</td></tr>
+              <tr><td><b>Base de datos</b></td><td><b>Cilindro</b>, con el tipo adentro (“BD Envíos · relacional”, “TSDB”)</td><td>Una base por servicio: <b>dibujá una por cada uno</b></td></tr>
+              <tr><td><b>Cola / broker</b></td><td>Caja alargada o cilindro acostado, con el <b>nombre del topic o de la cola</b></td><td>Siempre que haya asincronismo</td></tr>
+              <tr><td><b>Actor / usuario</b></td><td>Monigote o caja <code>«device»</code> con el tipo de cliente</td><td>Para mostrar <b>quién</b> entra y por dónde</td></tr>
+              <tr><td><b>Protocolo</b></td><td><b>Sobre la flecha</b>, siempre</td><td>HTTPS · MQTT/TLS · AMQP · JDBC · SOAP/WSDL</td></tr>
+              <tr><td><b>Réplicas</b></td><td><b>Cajas apiladas</b> o “xN” en la esquina</td><td>Donde haya escalado horizontal</td></tr>
+            </tbody>
+          </table></div>
+
+          <h3>El orden en que se dibuja (de afuera hacia adentro)</h3>
+          <p><b>Usuarios → Borde (CDN · WAF) → Balanceador → API Gateway → Servicios (xN) → Bases.</b> Y aparte,
+          colgando del costado: <b>broker con sus workers</b>, los <b>sistemas externos</b>, y abajo como banda
+          transversal <b>IAM/SSO, observabilidad y secretos</b>. Si seguís ese orden no te olvidás ninguna pieza.</p>
+
+          <h3>Diagrama de despliegue de referencia</h3>
+          ${APP.uml(`graph LR
+    U["👤 Usuarios<br/>«device» web · mobile"] -->|HTTPS| CDN["CDN<br/>estáticos e imágenes"]
+    U -->|HTTPS| WAF["WAF<br/>OWASP Top 10"]
+    WAF --> LB["⚖️ Load Balancer L7<br/>health checks · TLS"]
+    LB --> GW["API Gateway<br/>authN JWT · rate limiting"]
+    GW --> S1["Servicio A «container» xN"]
+    GW --> S2["Servicio B «container» xN"]
+    S1 --> DB1[("BD A<br/>relacional")]
+    S2 --> DB2[("BD B<br/>relacional")]
+    DB1 -.->|réplica| RR[("Réplica<br/>de lectura")]
+    S1 --> CA[("Redis<br/>caché TTL")]
+    S1 -->|publica evento| BK[("Broker · cola/topic")]
+    BK --> W["Workers xN<br/>notificaciones · batch"]
+    W -->|HTTPS + circuit breaker| EXT["Servicio externo<br/>«externo»"]
+    S1 -.-> OBS["Observabilidad<br/>métricas · logs · trazas"]
+    S1 -.-> IDP["IdM / SSO<br/>«externo»"]
+    style WAF fill:#fee2e2,stroke:#b91c1c,color:#0f172a
+    style LB fill:#fffbeb,stroke:#b45309,color:#0f172a
+    style GW fill:#e0f2fe,stroke:#0284c7,color:#0f172a
+    style BK fill:#fffbeb,stroke:#b45309,color:#0f172a`, "Despliegue de referencia: copiá esta estructura y sacá lo que no aplique")}
+
+          <h3>Cómo se mete un balanceador (el antes y el después)</h3>
+          ${APP.uml(`graph LR
+    subgraph ANTES["❌ ANTES · un solo servidor = punto único de falla"]
+      U1["👤"] -->|HTTPS| S["Servidor único"]
+      S --> D1[("BD")]
+    end
+    subgraph DESPUES["✅ DESPUÉS · escalado horizontal"]
+      U2["👤"] -->|HTTPS| L["⚖️ Load Balancer<br/>health checks"]
+      L --> A["Instancia 1"]
+      L --> B["Instancia 2"]
+      L --> C["Instancia 3"]
+      A --> R[("Redis · sesión<br/>externalizada")]
+      B --> R
+      A --> D2[("BD")]
+      B --> D2
+    end`, "Meter un balanceador: tres cambios, no uno")}
+          <p><b>Fijate que no alcanza con dibujar la caja del balanceador.</b> Meterlo implica <b>tres</b> cambios, y
+          hay que decirlos:</p>
+          <ol>
+            <li><b>Replicar el servicio</b> (xN instancias): si hay una sola, el balanceador no sirve para nada.</li>
+            <li><b>Sacar la sesión del servidor</b> (a Redis o a JWT): si queda en memoria local, hacen falta
+            <b>sticky sessions</b>, que atentan contra la escalabilidad y la disponibilidad.</li>
+            <li><b>Health checks</b>: para que saque de rotación al nodo caído. Sin eso, el balanceador sigue mandando
+            tráfico a un servidor muerto.</li>
+          </ol>
+
+          <h3>Qué componente meter, dónde, y cómo justificarlo</h3>
+          <div class="table-wrap"><table class="data">
+            <thead><tr><th>Componente</th><th>Dónde va en el dibujo</th><th>Frase de justificación</th><th>Atributos</th></tr></thead>
+            <tbody>
+              <tr><td><b>Balanceador</b></td><td>Entre el usuario y las instancias</td><td>“Reparte la carga entre N instancias y, con <b>health checks</b>, saca de rotación al nodo caído: elimina el <b>punto único de falla</b>.”</td><td>Disponibilidad · Escalabilidad · Performance</td></tr>
+              <tr><td><b>CDN</b></td><td>Antes de todo, colgando del usuario</td><td>“Sirve los estáticos desde el <b>nodo más cercano</b>; el backend sólo entrega la URL. Baja los tiempos de carga y el <b>costo de ancho de banda</b>, y mitiga DDoS.”</td><td>Performance · Escalabilidad · Costo</td></tr>
+              <tr><td><b>Caché (Redis)</b></td><td>Al costado del servicio, antes de la base</td><td>“Las consultas repetidas no llegan al origen: con TTL de [N] s absorbo [X] consultas/min sin tocar la base.”</td><td>Performance · Disponibilidad</td></tr>
+              <tr><td><b>Broker / cola</b></td><td>Entre el servicio que publica y los workers</td><td>“Quien llama <b>no necesita la respuesta</b> para continuar: desacopla en el tiempo, <b>amortigua los picos</b> y permite escalar consumidores.”</td><td>Escalabilidad · Disponibilidad</td></tr>
+              <tr><td><b>API Gateway</b></td><td>Entre el LB y los servicios</td><td>“Punto único de entrada: centraliza autenticación, rate limiting y logging, y evita que cada cliente se acople a la <b>topología interna</b>.”</td><td>Seguridad · Mantenibilidad</td></tr>
+              <tr><td><b>WAF</b></td><td>En el borde, antes del LB</td><td>“Filtra el OWASP Top 10 antes de consumir recursos del backend.”</td><td>Seguridad · Disponibilidad</td></tr>
+              <tr><td><b>Réplica de lectura</b></td><td>Colgando de la base, con línea punteada</td><td>“Las consultas pesadas no compiten con las transacciones; la base primaria deja de ser el cuello de botella.”</td><td>Performance · Escalabilidad</td></tr>
+              <tr><td><b>Object storage</b></td><td>Al costado, conectado a la CDN</td><td>“Los binarios <b>no van en la base</b>: va la URL. La base no crece ni se usa para transferir archivos.”</td><td>Performance · Costo</td></tr>
+              <tr><td><b>IdM / SSO</b></td><td>Banda transversal abajo, marcado externo</td><td>“Identidades, roles y permisos centralizados; el backend valida el <b>JWT</b> y queda <b>stateless</b>.”</td><td>Seguridad · Mantenibilidad</td></tr>
+              <tr><td><b>Observabilidad</b></td><td>Banda transversal abajo, punteada</td><td>“Con <b>correlation ID</b> y trazas se reconstruye una operación que cruzó varios servicios.”</td><td>Mantenibilidad · Disponibilidad</td></tr>
+              <tr><td><b>Edge Gateway</b></td><td>Junto a los dispositivos IoT</td><td>“Agrupa las lecturas del lugar, <b>bufferea y reintenta</b> si se corta el enlace.”</td><td>Disponibilidad · Tolerancia a fallos</td></tr>
+            </tbody>
+          </table></div>
+          <p><b>Regla de oro al justificar:</b> por cada componente que dibujes, escribí al lado <b>una línea</b> con
+          <b>qué problema del enunciado resuelve</b> y <b>qué atributo de calidad mejora</b>. Un componente dibujado y
+          no justificado <b>no suma</b>; y uno de más, <b>resta</b> (sobreingeniería).</p>
         </section>
 
         <!-- ===================== HOJA 9 ===================== -->

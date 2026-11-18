@@ -450,6 +450,11 @@ blockquote.just-modelo {
   .hoja .uml-svg { max-height: 26mm; width: auto; max-width: 100%; }
   .hoja .grid-2 { gap: 3mm; }
 
+  /* Hojas con diagramas: que se vean de verdad */
+  .hoja-diag .uml { max-width: 100%; margin: 3mm 0; break-inside: avoid; }
+  .hoja-diag .uml pre.mermaid svg { max-height: 95mm !important; width: auto !important; max-width: 100% !important; }
+  .hoja-diag .uml-cap { font-size: 8.6pt; font-weight: 700; margin-bottom: 1mm; }
+
   /* Los modelos HIDRA para imprimir: diagramas más grandes (legibles) */
   .hoja-hidra .uml pre.mermaid svg { max-height: 60mm !important; }
   .hoja-hidra { font-size: 8.6pt; }

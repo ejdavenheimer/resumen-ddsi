@@ -299,6 +299,29 @@
           <p class="mini"><b>CHECKLIST:</b> ☐ PK en cada tabla (y dije de qué tipo) ☐ FK + cardinalidad + <b>modalidad</b> en cada relación ☐ N:M con tabla intermedia ☐ ningún atributo multivaluado ☐ NOT NULL / UNIQUE / CHECK donde el enunciado los exige ☐ herencia elegida <b>y justificada</b> ☐ <b>lista de supuestos</b> ☐ <b>3 párrafos de justificación</b> ☐ un diagrama <b>por servicio</b> si lo piden, con IDs lógicos entre servicios.</p>
         </section>
 
+        <!-- ===================== HOJA 7 BIS ===================== -->
+        <section class="hoja">
+          <span class="hoja-num">HOJA 7 BIS · LOS 3 TIPOS DE SERVICIO (te toca uno de estos)</span>
+          <p class="mini">Los enunciados describen <b>tres servicios con su propia base</b> y te piden el DER de <b>uno</b>. Siempre son las mismas tres familias. <b>Identificá cuál te tocó y ya sabés qué entidades buscar.</b></p>
+          <div class="table-wrap"><table class="data">
+            <thead><tr><th></th><th>① GESTIÓN / RED<br><span class="mini">infraestructura, maestros</span></th><th>② TRANSACCIONAL<br><span class="mini">la operación del negocio</span></th><th>③ OPERACIÓN / AUDITORÍA<br><span class="mini">eventos y métricas</span></th></tr></thead>
+            <tbody>
+              <tr><td><b>Cómo lo reconocés</b></td><td>“administra la infraestructura”, “de cada X se conoce”, “se registran las intervenciones”</td><td>“el usuario hace / reserva / deposita / retira”, “historial de estados”, “comprobante”</td><td>“recibe eventos de forma periódica y masiva”, “genera métricas agregadas”, “tablero”</td></tr>
+              <tr><td><b>Columna vertebral</b></td><td><b>Jerarquía anidada de 3 niveles:</b> contenedor → equipo → unidad (punto→locker→casillero · estación→cargador→conector)</td><td><b>La transacción y su bitácora:</b> operación → ítems → eventos de estado</td><td><b>Hechos con marca de tiempo</b> + tablas de resumen. Casi no hay entidades de negocio</td></tr>
+              <tr><td><b>Entidades que casi siempre están</b></td><td>Zona/Responsable · <b>Catálogo de tipos</b> con sus medidas · <b>Horarios</b> (1:N) · <b>Servicios complementarios</b> (N:M) · <b>Mantenimiento</b> + <b>Técnico</b> · <b>Tarifa con vigencia</b> · <b>Historial de disponibilidad</b></td><td>Cliente · Operación (con <b>nro. único</b>) · <b>Ítems/bultos</b> (1,N) · <b>Evento de estado</b> (1,N) · <b>Código/credencial</b> con vencimiento · <b>Pago</b> · <b>Adjuntos</b> (URL) · <b>Devolución/cancelación</b> (0,1)</td><td><b>Evento</b> + <b>catálogo de tipo de evento</b> · <b>Lectura/medición</b> + tipo · <b>Heartbeat</b> · <b>Tabla de resumen</b> (PK fecha+entidad+franja) · <b>DIM_*</b> réplicas · <b>Incidente</b> (con estado) · <b>Liquidación</b></td></tr>
+              <tr><td><b>Dónde está el punto fino</b></td><td><b>PK compuesta</b> en la unidad <code>(nro_serie, nro_unidad)</code> — y la FK hacia ella <b>también compuesta</b>. <b>Dirección embebida o entidad:</b> discutilo. <b>Horarios NO son N:M.</b></td><td><b>Congelar</b> los datos del comprobante (consistencia). <b>Estado actual</b> + bitácora. <b>Credencial hasheada</b>, nunca en claro. <b>Varias</b> credenciales si “se regenera”</td><td><b>Las métricas NO son tablas: son consultas.</b> Por cada una escribí el COUNT/SUM. <b>DIM_* = réplica local</b> (read model, consistencia eventual). <b>Congelar</b> el % de comisión en la liquidación</td></tr>
+              <tr><td><b>Desnormalización típica</b></td><td><b>Performance:</b> <code>estado_actual</code> derivado del historial</td><td><b>Consistencia:</b> datos del comprobante congelados. <b>Performance:</b> <code>estado</code> derivado del último evento</td><td><b>Performance:</b> tabla de resumen por batch (esquema estrella) + DIM replicadas. <b>Consistencia:</b> todo lo de la liquidación</td></tr>
+              <tr><td><b>Qué NO va acá</b></td><td>Las operaciones del negocio (son del ②) ni la telemetría (③)</td><td>La infraestructura (①) ni las métricas (③)</td><td>Los maestros (①): sólo <b>réplicas</b>. Y la telemetría cruda, en rigor, va a <b>TSDB</b>, no a relacional: <b>decilo</b></td></tr>
+            </tbody>
+          </table></div>
+          <div class="callout key">
+            <div class="callout-title">EL CUARTO PATRÓN, QUE PUEDE APARECER EN CUALQUIERA: catálogo + configuración</div>
+            <p class="mini">Disparador: “<b>a partir de un catálogo de X predefinidas</b>” + “<b>el usuario puede ajustar los parámetros</b>”. Solución: <code>CATALOGO(id PK, codigo UNIQUE, descripcion, activo)</code> + <code>CONFIG(id PK, id_usuario FK, …, activa)</code> + <b>intermedia</b> <code>CONFIG_ITEM(id_config PK FK, id_catalogo PK FK, <b>parámetro1, parámetro2</b>)</code> + <code>HISTORIAL_DISPARO</code>.</p>
+            <p class="mini"><b>⚠️ EL ERROR QUE MÁS SE COBRA:</b> poner el parámetro ajustable <b>en el catálogo</b>. El catálogo lo <b>comparten todos los usuarios</b>; el valor que <b>este</b> usuario eligió va <b>en la intermedia</b>. En el catálogo sólo va lo que describe al tipo en sí (si admite parámetro, su unidad). Modalidad <b>1,N</b>: no hay configuración sin al menos una condición. Y la <b>PK compuesta</b> de la intermedia ya impide elegir dos veces lo mismo.</p>
+          </div>
+          <p class="mini"><b>Si el enunciado pide UN DIAGRAMA POR SERVICIO:</b> hacelos <b>separados</b> y marcá las referencias cruzadas como <b>ID lógico</b>, no como FK. Escribilo: “<i>no hay integridad referencial entre servicios; la validación es responsabilidad de la aplicación</i>”. Es una línea y vale puntos.</p>
+        </section>
+
         <!-- ===================== HOJA 8 ===================== -->
         <section class="hoja">
           <span class="hoja-num">HOJA 8 · ARQUITECTURA WEB II: SESIONES, CLIENTES, ESCALAR</span>

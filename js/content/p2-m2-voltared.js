@@ -384,6 +384,129 @@
           <b>evento</b>, encapsulada en un único punto, y un <b>proceso de recálculo</b>.</p>
         </details>
 
+        <h2>Punto 1 ter — DER del Servicio III (Operación y Auditoría)</h2>
+        <div class="card">
+          <p>Realice el <b>modelo de datos del Servicio III</b>: telemetría de los conectores, métricas de la red y
+          <b>liquidación mensual a los operadores adheridos</b>. Indique PK, FK, cardinalidad, modalidad y
+          restricciones, con supuestos y justificación.</p>
+        </div>
+        <details class="qa">
+          <summary>✅ Solución — DER del Servicio III</summary>
+          ${APP.uml(`erDiagram
+    DIM_ESTACION ||--o{ MEDICION_CONECTOR : reporta
+    TIPO_MEDICION ||--o{ MEDICION_CONECTOR : clasifica
+    DIM_ESTACION ||--o{ HEARTBEAT_CONECTOR : emite
+    DIM_ESTACION ||--o{ ENERGIA_DIARIA : resume
+    DIM_FECHA ||--o{ ENERGIA_DIARIA : fecha
+    DIM_ESTACION ||--o{ INCIDENTE : afecta
+    DIM_OPERADOR ||--o{ LIQUIDACION : "se liquida a"
+    LIQUIDACION ||--|{ DETALLE_LIQUIDACION : "se compone de (1,N)"
+    DIM_ESTACION ||--o{ DETALLE_LIQUIDACION : aporta
+    DIM_OPERADOR {
+      int id_operador PK "ID LOGICO del Servicio I - replica local"
+      string razon_social "replicado"
+      string cuit "replicado"
+      decimal pct_comision_vigente "replicado - solo referencia"
+      datetime sincronizado_en "NOT NULL"
+    }
+    DIM_ESTACION {
+      int id_estacion PK "ID LOGICO - replica local"
+      int id_operador FK "NOT NULL"
+      string nombre "replicado"
+      string localidad "replicado"
+      datetime sincronizado_en "NOT NULL"
+    }
+    TIPO_MEDICION {
+      int id_tipo PK
+      string codigo "UNIQUE NOT NULL - POTENCIA, TEMPERATURA, ESTADO_CONEXION"
+      string unidad "NOT NULL - kW, C, booleano"
+    }
+    MEDICION_CONECTOR {
+      bigint id_medicion PK
+      int id_estacion FK "NOT NULL"
+      int nro_conector "NOT NULL - ID logico"
+      int id_tipo FK "NOT NULL"
+      datetime fecha_hora "NOT NULL - particionado por fecha"
+      decimal valor "DECIMAL(12,3) NOT NULL"
+      string id_sesion "ID logico - NULL si no hay sesion"
+    }
+    HEARTBEAT_CONECTOR {
+      bigint id_heartbeat PK
+      int id_estacion FK "NOT NULL"
+      int nro_conector "NOT NULL"
+      datetime fecha_hora "NOT NULL"
+      boolean online "NOT NULL"
+      string estado_reportado
+    }
+    ENERGIA_DIARIA {
+      date fecha PK "y FK a DIM_FECHA"
+      int id_estacion PK "y FK"
+      int franja_horaria PK "CHECK (0..23)"
+      decimal kwh_despachados "DECIMAL(12,3) NOT NULL"
+      int sesiones "NOT NULL"
+      int sesiones_interrumpidas "NOT NULL"
+      int minutos_ocupado "NOT NULL"
+      int minutos_disponibles "NOT NULL"
+      datetime calculado_en "NOT NULL"
+    }
+    DIM_FECHA {
+      date fecha PK
+      int anio
+      int mes
+      int dia_semana
+      boolean es_feriado
+    }
+    INCIDENTE {
+      int id_incidente PK
+      int id_estacion FK "NOT NULL"
+      int nro_conector "NULL"
+      datetime detectado_en "NOT NULL"
+      datetime resuelto_en "NULL"
+      string tipo "CHECK (SESION_INTERRUMPIDA, SIN_CONEXION, SOBRETEMPERATURA)"
+      string estado "CHECK (ABIERTO, EN_CURSO, RESUELTO, DESCARTADO)"
+    }
+    LIQUIDACION {
+      int id_liquidacion PK
+      int id_operador FK "NOT NULL"
+      int anio PK "parte de la clave de negocio"
+      int mes PK
+      decimal energia_total_kwh "DECIMAL(14,3) NOT NULL"
+      decimal importe_bruto "DECIMAL(14,2) NOT NULL"
+      decimal pct_comision_aplicado "CONGELADO al liquidar"
+      decimal comision "DECIMAL(14,2) NOT NULL"
+      decimal importe_neto "DECIMAL(14,2) NOT NULL"
+      string razon_social_emision "congelado"
+      string cuit_emision "congelado"
+      string estado "CHECK (BORRADOR, EMITIDA, PAGADA, OBSERVADA)"
+      datetime emitida_en
+    }
+    DETALLE_LIQUIDACION {
+      int id_liquidacion PK "y FK"
+      int id_estacion PK "y FK"
+      decimal kwh "DECIMAL(14,3) NOT NULL"
+      decimal importe "DECIMAL(14,2) NOT NULL"
+    }`, "Servicio III — Operación, Auditoría y Liquidación")}
+          <h3>Las 5 decisiones propias de este servicio</h3>
+          <div class="table-wrap"><table class="data">
+            <thead><tr><th>Decisión</th><th>Qué hice y por qué</th></tr></thead>
+            <tbody>
+              <tr><td><b>1 · Hechos, no entidades</b></td><td>Es un servicio de <b>hechos</b> (<code>MEDICION_CONECTOR</code>, <code>HEARTBEAT</code>) con su marca de tiempo, más catálogos que los clasifican. <b>Append-only:</b> no se actualizan ni se borran.</td></tr>
+              <tr><td><b>2 · Las métricas no se modelan: se modela el hecho</b></td><td>“Energía por estación y mes”, “factor de utilización”, “top 10” <b>son consultas</b>. Por cada una, escribí el <code>SUM</code>/<code>COUNT</code> + <code>GROUP BY</code>: el <b>factor de utilización</b> sale de <code>minutos_ocupado / minutos_disponibles</code>, por eso <b>ambos están en la tabla de resumen</b> — si guardara sólo el porcentaje, no podría reagregar por mes.</td></tr>
+              <tr><td><b>3 · Esquema estrella</b></td><td><code>ENERGIA_DIARIA</code> con PK compuesta <code>(fecha, id_estacion, franja)</code>, por <b>batch nocturno</b>: tabla de <b>hechos</b> + <b>dimensiones</b> (<code>DIM_ESTACION</code>, <code>DIM_OPERADOR</code>, <code>DIM_FECHA</code>) deliberadamente desnormalizadas. Es <b>desnormalización por performance</b>, con <code>calculado_en</code> y proceso de recálculo.</td></tr>
+              <tr><td><b>4 · ⭐ La liquidación: congelar o quedar mal</b></td><td>Es <b>el punto de este servicio</b>. <code>pct_comision_aplicado</code>, <code>razon_social_emision</code> y <code>cuit_emision</code> quedan <b>congelados al emitir</b>: si el porcentaje de comisión cambia el mes que viene, <b>una liquidación recalculada no puede dar otro importe</b>. <b>Desnormalización por consistencia</b> — es un documento con valor probatorio. Por eso <code>DIM_OPERADOR.pct_comision_vigente</code> está marcado como <b>“sólo referencia”</b>: nunca se usa para recalcular el pasado.</td></tr>
+              <tr><td><b>5 · Volumen y políglota</b></td><td>La telemetría llega <b>periódica y masiva</b>: en una arquitectura real va a una <b>base de series temporales</b> (append-only, consulta por rango, <b>retención y downsampling</b>) y la analítica de meses a un almacén <b>columnar</b>. Si piden el modelo <b>relacional</b>, lo entrego con <b>particionado por fecha</b> y <code>BIGINT</code> en los hechos, <b>aclarando el criterio</b>.</td></tr>
+            </tbody>
+          </table></div>
+          <h3>Supuestos</h3>
+          <ul>
+            <li>Estación, conector, operador y sesión son de <b>otros servicios</b>: referencias por <b>ID lógico</b>, sin FK entre bases. <code>DIM_*</code> son <b>réplicas locales</b> (read model) sincronizadas por <b>eventos</b> → <b>consistencia eventual</b> declarada.</li>
+            <li>Hay <b>una liquidación por operador y período</b>: PK compuesta o UNIQUE sobre <code>(id_operador, anio, mes)</code>.</li>
+            <li>El <b>detalle por estación</b> es <b>1,N</b>: no existe liquidación sin al menos una estación con consumo.</li>
+            <li>Una liquidación <b>sí tiene ciclo de vida</b> (borrador → emitida → pagada / observada): es la única entidad del servicio con <b>estado</b>, junto con el incidente.</li>
+            <li>La <b>retención</b> de la telemetría es una decisión de negocio; los resúmenes y las liquidaciones se conservan por obligación <b>fiscal</b>.</li>
+          </ul>
+        </details>
+
         <h2>Punto 2 — Auditar un DER contra las 3 formas normales</h2>
         <div class="card">
           <p>Se le presenta el modelo ya construido del <b>Servicio I (Red y Estaciones)</b>. <b>¿Cumple con las tres
@@ -669,6 +792,80 @@ SESION_CARGA.nombre_estacion         -- conservando id_estacion (fuente de verda
           satura, los mensajes esperan en la cola y <b>las cargas siguen funcionando</b>.</p>
         </details>
 
+        <h2>⚠️ Punto extra — el patrón que estos modelos no ejercitan</h2>
+        <div class="callout warn">
+          <p>“Catálogo predefinido + parámetros que el usuario ajusta” aparece en <b>8 de 24</b> enunciados de la
+          carpeta y es donde está <b>el error que más se cobra</b>: poner el parámetro <b>en el catálogo</b> en lugar de
+          en la tabla intermedia. <b>10 minutos.</b></p>
+        </div>
+        <div class="card">
+          <p><b>Agregado al Servicio II.</b> Los conductores configuran <b>alertas</b>. No las crean libremente: las
+          arman eligiendo de un <b>catálogo de condiciones predefinidas</b> (batería del vehículo por debajo de un
+          umbral, precio del kWh por debajo de un valor, estación favorita con conector libre, sesión finalizada) y de
+          un <b>catálogo de canales</b> (push, mail, SMS). Una alerta <b>combina una o varias condiciones</b> con un
+          canal, y para cada condición el conductor <b>ajusta sus parámetros</b> (el umbral, la estación de
+          referencia). Se registra el <b>historial de disparos</b>.</p>
+        </div>
+        <details class="qa">
+          <summary>✅ Solución — catálogo + configuración</summary>
+          ${APP.uml(`erDiagram
+    CONDUCTOR ||--o{ ALERTA : configura
+    CANAL ||--o{ ALERTA : "se notifica por"
+    ALERTA ||--|{ ALERTA_CONDICION : "combina (1,N)"
+    TIPO_CONDICION ||--o{ ALERTA_CONDICION : "se elige en"
+    ALERTA ||--o{ DISPARO_ALERTA : registra
+    TIPO_CONDICION {
+      int id_tipo_condicion PK
+      string codigo "UNIQUE NOT NULL - BATERIA_BAJA, PRECIO_BAJO, CONECTOR_LIBRE"
+      string descripcion "NOT NULL"
+      string tipo_parametro "CHECK (NUMERICO, ID_ESTACION, NINGUNO) - describe al TIPO"
+      string unidad "pct, ARS/kWh"
+      boolean activo "NOT NULL DEFAULT true"
+    }
+    CANAL {
+      int id_canal PK
+      string nombre "UNIQUE NOT NULL - PUSH, MAIL, SMS"
+    }
+    ALERTA {
+      int id_alerta PK
+      int id_conductor FK "NOT NULL"
+      int id_canal FK "NOT NULL"
+      string nombre "NOT NULL"
+      boolean activa "NOT NULL DEFAULT true"
+      datetime fecha_creacion "NOT NULL"
+    }
+    ALERTA_CONDICION {
+      int id_alerta PK "y FK"
+      int id_tipo_condicion PK "y FK"
+      decimal valor_umbral "PARAMETRO AJUSTABLE - NULL si no aplica"
+      int id_estacion_referencia "PARAMETRO AJUSTABLE - ID logico, NULL si no aplica"
+    }
+    DISPARO_ALERTA {
+      int id_disparo PK
+      int id_alerta FK "NOT NULL"
+      datetime fecha_hora "NOT NULL"
+      string resultado "CHECK (ENVIADO, FALLIDO)"
+      decimal valor_detectado "congelado - que valor la disparo"
+      string detalle_error
+    }`, "Catálogo predefinido + configuración con parámetros")}
+          <div class="callout key">
+            <div class="callout-title">🎯 Las 4 cosas que se evalúan</div>
+            <ol>
+              <li><b>El parámetro ajustable va en la INTERMEDIA.</b> <code>valor_umbral</code> es “el 20% <b>que eligió
+              este conductor</b>”, no una propiedad del tipo de condición, que es <b>compartido por todos</b>. En el
+              catálogo va sólo lo que describe al tipo (<code>tipo_parametro</code>, <code>unidad</code>). <b>Es el
+              error que más se cobra.</b></li>
+              <li><b>Catálogo, no enum:</b> el enunciado dice <b>“predefinidas”</b>; agregar una condición no puede
+              exigir un deploy. <code>activo</code> permite darla de baja <b>sin romper el histórico</b>.</li>
+              <li><b>“Combina una o varias condiciones”</b> → <b>1,N</b> (<code>||--|{</code>), y la <b>PK compuesta</b>
+              <code>(id_alerta, id_tipo_condicion)</code> impide elegir dos veces la misma condición <b>por
+              diseño</b>.</li>
+              <li><b>Historial de disparos</b> con <code>valor_detectado</code> <b>congelado</b>: si después el
+              conductor cambia el umbral, el registro debe seguir explicando <b>por qué se disparó</b> en ese momento.</li>
+            </ol>
+          </div>
+        </details>
+
         <h2>Autoevaluación</h2>
         <div id="p2m2rub"></div>
       `;
@@ -694,6 +891,10 @@ SESION_CARGA.nombre_estacion         -- conservando id_estacion (fuente de verda
         { t: "Arquitectura: CDN para fotos y caché con TTL corto + invalidación por evento para la disponibilidad", p: 6 },
         { t: "Arquitectura: diagrama de despliegue con protocolos, externos y las 3 bases", p: 7 },
         { t: "Decisión monolito/servicios: elegí una, con las restricciones del enunciado, y la grafiqué", p: 8 },
+        { t: "Servicio III: modelé HECHOS con fecha_hora y dije que las métricas son consultas, no tablas", p: 5 },
+        { t: "Servicio III: congelé el % de comisión y los datos del operador en la liquidación", p: 6 },
+        { t: "Servicio III: declaré las DIM_* como réplica local (read model) con consistencia eventual", p: 4 },
+        { t: "Patrón catálogo: los parámetros ajustables quedaron en la INTERMEDIA, no en el catálogo", p: 6 },
       ]);
     },
   });

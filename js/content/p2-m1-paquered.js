@@ -57,8 +57,9 @@
           código <b>vence</b> y puede <b>regenerarse</b>. El destinatario <b>retira</b> el paquete ingresando el código.
           Si no lo retira dentro del <b>plazo de permanencia</b>, el envío pasa a <b>vencido</b> y se genera una
           <b>devolución</b> al comercio. De cada envío hay que poder reconstruir <b>todo su historial de estados</b> (quién
-          hizo qué y cuándo), porque los comercios reclaman. El comprobante de entrega <b>debe poder reimprimirse tal
-          como se emitió</b>.</p>
+          hizo qué y cuándo), porque los comercios reclaman. Tanto al depositar como al retirar, el sistema guarda
+          <b>una o varias fotografías</b> del paquete en el casillero, que quedan asociadas al envío como respaldo ante
+          reclamos. El comprobante de entrega <b>debe poder reimprimirse tal como se emitió</b>.</p>
 
           <h3>Servicio III — Operación y Auditoría</h3>
           <p>Recibe de cada locker los <b>eventos de apertura y cierre</b> de casillero y el <b>estado de los sensores</b>
@@ -419,6 +420,125 @@
           frecuente y reconstruir el estado con una subconsulta sobre la bitácora en cada fila sería caro; declaro
           <code>EVENTO_ENVIO</code> como <b>fuente de verdad</b>, encapsulo la actualización en un <b>único</b> servicio
           de dominio y dejo un <b>proceso de recálculo</b> capaz de reparar el campo desde la bitácora.</p>
+        </details>
+
+        <h2>Punto 1 ter — DER del Servicio III (Operación y Auditoría)</h2>
+        <div class="card">
+          <p>Realice el <b>modelo de datos del Servicio III</b>. Es el servicio “raro”: casi no tiene entidades de
+          negocio y sí <b>hechos</b> y <b>métricas</b>. Indique entidades, PK, FK, cardinalidad, modalidad y
+          restricciones, con supuestos y justificación.</p>
+        </div>
+        <details class="qa">
+          <summary>✅ Solución — DER del Servicio III</summary>
+          ${APP.uml(`erDiagram
+    DIM_LOCKER ||--o{ EVENTO_CASILLERO : "ocurre en"
+    TIPO_EVENTO_LOCKER ||--o{ EVENTO_CASILLERO : clasifica
+    DIM_LOCKER ||--o{ LECTURA_SENSOR : reporta
+    TIPO_SENSOR ||--o{ LECTURA_SENSOR : clasifica
+    DIM_LOCKER ||--o{ HEARTBEAT_LOCKER : emite
+    DIM_LOCKER ||--o{ OCUPACION_DIARIA : resume
+    DIM_FECHA ||--o{ OCUPACION_DIARIA : fecha
+    DIM_LOCKER ||--o{ INCIDENTE : afecta
+    DIM_LOCKER {
+      int id_locker PK "ID LOGICO del Servicio I - replica local"
+      string nro_serie "replicado"
+      string nombre_punto "replicado - read model"
+      string zona "replicado"
+      int cantidad_casilleros "replicado"
+      datetime sincronizado_en "NOT NULL"
+    }
+    TIPO_EVENTO_LOCKER {
+      int id_tipo PK
+      string codigo "UNIQUE NOT NULL - APERTURA_DEPOSITO, APERTURA_RETIRO, CIERRE, PUERTA_FORZADA"
+      string descripcion "NOT NULL"
+      string severidad "CHECK (INFO, ALERTA, CRITICO)"
+    }
+    EVENTO_CASILLERO {
+      bigint id_evento PK
+      int id_locker FK "NOT NULL"
+      int nro_casillero "NOT NULL"
+      int id_tipo FK "NOT NULL"
+      datetime fecha_hora "NOT NULL - particionado por fecha"
+      int id_envio "ID logico - NULL si no aplica"
+      string origen "CHECK (TRANSPORTISTA, DESTINATARIO, OPERADOR, SISTEMA)"
+      string correlation_id "para unir con los logs"
+    }
+    TIPO_SENSOR {
+      int id_tipo_sensor PK
+      string codigo "UNIQUE NOT NULL - PUERTA, PESO, CONECTIVIDAD, BATERIA"
+      string unidad "NOT NULL - kg, pct, booleano"
+    }
+    LECTURA_SENSOR {
+      bigint id_lectura PK
+      int id_locker FK "NOT NULL"
+      int nro_casillero "NULL si es del locker entero"
+      int id_tipo_sensor FK "NOT NULL"
+      datetime fecha_hora "NOT NULL"
+      decimal valor "DECIMAL(12,3) NOT NULL"
+    }
+    HEARTBEAT_LOCKER {
+      bigint id_heartbeat PK
+      int id_locker FK "NOT NULL"
+      datetime fecha_hora "NOT NULL"
+      boolean online "NOT NULL"
+      int bateria_pct "CHECK (0..100)"
+      int senial_pct
+    }
+    OCUPACION_DIARIA {
+      date fecha PK "y FK a DIM_FECHA"
+      int id_locker PK "y FK"
+      int franja_horaria PK "CHECK (0..23)"
+      int casilleros_totales "NOT NULL"
+      decimal ocupados_promedio "DECIMAL(8,2) NOT NULL"
+      int depositos "NOT NULL"
+      int retiros "NOT NULL"
+      int vencidos "NOT NULL"
+      decimal permanencia_prom_horas "DECIMAL(8,2)"
+      datetime calculado_en "NOT NULL"
+    }
+    DIM_FECHA {
+      date fecha PK
+      int anio
+      int mes
+      int dia_semana
+      boolean es_feriado
+    }
+    INCIDENTE {
+      int id_incidente PK
+      int id_locker FK "NOT NULL"
+      int nro_casillero "NULL"
+      int id_tipo FK "tipo de evento que lo origino"
+      datetime detectado_en "NOT NULL"
+      datetime resuelto_en "NULL mientras esta abierto"
+      string estado "CHECK (ABIERTO, EN_CURSO, RESUELTO, DESCARTADO)"
+      string descripcion
+    }`, "Servicio III — Operación y Auditoría")}
+          <h3>Las 5 decisiones propias de un servicio de auditoría</h3>
+          <div class="table-wrap"><table class="data">
+            <thead><tr><th>Decisión</th><th>Qué hice y por qué</th></tr></thead>
+            <tbody>
+              <tr><td><b>1 · Hechos, no entidades</b></td><td>Este servicio <b>casi no tiene entidades de negocio</b>: tiene <b>hechos</b> (<code>EVENTO_CASILLERO</code>, <code>LECTURA_SENSOR</code>, <code>HEARTBEAT</code>) con su <b>marca de tiempo</b>, y <b>catálogos</b> que los clasifican. Una fila por hecho, nunca se actualiza: es <b>append-only</b>.</td></tr>
+              <tr><td><b>2 · Las métricas NO se modelan: se modela el hecho</b></td><td>“Ocupación promedio”, “top 10 de lockers”, “permanencia promedio” <b>no son tablas</b>: son consultas. Por cada métrica que pide el enunciado escribí el <code>COUNT</code>/<code>SUM</code> + <code>GROUP BY</code>; <b>si no sale, falta una tabla de hechos</b>. Lo que sí modelo es la <b>tabla de resumen</b> preagregada, y la justifico.</td></tr>
+              <tr><td><b>3 · Tabla de resumen = esquema estrella</b></td><td><code>OCUPACION_DIARIA</code> con PK compuesta <code>(fecha, id_locker, franja)</code>, alimentada por <b>batch nocturno</b>: es la <b>tabla de hechos</b> rodeada de <b>dimensiones</b> (<code>DIM_LOCKER</code>, <code>DIM_FECHA</code>) deliberadamente desnormalizadas. <b>Desnormalización por performance</b>, con <code>calculado_en</code> para saber cuán vieja está la cifra y un <b>proceso de recálculo</b>.</td></tr>
+              <tr><td><b>4 · <code>DIM_LOCKER</code> es una RÉPLICA LOCAL, no una FK</b></td><td>Los datos del locker son del <b>Servicio I</b>. Acá los <b>replico</b> (patrón <b>read model</b>, sincronizado por <b>eventos</b>) para no llamar al otro servicio en cada consulta analítica. <b>Trade-off que hay que declarar:</b> <b>consistencia eventual</b> y hay que gestionar la sincronización — por eso el campo <code>sincronizado_en</code>. La alternativa (referencia + API) daría datos siempre frescos pero a costa de <b>latencia y dependencia de disponibilidad</b>.</td></tr>
+              <tr><td><b>5 · Volumen: qué va en relacional y qué no</b></td><td><b>Dicho explícitamente:</b> las lecturas de sensores y los heartbeats llegan de forma <b>periódica y masiva</b>, así que en una arquitectura real van a una <b>base de series temporales</b> (escritura append-only + consulta por rango de tiempo + <b>retención y downsampling</b>), y la analítica de meses a un almacén <b>columnar</b> — eso es <b>persistencia políglota</b>. Si el enunciado pide igual el modelo <b>relacional</b>, lo entrego con <b>particionado por fecha</b> y <code>BIGINT</code> en las PK de los hechos, y <b>aclaro el criterio</b>. Nombrarlo suma; no nombrarlo es el error.</td></tr>
+            </tbody>
+          </table></div>
+          <h3>Supuestos</h3>
+          <ul>
+            <li>Las referencias a locker, casillero y envío son <b>IDs lógicos</b> de otros servicios: <b>no hay FK entre bases</b> y la validación es de la aplicación.</li>
+            <li>Los hechos son <b>inmutables</b>: no se actualizan ni se borran (auditoría). Las correcciones se registran como <b>nuevos</b> hechos.</li>
+            <li>Un <b>incidente</b> sí tiene ciclo de vida (abierto → resuelto), así que es la única entidad del servicio con <b>estado</b>.</li>
+            <li>El <code>correlation_id</code> permite unir el evento con los <b>logs y trazas</b> del resto del sistema.</li>
+            <li>La <b>retención</b> es una decisión de negocio: detalle fino poco tiempo, resumen mucho tiempo.</li>
+          </ul>
+          <p class="mini"><b>Justificación en una línea para cada párrafo:</b> <b>(a)</b> persisto hechos, catálogos,
+          dimensiones replicadas y resúmenes; <b>no persisto</b> las métricas (son consultas) ni recalculo lo que ya
+          está agregado. <b>(b)</b> identidad con PK subrogada <code>BIGINT</code> en los hechos y <b>compuesta</b> en
+          el resumen; <code>DECIMAL</code> para las mediciones; sin herencia; catálogos como <b>tabla maestra</b>.
+          <b>(c)</b> desnormalizo <b>por performance</b> (tabla de resumen y <code>DIM_LOCKER</code> replicada), con
+          fuente de verdad declarada y proceso de recálculo; <b>por consistencia</b> no hace falta congelar nada porque
+          <b>los hechos ya son inmutables por naturaleza</b>.</p>
         </details>
 
         <h2>Punto 2 — Auditar un DER contra las 3 formas normales</h2>
@@ -831,7 +951,9 @@ ENVIO.nombre_comercio           -- conservando id_comercio (FK y fuente de verda
           datos ajenos— para <b>no construir un Big Ball of Mud</b>. Lo despliego <b>stateless</b> en <b>N réplicas detrás
           de un balanceador</b>, con <b>caché</b> y <b>cola</b> para el módulo de alta demanda. Dejo el <b>módulo de alto
           tráfico identificado como primer candidato a extracción</b> y, si la asimetría se confirma en producción, lo
-          extraigo con el <b>patrón Strangler</b> —una fachada va derivando ese tráfico al servicio nuevo, sin big
+          extraigo con el <b>patrón Strangler</b> —una fachada va derivando ese tráfico al servicio nuevo, y los cambios
+            de esquema que eso implique los hago con <b>Expand and Contract</b> (agregar manteniendo lo viejo → escribir
+            en ambos y migrar en segundo plano → eliminar cuando nadie consulta lo anterior), sin big
           bang—. <b>Qué evidencia cambiaría mi decisión:</b> que la base compartida sea el cuello de botella medido, que
           ese módulo necesite otro stack o otro tipo de base, que su ritmo de releases choque con el del resto, o que el
           equipo crezca a varios equipos independientes (Ley de Conway).”</p>
@@ -878,6 +1000,90 @@ ENVIO.nombre_comercio           -- conservando id_comercio (FK y fuente de verda
           <b>mantenibilidad</b> (módulos con interfaz explícita, listos para extraer).</p>
         </details>
 
+        <h2>⚠️ Punto extra — el patrón que estos modelos no ejercitan</h2>
+        <div class="callout warn">
+          <p>Sobre los 17 finales y los 2 parciales de la carpeta, <b>“catálogo predefinido + parámetros que el usuario
+          ajusta” aparece en 8 de 24 enunciados</b> (fue el Servicio de Rutinas de PetGuardian), y ahí está <b>el error
+          que más se cobra</b>: poner el parámetro configurable <b>en el catálogo</b> en lugar de en la tabla
+          intermedia. Ninguno de los tres servicios de PaqueRed lo ejercita, así que va este agregado corto.
+          <b>Resolvelo en 10 minutos.</b></p>
+        </div>
+        <div class="card">
+          <p><b>Agregado al Servicio II.</b> Los comercios configuran <b>reglas de aviso</b> sobre sus envíos. No las
+          crean libremente: las arman eligiendo de un <b>catálogo de eventos predefinidos</b> (depositado, próximo a
+          vencer, vencido, retirado) y de un <b>catálogo de canales</b> (mail, SMS, webhook). Una regla <b>combina una o
+          varias condiciones</b> con un canal, y para cada condición el comercio <b>puede ajustar sus parámetros</b>:
+          con cuántas horas de anticipación avisar y cuántos reintentos hacer. Las reglas se <b>activan y
+          desactivan</b>, y se registra el <b>historial de disparos</b>.</p>
+        </div>
+        <details class="qa">
+          <summary>✅ Solución — catálogo + configuración</summary>
+          ${APP.uml(`erDiagram
+    COMERCIO ||--o{ REGLA_AVISO : configura
+    CANAL ||--o{ REGLA_AVISO : "se notifica por"
+    REGLA_AVISO ||--|{ REGLA_CONDICION : "combina (1,N)"
+    TIPO_EVENTO ||--o{ REGLA_CONDICION : "se elige en"
+    REGLA_AVISO ||--o{ DISPARO_REGLA : registra
+    TIPO_EVENTO {
+      int id_tipo_evento PK
+      string codigo "UNIQUE NOT NULL - DEPOSITADO, POR_VENCER"
+      string descripcion "NOT NULL"
+      boolean admite_anticipacion "NOT NULL - describe al TIPO"
+      boolean activo "NOT NULL DEFAULT true"
+    }
+    CANAL {
+      int id_canal PK
+      string nombre "UNIQUE NOT NULL - MAIL, SMS, WEBHOOK"
+      boolean activo "NOT NULL"
+    }
+    REGLA_AVISO {
+      int id_regla PK
+      int id_comercio FK "NOT NULL"
+      int id_canal FK "NOT NULL"
+      string nombre "NOT NULL"
+      string destino "NOT NULL - mail, telefono o URL"
+      boolean activa "NOT NULL DEFAULT true"
+      datetime fecha_creacion "NOT NULL"
+    }
+    REGLA_CONDICION {
+      int id_regla PK "y FK"
+      int id_tipo_evento PK "y FK"
+      int horas_anticipacion "PARAMETRO AJUSTABLE - NULL si no aplica"
+      int reintentos "PARAMETRO AJUSTABLE - NOT NULL DEFAULT 1"
+    }
+    DISPARO_REGLA {
+      int id_disparo PK
+      int id_regla FK "NOT NULL"
+      int id_envio "ID logico"
+      datetime fecha_hora "NOT NULL"
+      string resultado "CHECK (ENVIADO, FALLIDO)"
+      string destino_usado "congelado"
+      string detalle_error
+    }`, "Catálogo predefinido + configuración con parámetros")}
+          <div class="callout key">
+            <div class="callout-title">🎯 Las 4 cosas que se evalúan acá</div>
+            <ol>
+              <li><b>Los parámetros ajustables van en la INTERMEDIA, no en el catálogo.</b>
+              <code>horas_anticipacion</code> y <code>reintentos</code> son de <b>esa regla de ese comercio</b>; si
+              estuvieran en <code>TIPO_EVENTO</code> —que es <b>compartido por todos los comercios</b>— cambiarlos para
+              uno se los cambiaría a todos. <b>Es el error que más se cobra en este patrón.</b> En el catálogo sólo va
+              lo que describe al tipo en sí (<code>admite_anticipacion</code>).</li>
+              <li><b>Catálogo, no enum.</b> El enunciado dice <b>“predefinidos”</b> y los mantiene un administrador →
+              <b>tabla maestra</b> con FK: con un enum, agregar un tipo exigiría un <b>deploy</b>. El campo
+              <code>activo</code> permite dar de baja un tipo <b>sin romper el histórico</b>.</li>
+              <li><b>“Combina una o varias condiciones”</b> → modalidad <b>1,N</b> (<code>||--|{</code>): no existe
+              regla sin condiciones. Y como la misma regla no puede elegir dos veces el mismo evento, la <b>PK
+              compuesta</b> <code>(id_regla, id_tipo_evento)</code> ya lo impide <b>por diseño</b>.</li>
+              <li><b>Historial de disparos</b> con <code>destino_usado</code> <b>congelado</b>: si el comercio cambia el
+              mail de la regla, el registro debe seguir diciendo <b>a dónde se avisó realmente</b>. Es desnormalización
+              por consistencia, en miniatura.</li>
+            </ol>
+          </div>
+          <p class="mini"><b>Variante frecuente:</b> si el enunciado dijera “una regla tiene <b>una</b> condición y
+          <b>una o varias acciones</b>”, el parámetro ajustable se muda a la intermedia de <b>acciones</b>. La regla no
+          cambia: <b>el valor configurable vive donde está la elección del usuario</b>.</p>
+        </details>
+
         <h2>Autoevaluación</h2>
         <p>Resolvé en papel, después marcá con honestidad. Se aprueba con <b>60</b> y <b>no menos del 50% por sección</b>.</p>
         <div id="p2m1rub"></div>
@@ -907,6 +1113,10 @@ ENVIO.nombre_comercio           -- conservando id_comercio (FK y fuente de verda
         { t: "Decisión monolito/servicios: elegí UNA, con las restricciones del enunciado (6 personas, 4 meses) y los atributos de calidad", p: 7 },
         { t: "Decisión: expliqué que el monolito stateless SÍ escala horizontalmente y qué es lo que NO puede (escalar partes)", p: 6 },
         { t: "Decisión: dibujé el diagrama de despliegue coherente con la decisión y dije qué evidencia la cambiaría", p: 6 },
+        { t: "Servicio III: modelé HECHOS con fecha_hora y dije que las métricas son consultas, no tablas", p: 5 },
+        { t: "Servicio III: declaré la réplica local (read model) y la tabla de resumen como desnormalización", p: 4 },
+        { t: "Patrón catálogo: los parámetros ajustables quedaron en la INTERMEDIA, no en el catálogo", p: 6 },
+        { t: "Patrón adjuntos: las fotos salieron a tabla hija con la URL, nunca un BLOB", p: 3 },
       ]);
     },
   });

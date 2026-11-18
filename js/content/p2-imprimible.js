@@ -325,6 +325,9 @@
           </table></div>
           <p class="mini"><b>Balanceador:</b> reparte solicitudes (performance), <b>redirige si un servidor falla</b> (disponibilidad), permite sumar/quitar nodos (escalabilidad). <b>Algoritmos:</b> Round Robin · Least Connections · Weighted · <b>Sticky Sessions</b> (no es algoritmo: <b>política</b> que fuerza el mismo servidor; <b>atenta contra escalabilidad y disponibilidad</b> → mejor <b>stateless + sesión externalizada</b>). <b>L4</b> = IP y puerto, no mira el contenido; <b>L7</b> = entiende HTTP, decide por <b>URL/headers/cookies</b>. <b>Health checks:</b> <b>activo</b> (GET /health periódico, saca de rotación) y <b>pasivo</b> (observa timeouts y 5xx reales).</p>
           <p class="mini"><b>Caché:</b> de <b>aplicación</b> (datos calculados → performance), de <b>contenido</b> (estáticos → uso de recursos), de <b>navegador</b> (→ tiempo de respuesta). Vive <b>privada</b> (navegador), <b>compartida</b> (proxy) o <b>compartida y administrada</b> (<b>CDN</b>), <b>siempre con expiración</b>. <b>Caché HTTP:</b> reutiliza la respuesta y <b>el origen no procesa la solicitud</b> (no parsea, no enruta, no consulta la base, no renderiza). <code>Cache-Control</code>, <code>ETag</code>→<b>304</b>, <code>Vary</code>. <b>CDN:</b> servidores distribuidos geográficamente; entrega HTML/JS/CSS/imágenes/video desde el nodo más cercano; <b>mitiga DDoS</b>; ✅ tiempos de carga, <b>costos de ancho de banda</b>, disponibilidad y redundancia, seguridad. <b>API Gateway:</b> <b>único punto de entrada</b>, enruta, centraliza <b>autenticación, rate limiting, logging</b>, puede ser LB L7 (sin él, cada cliente se acopla a la <b>topología interna</b>). <b>BFF:</b> un backend <b>por tipo de cliente</b>, que agrega y adapta sin tocar los contratos internos.</p>
+          <p class="mini"><b>Cabeceras de caché (por si piden la especificación):</b> <code>Cache-Control: max-age=N</code> TTL para cualquier caché · <code>s-maxage=N</code> TTL <b>sólo para cachés compartidas</b> (CDN/proxy), pisa a max-age · <code>public</code> la puede guardar cualquier caché / <code>private</code> <b>sólo el navegador del usuario</b> · <code>no-cache</code> se guarda pero <b>hay que revalidar</b> antes de usarla · <code>no-store</code> <b>no se guarda en ninguna</b> (datos sensibles) · <code>ETag</code> + <code>If-None-Match</code> → <b>304 Not Modified</b> sin cuerpo · <code>Vary</code> guarda una versión por cabecera (ej. <code>Accept-Language</code>). <b>HIT</b> = estaba válido en caché; <b>MISS</b> = no estaba o expiró y se va al <b>origin server</b>. <b>Hit ratio = HITs / (HITs + MISSes)</b>.</p>
+          <p class="mini"><b>Qué SÍ va a la CDN:</b> HTML estático, CSS, JS, imágenes, fuentes, video, bundles de la SPA, sitios SSG, vistas públicas no personalizadas. <b>Qué NO:</b> respuestas <b>JSON personalizadas por usuario</b> (carrito, perfil, saldo), <b>operaciones que modifican estado</b> (POST/PUT/DELETE) y contenido sensible sin <code>private</code>. <b>Invalidación:</b> ① <b>purge</b> explícito en la CDN; ② <b>cache busting</b> (nombre con hash, <code>app.3f9a1c.js</code>, + TTL larguísimo: al desplegar cambia el nombre y no hay que invalidar nada). <b>Compromiso del TTL:</b> largo = más HITs y menos carga pero riesgo de contenido viejo; corto = fresco pero más MISS. <b>Pull CDN</b> (trae del origen en el primer pedido, lo habitual) vs <b>Push CDN</b> (se sube de antemano); <b>origin shield</b> = capa intermedia que consolida los MISS de varios nodos antes de llegar al origen.</p>
+          <p class="mini"><b>Algoritmos de balanceo (lista completa):</b> <b>Round Robin</b> (uno por uno; servidores iguales) · <b>Weighted Round Robin</b> (los más potentes reciben más) · <b>Least Connections</b> (menos conexiones activas; requests de duración variable) · <b>Least Response Time</b> (al más rápido; optimizar latencia) · <b>IP Hash</b> (hash de la IP → siempre el mismo servidor; afinidad) · <b>Sticky sessions</b> (política, no algoritmo). <b>⚠️ Si hay un solo balanceador, él mismo es el punto único de falla: hay que redundarlo.</b></p>
         </section>
 
         <!-- ===================== HOJA 9 ===================== -->
@@ -390,6 +393,8 @@
             </tbody>
           </table></div>
           <p class="mini"><b>Cómo elegir:</b> ¿necesito la respuesta <b>ya</b>? → <b>API</b> (+ timeout, retry, circuit breaker). ¿Puede esperar y <b>no debe perderse</b>? → <b>cola</b>. ¿<b>Muchos lectores</b> o <b>historial/replay</b>? → <b>Kafka</b>. ¿Mismo equipo y legado? → recién ahí BD compartida. <b>Una solución suele COMBINAR:</b> API para cobrar, cola para facturar. <b>IoT/sensores:</b> <b>MQTT</b> (liviano, pub/sub, QoS, tolera conectividad intermitente) + broker + <b>Edge Gateway</b> que bufferea y reintenta → ingesta → <b>TSDB</b>.</p>
+          <p class="mini"><b>Resiliencia — lo que falta nombrar:</b> <b>Bulkhead (mamparo):</b> <b>aislar pools de recursos por dependencia</b>, para que una dependencia lenta <b>no consuma todos los hilos</b> del servicio (evita el <i>thread starvation</i>). Es el complemento del timeout. · <b>Circuit breaker en detalle:</b> <b>CLOSED</b> (tráfico normal, se mide la tasa de fallas) → supera el <b>umbral</b> (ej. 50%) → <b>OPEN</b> (intercepta sin tocar al destino y responde el <b>fallback</b> durante la <b>sleep window</b>) → <b>HALF-OPEN</b> (deja pasar unas pocas llamadas de prueba, <b>probes</b>) → vuelve a CLOSED si tienen éxito, a OPEN si fallan. <b>Beneficios:</b> evita la falla en cascada, <b>libera hilos</b>, le da tiempo de recuperación al servicio dañado y permite <b>degradar con gracia</b>.</p>
+          <p class="mini"><b>Otros patrones que pueden pedir:</b> <b>CQRS</b> (separar el modelo de <b>escritura</b> del de <b>lectura</b>; junto con <b>API Composition</b> es la forma de resolver consultas que cruzan servicios <b>sin joins entre bases</b>) · <b>CDC — Change Data Capture</b> (un motor como <b>Debezium</b> lee el <b>log de transacciones</b> de la base y publica los cambios como eventos: es la alternativa al <i>relay</i> por polling del <b>Outbox</b>, y el mecanismo típico para sincronizar datos entre sistemas) · <b>2PC (commit de dos fases)</b>: coordina una transacción entre varios sistemas con un coordinador que primero pregunta “¿pueden?” y después ordena commit; <b>es lento, bloqueante y poco disponible</b> — <b>por eso en microservicios se usa SAGA</b> con compensaciones y consistencia eventual. <b>Consumer lag</b> (Kafka): atraso del consumidor respecto del último mensaje; es <b>la métrica de saturación</b> que hay que monitorear.</p>
         </section>
 
         <!-- ===================== HOJA 11 ===================== -->
@@ -413,6 +418,13 @@
           <p class="mini"><b>Alertas:</b> umbral estático · tendencia/anomalía · <b>basada en SLO</b> · <b>ausencia de datos</b> · compuesta. <b>Alertar por SÍNTOMAS, no por causas</b> (“% de pedidos fallidos &gt; 1%”, no “CPU &gt; 80%”). Accionable, urgente, con <b>dueño y runbook</b>, con <b>severidad</b>. <b>Alert fatigue:</b> si todo alerta, nada se atiende. Parámetros: <b>umbral</b>, <b>duración (for)</b>, agregación, recuperación (evita <b>flapping</b>). <b>SLI</b> (medición real) · <b>SLO</b> (meta interna) · <b>SLA</b> (contrato <b>con penalidades</b>). <b>Error budget</b> = 100% − SLO (99,5% → <b>216 min/mes</b>): con presupuesto se puede arriesgar; al <b>80%</b> se frenan cambios riesgosos; al <b>100%</b> se <b>congelan los lanzamientos</b>. <b>Disponibilidad compuesta:</b> 99,9% × 99,9% ≈ <b>99,8%</b> — <b>cada dependencia resta</b>. 99,9% = 8,76 h/año · 99,99% = 52,6 min/año.</p>
           <p class="mini"><b>Infra:</b> bare metal → <b>VM</b> (SO completo, GBs, minutos, aislamiento fuerte) → <b>contenedor</b> (<b>comparte el kernel</b>, MBs, segundos, portabilidad: “fin del <i>en mi máquina funciona</i>”) → <b>Kubernetes</b> (<b>estado deseado</b>, scheduling, <b>self-healing</b>, autoescalado, rolling updates, descubrimiento) → <b>serverless</b>. <b>Ambientes:</b> Dev (ficticios) · QA (de prueba) · <b>Staging/UAT</b> (<b>réplica fiel</b>, datos <b>anonimizados</b>) · Producción. <b>Paridad entre ambientes</b> = menos sorpresas; <b>nunca copiar datos reales sin anonimizar</b> (Ley 25.326). <b>Mutable (“mascotas”)</b> → configuration drift, servidores “copo de nieve” vs. <b>INMUTABLE (“ganado”)</b> → se <b>reemplaza</b>, no se parchea; <b>rollback = redeploy de la imagen anterior</b>; <b>IaC</b> (Terraform) versionada y auditable. <b>CI/CD:</b> el <b>artefacto se construye una sola vez</b> y recorre todos los ambientes; <b>Delivery</b> (con aprobación) vs. <b>Deployment</b> (sin intervención) = <b>decisión de negocio</b>. <b>RPO</b> (cuántos datos tolero perder: 24 h → backup diario; ≈0 → <b>replicación sincrónica</b>) · <b>RTO</b> (cuánto sin servicio). <b>DR:</b> Backup&amp;Restore (horas/días) · <b>Pilot Light</b> (min/decenas de min) · <b>Warm Standby</b> (seg-min/min) · <b>Activo-Activo</b> (≈0/≈0).</p>
           <p class="mini"><b>Despliegue — DEPLOY ≠ RELEASE</b> (técnico vs. <b>negocio</b>; dimensiones: downtime, <b>radio de impacto</b>, costo de infra, velocidad de rollback). <b>Recreate</b>: se detiene todo y se levanta la nueva (<b>downtime garantizado</b>; útil si dos versiones <b>no pueden convivir</b>). <b>Rolling update</b>: progresivo, sin downtime ni infra extra, <b>conviven v1 y v2</b> (API y base <b>compatibles con ambas</b>); rollback lento; <b>default de Kubernetes</b>. <b>Blue/Green</b>: dos ambientes idénticos, switch y <b>rollback inmediatos</b>; ⚠️ <b>duplica la infra</b>, base compartida y sesiones en curso. <b>Canary</b>: 1→5→25→50→100% <b>según métricas</b>; <b>limita el radio de impacto</b>; requiere <b>observabilidad y LB L7</b>. <b>Canary</b> (técnico: ¿es estable?) vs. <b>A/B testing</b> (negocio: ¿qué variante convierte más?) vs. <b>Shadow</b> (copia del tráfico real, <b>respuesta descartada</b>; ⚠️ no cobrar/mailear dos veces). <b>Feature flags:</b> separan deploy de release, activación gradual, <b>kill switch</b>; ⚠️ deuda técnica si no se eliminan.</p>
+          <div class="callout key">
+            <div class="callout-title">⭐ EXPAND AND CONTRACT — cambiar el esquema sin downtime</div>
+            <p class="mini">Es la respuesta a “<b>durante un rolling update conviven v1 y v2, así que la base tiene que ser compatible con ambas</b>”. Tres fases:</p>
+            <p class="mini"><b>① EXPAND:</b> se <b>agrega</b> la columna/tabla nueva <b>manteniendo activa la anterior</b> → compatibilidad hacia atrás, la v1 sigue funcionando. <b>② MIGRATE / DUAL WRITE:</b> se despliega la versión nueva, que <b>escribe en ambas</b> estructuras, y se migran los datos históricos <b>en segundo plano</b>. <b>③ CONTRACT:</b> cuando se verifica que <b>ningún servicio consulta la estructura vieja</b>, se elimina.</p>
+            <p class="mini"><b>Regla general:</b> los cambios de esquema y de contrato de API deben ser <b>aditivos</b> (agregar campos opcionales), nunca renombrar o borrar de una. <b>Rollback vs roll-forward:</b> <b>rollback</b> = volver a la versión anterior (rápido, pero <b>falla si hubo cambios de datos incompatibles</b> — justamente por eso Expand &amp; Contract); <b>roll-forward</b> = arreglar y desplegar una versión nueva, que se elige cuando volver atrás no es posible o es más riesgoso.</p>
+          </div>
+          <p class="mini"><b>MELT:</b> la cátedra enseña <b>3 pilares</b> (logs, métricas, trazas) <b>+ profiling</b> como cuarta pata. En la industria se usa el acrónimo <b>MELT = Metrics, Events, Logs, Traces</b>; todos se vinculan por el <b>Correlation ID / Trace ID</b>. Si lo nombrás, aclaralo así.</p>
           <p class="mini"><b>Componentes:</b> <b>DNS</b> (nombre→IP, cacheado por <b>TTL</b>; failover, geo-routing, ponderado; TTL alto = mejor performance pero <b>conmutación más lenta</b>) · <b>Proxy directo</b> (en nombre de los <b>clientes</b>; filtrado corporativo) vs. <b>Proxy reverso</b> (en nombre de los <b>servidores</b>; terminación TLS, caché, oculta la topología; <b>base del LB, el API Gateway y el WAF</b>) · <b>IAM/IDM</b> (identidades, roles y permisos centralizados: <b>altas y bajas en un lugar</b>) · <b>SSO</b> (autenticarse <b>una vez</b> para varias apps; OAuth2/OIDC/SAML; <b>el IdP es crítico</b>) · <b>MFA</b> · <b>WAF</b> (bloquea <b>OWASP Top 10</b>, rate limiting, <b>parches virtuales</b>) · <b>Secretos</b> (<b>nunca en el repo</b>: queda en el historial; bóveda con acceso, auditoría y <b>rotación</b>; inyectados por variables de entorno).</p>
         </section>
 
@@ -454,6 +466,77 @@
             <p class="mini"><b>Cierre (el que distingue):</b> “El costo que asumo es [consistencia eventual / complejidad operativa / ventana de inconsistencia], y lo mitigo con [idempotencia / DLQ y monitoreo del backlog / proceso de recálculo / circuit breaker y degradación].”</p>
           </div>
           <p class="mini"><b>CHECKLIST FINAL:</b> ☐ Repartí el tiempo <b>por puntaje</b> y <b>ninguna sección quedó en blanco</b> (se exige ≥50% en cada una) ☐ Escribí <b>supuestos</b> ☐ Todo decidido está <b>justificado por escrito</b> ☐ Nombré <b>y definí</b> los atributos de calidad ☐ Los diagramas tienen <b>título, leyenda y todas las flechas rotuladas con su protocolo</b> (HTTPS, AMQP, MQTT, JDBC) y lo <b>externo</b> marcado ☐ En el modelo de datos: <b>PK, FK, cardinalidad, modalidad, restricciones</b> ☐ N:M con <b>tabla intermedia</b> ☐ Ningún atributo <b>multivaluado</b> ☐ Herencia <b>elegida y justificada</b> ☐ Los <b>3 párrafos</b> (persistir / impedance / desnormalizar) ☐ Releí el enunciado buscando requerimientos que no aparezcan en mi solución.</p>
+        </section>
+
+        <!-- ===================== HOJA 13 ===================== -->
+        <section class="hoja">
+          <span class="hoja-num">HOJA 13 · GLOSARIO EXPRESS · FÓRMULAS · NÚMEROS</span>
+          <div class="grid-2">
+            <div class="card">
+              <p class="mini"><b>ACID</b> — Atomicidad, Consistencia, Aislamiento, Durabilidad: garantías de una transacción <b>local</b>.<br>
+              <b>ADR</b> — Architecture Decision Record: registro de una decisión arquitectónica <b>y su porqué</b>.<br>
+              <b>API Composition</b> — resolver una consulta pidiendo a cada servicio dueño y uniendo en memoria (no hay join entre bases).<br>
+              <b>at-least-once</b> — no se pierde, puede duplicarse ⇒ <b>consumidor idempotente</b>.<br>
+              <b>Bounded Context</b> — límite de un modelo de dominio coherente (DDD); guía para cortar microservicios.<br>
+              <b>Bulkhead</b> — pools de recursos aislados por dependencia; evita que una lenta consuma todos los hilos.<br>
+              <b>CAPEX / OPEX</b> — inversión inicial amortizable / gasto recurrente por uso.<br>
+              <b>CDC</b> — Change Data Capture: lee el log de transacciones de la base y publica los cambios (Debezium).<br>
+              <b>Consumer lag</b> — atraso del consumidor Kafka respecto del último mensaje: métrica de saturación.<br>
+              <b>Correlation ID / Trace ID</b> — identificador que une logs, métricas y trazas de una misma solicitud.<br>
+              <b>CQRS</b> — separar el modelo de escritura del de lectura.<br>
+              <b>CSR / SSR / SSG</b> — renderizado en cliente / en servidor por request / en build.<br>
+              <b>Dirty read</b> — leer datos de una transacción no confirmada que puede hacer rollback.<br>
+              <b>DLQ</b> — cola de mensajes que no se pudieron procesar.<br>
+              <b>DIP</b> — el dominio define las interfaces; la infraestructura las implementa.<br>
+              <b>Error budget</b> — 100% − SLO: margen de falla permitido.<br>
+              <b>Expand &amp; Contract</b> — evolución de esquema en 3 fases sin downtime.<br>
+              <b>Golden Signals</b> — latencia, tráfico, errores, saturación.<br>
+              <b>Grado / Cardinalidad</b> — nº de atributos / nº de tuplas (en teoría relacional).<br>
+              <b>HIT / MISS</b> — el recurso estaba válido en caché / hubo que ir al origen.<br>
+              <b>Hidratación</b> — instanciar la clase y popular sus atributos no-lazy desde la base.</p>
+            </div>
+            <div class="card">
+              <p class="mini"><b>Idempotencia</b> — repetir la operación no cambia el resultado (clave de idempotencia).<br>
+              <b>Impedance mismatch</b> — desajuste objeto↔relacional: identidad, tipos, cardinalidad, herencia.<br>
+              <b>MELT</b> — Metrics, Events, Logs, Traces (la cátedra: 3 pilares + profiling).<br>
+              <b>Modalidad</b> — cantidad <b>mínima</b> de la relación (0 opcional / 1 obligatoria).<br>
+              <b>Monolith First</b> — empezar monolito y dividir cuando se entienda el dominio (Fowler).<br>
+              <b>N+1 queries</b> — 1 consulta + N por el lazy dentro de un ciclo; se cura con <code>JOIN FETCH</code>.<br>
+              <b>Nano / Teraservicio</b> — demasiado chico (la red y la operación superan el beneficio) / casi un monolito.<br>
+              <b>OpenAPI</b> — contrato de una API REST (Swagger). <b>WSDL</b> — el de SOAP.<br>
+              <b>Origin server</b> — servidor al que recurre la CDN ante un MISS.<br>
+              <b>Outbox</b> — el evento se guarda en la misma transacción que la entidad; un relay lo publica.<br>
+              <b>Políglota</b> — distintos tipos de base en un mismo ecosistema, uno por necesidad.<br>
+              <b>Puerto / Adaptador</b> — interfaz que define el dominio / implementación concreta (hexagonal).<br>
+              <b>RPO / RTO</b> — datos que tolero perder / tiempo que tolero sin servicio.<br>
+              <b>Saga</b> — transacciones locales + <b>compensaciones</b> en orden inverso.<br>
+              <b>SLI / SLO / SLA</b> — medición / objetivo interno / contrato con penalidad.<br>
+              <b>Span</b> — bloque de trabajo con inicio, fin y metadatos dentro de una traza.<br>
+              <b>Stateless</b> — sin estado de sesión en el servidor; habilita el escalado horizontal.<br>
+              <b>Sticky session</b> — el LB manda siempre al mismo usuario al mismo nodo (limita la flexibilidad).<br>
+              <b>Strangler Fig</b> — reemplazar el monolito de a poco, ruta por ruta.<br>
+              <b>TTL</b> — tiempo de validez de un recurso en caché.<br>
+              <b>2PC</b> — commit de dos fases: coordina entre sistemas, pero es lento y poco disponible ⇒ Saga.<br>
+              <b>WAF</b> — firewall de aplicación: bloquea el OWASP Top 10.</p>
+            </div>
+          </div>
+          <div class="callout key">
+            <div class="callout-title">FÓRMULAS</div>
+            <p class="mini"><b>SLI</b> = peticiones buenas / peticiones totales × 100 &nbsp;·&nbsp; <b>Error budget</b> = 100% − SLO<br>
+            <b>Disponibilidad en SERIE</b> (dependencias encadenadas) = a₁ × a₂ × … × aₙ → <b>cada dependencia RESTA</b> (0,999 × 0,999 ≈ 0,998; 0,99³ ≈ 97%)<br>
+            <b>Disponibilidad en PARALELO</b> (redundancia) = 1 − (1 − a)ⁿ → <b>cada réplica SUMA</b> (dos nodos de 0,99 → 1 − 0,01² = 99,99%)<br>
+            <b>Cache hit ratio</b> = HITs / (HITs + MISSes) × 100 &nbsp;·&nbsp; <b>Muestras/día</b> = series × (86.400 ÷ intervalo)<br>
+            <b>Integraciones punto a punto</b> = n·(n−1)/2 → 6 sistemas = <b>15</b> integraciones (SOA las baja a 6)</p>
+          </div>
+          <div class="callout key">
+            <div class="callout-title">NÚMEROS PARA RECORDAR</div>
+            <p class="mini"><b>99% </b> = 3,65 días/año · <b>99,9%</b> = 8,76 h/año = <b>43,8 min/mes</b> · <b>99,95%</b> = 4,38 h/año · <b>99,99%</b> = 52,6 min/año · <b>99,999%</b> = 5,26 min/año.<br>
+            <b>Tiers:</b> I 99,671% (28,8 h) · II 99,741% (22 h) · <b>III mantenible concurrentemente 99,982%</b> (1,6 h) · <b>IV tolerante a fallas 99,995%</b> (26,3 min).<br>
+            <b>Canary típico:</b> 5% del tráfico a la v2 → 25 → 50 → 100. <b>Recreate</b> es el <b>único con downtime</b>; <b>Blue/Green</b> es el <b>único con costo 2×</b>.<br>
+            <b>Amazon Prime Video (2023):</b> migró de serverless/microservicios <b>a un monolito</b> y bajó <b>90%</b> el costo de infraestructura. <b>PedidosYa Plus:</b> 16 servicios en el MVP → <b>12</b> hoy.<br>
+            <b>Retención de métricas:</b> 15 s los primeros 15 días · 5 min hasta 90 días · 1 h hasta 2 años.<br>
+            <b>Modelo relacional:</b> Codd, IBM, <b>1970</b>. <b>MVC:</b> Reenskaug, Smalltalk-80, <b>1979</b>. <b>Falacias distribuidas:</b> Deutsch, Sun, <b>1994-97</b>. <b>Ley de Conway:</b> <b>1968</b>.</p>
+          </div>
         </section>
       `;
 

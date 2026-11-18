@@ -22,6 +22,20 @@
         </div>
 
         <div class="callout key">
+          <div class="callout-title">📋 Ya sabés la estructura del parcial — practicá ESO</div>
+          <p>Por los turnos anteriores, el modelo de datos viene en tres puntos: <b>(1)</b> armar el <b>DER de un
+          servicio con justificación</b>; <b>(2)</b> te dan un <b>DER ya hecho de otro servicio</b> y hay que decir
+          <b>si cumple las 3 formas normales</b>, sí o no, y explicar el problema <b>en dos renglones</b>; <b>(3)</b> un
+          punto de <b>desnormalización</b>. Y arquitectura: <b>métricas y logs</b>, <b>circuit breaker</b>, <b>CDN,
+          caché y TTL</b>, <b>diagrama de despliegue</b> y una decisión de <b>monolito vs. servicios</b> con sus
+          restricciones de equipo y plazo.</p>
+          <p><b>Tenés los dos modelos armados con esa estructura exacta y resueltos:</b>
+          <a class="inline" data-go="p2-m1-paquered">Modelo 1 · PaqueRed</a> (tu contexto) y
+          <a class="inline" data-go="p2-m2-voltared">Modelo 2 · VoltaRed</a>. <b>Son la práctica de mayor rendimiento
+          que podés hacer ahora:</b> resolvelos en papel con el reloj corriendo antes de abrir las soluciones.</p>
+        </div>
+
+        <div class="callout key">
           <div class="callout-title">🔑 La regla que ordena todo</div>
           <p>Este parcial <b>no se aprueba sabiendo definiciones: se aprueba eligiendo y justificando</b>. Por cada tema,
           lo único que tenés que poder hacer es:</p>
@@ -45,9 +59,9 @@
               <td><a class="inline" data-go="p2-normalizacion">Formas Normales</a> · <a class="inline" data-go="p2-desnormalizacion">Desnormalización</a></td>
             </tr>
             <tr>
-              <td><b>2 · 45 min<br>Hacer un DER</b></td>
-              <td><b>Con lápiz y papel</b>, modelá el “Servicio de Gestión de Mascotas” del parcial 2025 <b>antes</b> de mirar la solución. Después compará. Repetí con el punto de Persistencia (bicicleteros).</td>
-              <td><a class="inline" data-go="p2-der">DER paso a paso</a> · <a class="inline" data-go="p2-simulacro">Simulacro</a></td>
+              <td><b>2 · 60 min<br>Hacer un DER y auditar otro</b></td>
+              <td><b>Con lápiz y papel</b>, resolvé los tres puntos de datos del <b>Modelo 1 (PaqueRed)</b> —tu contexto— <b>antes</b> de mirar la solución: el DER del servicio de envíos, la auditoría del DER dado contra las 3FN y el punto de desnormalización. Después compará y repetí con el <b>Modelo 2 (VoltaRed)</b>.</td>
+              <td><a class="inline" data-go="p2-m1-paquered">Modelo 1 · PaqueRed</a> · <a class="inline" data-go="p2-m2-voltared">Modelo 2 · VoltaRed</a> · <a class="inline" data-go="p2-der">DER paso a paso</a></td>
             </tr>
             <tr>
               <td><b>3 · 40 min<br>ORM e Hibernate</b></td>
@@ -81,8 +95,8 @@
             </tr>
             <tr>
               <td><b>9 · 30 min<br>Cierre activo</b></td>
-              <td>Hacé el <a class="inline" data-go="p2-preguntas">banco de preguntas</a> completo. Lo que falles, anotalo <b>a mano</b> en una hoja: esa hoja es tu repaso de mañana a la mañana (no vuelvas al sitio).</td>
-              <td><a class="inline" data-go="p2-preguntas">Preguntas</a></td>
+              <td>Hacé el <a class="inline" data-go="p2-preguntas">banco de preguntas</a> completo y el punto de arquitectura de los dos modelos. Lo que falles, anotalo <b>a mano</b> en una hoja: esa hoja es tu repaso de mañana a la mañana (no vuelvas al sitio).</td>
+              <td><a class="inline" data-go="p2-preguntas">Preguntas</a> · <a class="inline" data-go="p2-m1-paquered">Modelo 1</a></td>
             </tr>
             <tr>
               <td><b>10 · 10 min<br>Imprimir</b></td>
@@ -92,8 +106,8 @@
           </tbody>
         </table></div>
         <div class="callout tip">
-          <p><b>Si sólo te quedan 3 horas:</b> bloques 1, 2, 3 y 6, y el imprimible. Son el 70% del puntaje
-          (modelo de datos + persistencia + las preguntas de arquitectura que caen siempre).</p>
+          <p><b>Si sólo te quedan 3 horas:</b> <b>Modelo 1 completo</b> (es el parcial entero con tu contexto) +
+          bloques 1 y 3 + el imprimible. Son el 70% del puntaje.</p>
         </div>
 
         <h2>La técnica (esto es lo que realmente mueve la aguja)</h2>

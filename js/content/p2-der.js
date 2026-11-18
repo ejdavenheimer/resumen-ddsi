@@ -32,6 +32,24 @@
           memorizada: es el punto más barato del parcial.</p>
         </div>
 
+        <h2>El método, en 7 pasos</h2>
+        <div class="card">
+          <ol>
+            <li><b>Leé el enunciado entero una vez SIN escribir.</b> En la segunda lectura, subrayá con la tabla de disparadores de abajo.</li>
+            <li><b>Hacé el esqueleto primero:</b> sólo las cajas con nombre, <b>PK y FK</b>, y las líneas. <b>Ves la estructura antes de perderte en los detalles</b> — y si te queda mal, todavía estás a tiempo de rehacerla.</li>
+            <li><b>Recién ahí completá</b> atributos, tipos de dato y restricciones.</li>
+            <li><b>Revisá línea por línea:</b> la <b>pata de gallo va del lado donde está la FK</b>; si la entidad <b>puede existir sin</b> la otra va <code>o</code> (opcional), si <b>no puede</b> va <code>|</code> (obligatoria); <b>ninguna tabla queda suelta</b> sin relaciones.</li>
+            <li><b>Checklist:</b> releé el enunciado <b>oración por oración</b> tachando cada dato que ya esté en el DER; por cada <b>estadística</b> pedida preguntate <b>“¿con qué tabla y qué COUNT o SUM la saco?”</b>; y verificá que no haya <b>FK redundantes</b> ni dos FK que se excluyan entre sí.</li>
+            <li><b>Escribí 3 a 5 supuestos y justificaciones</b> al lado del diagrama.</li>
+            <li><b>Pasalo en limpio:</b> nada tachado, ninguna nota suelta. <b>El corrector lee lo que ve.</b></li>
+          </ol>
+        </div>
+        <div class="callout tip">
+          <p><b>El paso 2 es el que más tiempo ahorra</b> y el que casi nadie hace: si empezás escribiendo los atributos de
+          la primera entidad, llegás a la mitad de la hoja y descubrís que te falta una tabla en el medio. Con el
+          esqueleto primero, mover una caja cuesta cero.</p>
+        </div>
+
         <h2>Paso 1 — Leer el enunciado buscando sustantivos y verbos</h2>
         <div class="grid-2">
           <div class="card">
@@ -53,6 +71,28 @@
             </ul>
           </div>
         </div>
+
+        <h3>⭐ Tabla de disparadores: si el enunciado dice… entonces…</h3>
+        <div class="table-wrap"><table class="data">
+          <thead><tr><th>Si dice…</th><th>Significa…</th></tr></thead>
+          <tbody>
+            <tr><td>Un sustantivo con datos propios (Mascota, Zona, Técnico)</td><td><b>Entidad</b> (tabla con PK)</td></tr>
+            <tr><td>“De cada X se conoce…”</td><td><b>Atributos</b> de X</td></tr>
+            <tr><td>“Tiene varios”, “uno o más”, “puede incluir”</td><td><b>1:N</b> — la FK va del lado <b>N</b></td></tr>
+            <tr><td>“Múltiples… y a su vez…”</td><td><b>N:M</b>, con <b>tabla intermedia</b></td></tr>
+            <tr><td>“Al menos uno”</td><td><b>Modalidad obligatoria</b> (<code>|{</code>), FK NOT NULL</td></tr>
+            <tr><td>“Puede tener”, “opcional”</td><td><b>Modalidad opcional</b> (<code>o{</code>), FK admite NULL</td></tr>
+            <tr><td>“Único”, “identificatorio”, “código”, “número de serie”</td><td><b>UNIQUE</b> (clave natural); la PK puede seguir siendo subrogada</td></tr>
+            <tr><td><b>“Historial”, “bitácora”, “registro”, “trazabilidad”, “se puede consultar qué pasó”</b></td><td><b>Tabla de eventos</b> con <code>fecha_hora</code> (una fila por hecho), <b>no</b> un campo en la entidad</td></tr>
+            <tr><td><b>“Estadísticas”, “el más…”, “top 10”, “promedio”, “cantidad de…”</b></td><td><b>Tiene que existir una tabla que permita contarlo o sumarlo.</b> Si no podés escribir el COUNT o el SUM, te falta una entidad</td></tr>
+            <tr><td><b>“Predefinido”, “catálogo”, “tipos posibles”, “lo configura un administrador”</b></td><td><b>Tabla catálogo</b> + <b>intermedia</b> con los valores elegidos (no un enum: agregar un valor no puede exigir un deploy)</td></tr>
+            <tr><td><b>“Puede ajustar los parámetros”, “configurable”</b></td><td>El valor <b>va en la tabla intermedia</b> (es de <i>esa</i> configuración), <b>NO en el catálogo</b> (que es compartido por todos)</td></tr>
+            <tr><td>“Estado”, “pasa por…”, “acepta o rechaza”, “ciclo de vida”</td><td>Campo <code>estado</code> con <b>CHECK</b> / enum STRING — <b>nunca un BOOLEAN</b> si hay más de dos valores (y casi siempre hay un tercero)</td></tr>
+            <tr><td>“Vigente desde”, “cambia en el tiempo”, “histórico de precios”</td><td><code>vigente_desde</code> <b>dentro de la PK</b> + <code>vigente_hasta</code> NULL en la fila actual</td></tr>
+            <tr><td>“Adjuntos”, “fotos”, “documentos”</td><td>Tabla hija 1:N guardando la <b>URL</b> (object storage) — <b>nunca el binario en la base</b></td></tr>
+            <tr><td>“Al momento de”, “el precio aplicado”, “comprobante”</td><td><b>Dato congelado</b> (desnormalización por consistencia), conservando la FK</td></tr>
+          </tbody>
+        </table></div>
 
         <h2>Paso 2 — Del diagrama de clases al modelo de datos</h2>
         <div class="table-wrap"><table class="data">
@@ -89,6 +129,106 @@
           <p>Escribí la lectura en palabras al lado de la línea: “<b>un</b> Domicilio tiene <b>cero o muchos</b>
           Dispositivos / <b>un</b> Dispositivo pertenece a <b>exactamente un</b> Domicilio”. Eso demuestra cardinalidad
           <b>y</b> modalidad sin ambigüedad, aunque el corrector no comparta tu notación.</p>
+        </div>
+
+        <h3>Tipos de dato (para no dudar en el momento)</h3>
+        <div class="grid-2">
+          <div class="card">
+            <div class="table-wrap"><table class="data">
+              <thead><tr><th>Tipo</th><th>Para qué</th></tr></thead>
+              <tbody>
+                <tr><td><code>INT</code> / <code>BIGINT</code></td><td>Ids, cantidades</td></tr>
+                <tr><td><code>SMALLINT</code></td><td>Números chicos (edad, nivel)</td></tr>
+                <tr><td><b><code>DECIMAL(p,s)</code></b></td><td><b>Dinero y medidas exactas</b> — <code>importe DECIMAL(12,2)</code></td></tr>
+                <tr><td><code>FLOAT</code> / <code>DOUBLE</code></td><td>Medidas <b>aproximadas</b>: latitud, temperatura</td></tr>
+                <tr><td><code>VARCHAR(n)</code></td><td>Texto corto o mediano: <code>nombre VARCHAR(100)</code>, <code>url VARCHAR(255)</code></td></tr>
+                <tr><td><code>CHAR(n)</code></td><td>Largo fijo: país <code>CHAR(2)</code>, moneda <code>CHAR(3)</code></td></tr>
+              </tbody>
+            </table></div>
+          </div>
+          <div class="card">
+            <div class="table-wrap"><table class="data">
+              <thead><tr><th>Tipo</th><th>Para qué</th></tr></thead>
+              <tbody>
+                <tr><td><code>TEXT</code></td><td>Texto largo: descripción, observaciones</td></tr>
+                <tr><td><code>BOOLEAN</code></td><td>Sí/no <b>real</b>, sólo dos valores: <code>activo</code></td></tr>
+                <tr><td><code>DATE</code> · <code>TIME</code></td><td>Sólo fecha · sólo hora (<code>hora_desde</code>)</td></tr>
+                <tr><td><code>DATETIME</code> / <code>TIMESTAMP</code></td><td>Fecha + hora de un evento</td></tr>
+                <tr><td><code>ENUM(...)</code></td><td>Lista fija (MySQL); en el parcial, <code>VARCHAR</code> + <b>CHECK</b></td></tr>
+                <tr><td><code>BLOB</code></td><td>Binario — <b>evitalo: guardá la URL</b></td></tr>
+              </tbody>
+            </table></div>
+          </div>
+        </div>
+        <div class="callout tip">
+          <p><b>Tip:</b> <b>DNI, CUIT, teléfono y código postal van como <code>VARCHAR</code></b>, no como número: no se
+          hacen cuentas con ellos y pueden tener <b>ceros a la izquierda</b>, guiones o letras. Y <b>dinero nunca en
+          <code>DOUBLE</code></b>: el redondeo binario te arruina un importe cobrado.</p>
+        </div>
+
+        <h3>Claves y restricciones: qué significa cada sigla</h3>
+        <div class="table-wrap"><table class="data">
+          <thead><tr><th>Sigla</th><th>Qué es</th></tr></thead>
+          <tbody>
+            <tr><td><b>PK</b></td><td>Identificador único de cada fila. <b>No puede ser NULL.</b></td></tr>
+            <tr><td><b>FK</b></td><td>Referencia a la PK de otra tabla.</td></tr>
+            <tr><td><b>PK FK</b></td><td>Columna que es <b>parte de la PK y a la vez FK</b>. Es lo típico en las <b>tablas intermedias</b>.</td></tr>
+            <tr><td><b>UK / UNIQUE</b></td><td>No se repite, pero no es la PK: DNI, email, código, nro. de serie.</td></tr>
+            <tr><td><b>NN / NOT NULL</b></td><td>Obligatorio ↔ <b>modalidad 1</b>.</td></tr>
+            <tr><td><b>NULL</b></td><td>Opcional ↔ <b>modalidad 0</b>.</td></tr>
+            <tr><td><b>CHECK</b></td><td>Regla de validación: <code>CHECK (estado IN ('A','B'))</code>, <code>CHECK (hora_fin &gt; hora_inicio)</code>, <code>CHECK (peso &gt; 0)</code>.</td></tr>
+            <tr><td><b>DEFAULT</b></td><td>Valor por defecto: <code>activo DEFAULT true</code>, <code>fecha_alta DEFAULT NOW()</code>.</td></tr>
+            <tr><td><b>AI / AUTO_INCREMENT</b></td><td>El id se genera solo → es la <b>clave subrogada</b>.</td></tr>
+            <tr><td><b>PK compuesta</b></td><td>Formada por varias columnas: <code>(id_locker, nro_casillero)</code>.</td></tr>
+            <tr><td><b>UK compuesta</b></td><td>La <b>combinación</b> no se repite: <code>UNIQUE (id_rutina, nombre)</code>.</td></tr>
+            <tr><td><b>IDX</b> (índice)</td><td>Acelera las búsquedas por esa columna. <b>Opcional en el parcial</b> (PK y FK ya son índices).</td></tr>
+          </tbody>
+        </table></div>
+
+        <h2>⭐ Los 5 patrones que se repiten en todos los parciales</h2>
+        <p>Revisé los 17 finales y los 2 parciales de la carpeta. <b>Esto es lo que aparece una y otra vez</b>, con la
+        solución típica. Si reconocés el patrón, ya tenés media tabla escrita:</p>
+        <div class="table-wrap"><table class="data">
+          <thead><tr><th>Patrón</th><th>Frase que lo dispara</th><th>Solución típica</th><th>Aparece en…</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><b>1 · Historial / bitácora</b></td>
+              <td>“mantener el historial”, “trazabilidad”, “consultar qué pasó y cuándo”, “historial de ejecuciones”</td>
+              <td><code>EVENTO(id PK, id_entidad FK NOT NULL, fecha_hora NOT NULL, estado/tipo, origen, motivo)</code> — <b>una fila por hecho</b>, <b>1,N</b> desde la entidad. Si además interesa “desde/hasta”, usá <code>desde NOT NULL</code> + <code>hasta NULL</code> para el vigente. El <b>estado actual</b> en la entidad es un campo derivado: <b>declaralo como desnormalización</b>.</td>
+              <td><b>23 de 24</b> enunciados</td>
+            </tr>
+            <tr>
+              <td><b>2 · Estados y ciclo de vida</b></td>
+              <td>“pasa por los estados…”, “acepta o rechaza”, “pendiente / aprobado”, “se puede cancelar”</td>
+              <td>Campo <code>estado VARCHAR</code> con <b>CHECK</b> (nunca BOOLEAN) <b>+ la tabla de eventos</b> del patrón 1. Si el diagrama de clases usa <b>State</b>, <b>esas clases no se persisten</b>: son comportamiento.</td>
+              <td><b>17 de 24</b></td>
+            </tr>
+            <tr>
+              <td><b>3 · Catálogo + configuración</b></td>
+              <td>“a partir de un catálogo de condiciones y acciones <b>predefinidas</b>”, “el usuario <b>puede ajustar los parámetros</b>”, “los configura un administrador”</td>
+              <td><code>CATALOGO(id PK, nombre UNIQUE, descripcion)</code> + <code>CONFIGURACION(id PK, id_usuario, …)</code> + <b>intermedia</b> <code>CONFIG_ITEM(id_config PK FK, id_catalogo PK FK, <b>valores/parametros</b>)</code>. <b>⚠️ El error que más se cobra:</b> poner el parámetro ajustable <b>en el catálogo</b> — el catálogo es <b>compartido por todos</b>, así que el valor que el usuario ajusta va <b>en la intermedia</b>.</td>
+              <td><b>8 de 24</b></td>
+            </tr>
+            <tr>
+              <td><b>4 · Estadísticas</b></td>
+              <td>“mascota más activa del mes”, “top 10 usuarios”, “promedio de…”, “porcentaje de…”</td>
+              <td><b>No se modela la estadística: se modela el hecho que permite calcularla.</b> Por cada métrica pedida, escribí mentalmente el <code>COUNT</code>/<code>SUM</code> + <code>GROUP BY</code>: si no sale, <b>te falta una tabla</b>. Si el volumen es alto, mencionás la <b>tabla de resumen</b> preagregada por batch (desnormalización por performance).</td>
+              <td><b>6 de 24</b></td>
+            </tr>
+            <tr>
+              <td><b>5 · Adjuntos y multimedia</b></td>
+              <td>“puede incluir archivos adjuntos”, “fotos de la entrega”, “recetas y estudios”</td>
+              <td>Tabla hija <code>ADJUNTO(id PK, id_padre FK NOT NULL, url NOT NULL, tipo, fecha)</code> con la <b>URL</b> del object storage. <b>Nunca un BLOB.</b> Es además 1FN: un campo con varias rutas sería multivaluado.</td>
+              <td><b>13 de 24</b></td>
+            </tr>
+          </tbody>
+        </table></div>
+        <div class="callout key">
+          <p><b>Bonus — los que acompañan siempre:</b> <b>N:M</b> (“puede estar en varios / varios pueden tener”) →
+          tabla intermedia con PK compuesta, y si tiene datos propios, <b>nombre de dominio</b>; <b>jerarquía anidada</b>
+          (contenedor → equipo → unidad) → tres tablas, PK compuesta en la unidad; <b>precios/tarifas con vigencia</b> →
+          <code>vigente_desde</code> en la PK; <b>multi-servicio</b> → referencias entre servicios como <b>ID lógico</b>,
+          nunca FK.</p>
         </div>
 
         <h2>Ejemplo completo resuelto (parcial 2025 · PetGuardian)</h2>
@@ -219,6 +359,19 @@
           <p><b>Detalle que se cobra en microservicios:</b> si cada servicio tiene su propia base, <b>no hay FK entre
           servicios</b>. La referencia se guarda como <b>ID lógico</b> y la validación es responsabilidad de la aplicación.
           Decilo explícitamente en los supuestos: suma puntos y es exactamente lo que explica la clase de microservicios.</p>
+        </div>
+
+        <h2>⚠️ Los 7 errores que más se cobran</h2>
+        <div class="card">
+          <ol>
+            <li><b>Poner el parámetro configurable en el catálogo</b> en vez de en la tabla intermedia. El catálogo lo comparten todos los usuarios; el valor ajustado es de <b>esa</b> configuración.</li>
+            <li><b>Olvidar la tabla de eventos/historial</b> — y después no poder calcular ninguna de las estadísticas que pide el enunciado.</li>
+            <li><b>Usar BOOLEAN para un estado de más de dos valores.</b> Casi siempre aparece un tercer estado (cancelado, en revisión, vencido) y el modelo no lo soporta.</li>
+            <li><b>FK del lado equivocado</b> (va siempre del lado “muchos”), <b>FK redundante</b> (la misma relación por dos caminos) o <b>cardinalidades invertidas</b>.</li>
+            <li><b>Olvidar atributos que el enunciado nombra explícitamente</b>, y las restricciones (UNIQUE del “código único”, NOT NULL de lo obligatorio, CHECK del “puede ser A, B o C”).</li>
+            <li><b>No escribir los supuestos ni la justificación.</b> Es puntaje regalado: son los párrafos más previsibles del parcial.</li>
+            <li><b>Dejar una tabla suelta</b>, sin ninguna relación con el resto del modelo.</li>
+          </ol>
         </div>
 
         <h2>Ejercicio</h2>

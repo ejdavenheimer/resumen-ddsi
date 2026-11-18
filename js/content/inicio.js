@@ -23,6 +23,13 @@
     "En los V/F, un “Falso” sin justificar vale cero. Practicá redactando el <i>porqué</i>, no sólo eligiendo la opción.",
     "Cualidad de diseño ≠ atributo de calidad. La primera es del diseño (acoplamiento, cohesión); la segunda es un requerimiento no funcional (disponibilidad, performance).",
     "Framework = inversión de control (“no me llames, yo te llamo”). Biblioteca = control directo. Es un V/F recurrente del parcial.",
+    "2º parcial: cardinalidad es la cantidad <b>máxima</b> de relaciones; modalidad es la <b>mínima</b>. “Puede” → 0, “debe” → 1. Lo piden textualmente en cada enunciado.",
+    "Desnormalizar sin haber normalizado antes no es desnormalizar: es modelar mal. Y hay dos razones válidas: <b>consistencia histórica</b> y <b>performance medida</b>.",
+    "Si el dato integra un documento con valor probatorio (una factura, una liquidación), <b>se copia</b>. Si sólo sirve para navegar, <b>se referencia</b>.",
+    "La justificación del modelo de datos son siempre los mismos 3 párrafos: qué persistir, cómo resolviste los impedance mismatches y qué desnormalizaste. Es el punto más barato del parcial.",
+    "Los 4 impedance mismatches: identidad, conversión de tipos, cardinalidad y herencia. Si los nombrás en orden, ya tenés media justificación escrita.",
+    "Monolito no es “código desordenado” ni “grande”: es <b>una única unidad de despliegue</b>. Separar el frontend no lo convierte en distribuido.",
+    "Las métricas avisan, las trazas ubican, los logs explican. Con uno solo de los tres, el diagnóstico queda a medias.",
   ];
 
   APP.register({
@@ -49,17 +56,18 @@
       el.innerHTML = `
         <div class="hero">
           <div class="kick">UTN.BA · FRBA · Plan 23</div>
-          <h1>Diseño de Sistemas — todo lo que necesitás para el parcial</h1>
-          <p>Teoría explicada desde cero, los 11 patrones del temario con diagramas UML,
-             práctica pensada para el <b>examen escrito</b> (diagramar a mano, justificar, V/F, pseudocódigo)
-             y seis finales resueltos paso a paso.</p>
+          <h1>Diseño de Sistemas — todo lo que necesitás para los dos parciales</h1>
+          <p>Teoría explicada desde cero, los 11 patrones del temario con diagramas UML, <b>modelado de datos,
+             persistencia y arquitectura distribuida</b> para el 2º parcial, práctica pensada para el
+             <b>examen escrito</b> (diagramar a mano, justificar, V/F, pseudocódigo) y parciales y finales
+             resueltos paso a paso.</p>
           <div class="hero-stats">
-            <span>30+ temas</span>
+            <span>87 temas</span>
             <span>11 patrones</span>
             <span>43 casos del detector</span>
             <span>103 flashcards</span>
-            <span>26 V/F para justificar</span>
-            <span>6 finales resueltos</span>
+            <span>2 resúmenes imprimibles</span>
+            <span>parciales y finales resueltos</span>
           </div>
         </div>
 
@@ -81,6 +89,13 @@
 
         <h2>¿Por dónde arranco?</h2>
         <div class="rutas">
+          <div class="ruta" data-go="p2-guia">
+            <div class="emo">🗄️</div>
+            <h3>Rindo el 2º parcial</h3>
+            <p>Modelado de datos, persistencia y arquitectura. Arrancá por el plan de estudio, que te dice en qué orden
+               ver cada tema y cuánto tiempo darle, y terminá imprimiendo el resumen.</p>
+            <div class="pasos">Plan de estudio → Formas normales → Desnormalización → DER → ORM → Arquitectura → Simulacro → Imprimible P2</div>
+          </div>
           <div class="ruta" data-go="poo">
             <div class="emo">🚀</div>
             <h3>Voy desde cero</h3>

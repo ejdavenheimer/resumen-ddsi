@@ -29,6 +29,136 @@
           <button class="btn" id="p2rpPrint" type="button">📥 Descargar PDF (A4)</button>
         </div>
 
+        <!-- ===================== HOJA 0 · ÍNDICE ===================== -->
+        <section class="hoja">
+          <span class="hoja-num">HOJA 0 · ÍNDICE — ¿DÓNDE ESTÁ CADA COSA?</span>
+          <div class="table-wrap"><table class="data">
+            <thead><tr><th style="width:52%">Si te preguntan…</th><th>Andá a</th></tr></thead>
+            <tbody>
+              <tr><td><b>Cómo encarar el parcial, cómo repartir el tiempo</b></td><td><b>HOJA 0 BIS</b></td></tr>
+              <tr><td><b>Preguntas de parciales viejos, ya respondidas</b></td><td><b>HOJA 0 TER</b></td></tr>
+              <tr><td>Qué es persistencia · las 6 estrategias · Repositorio y DAO</td><td>HOJA 1</td></tr>
+              <tr><td>Relación, tupla, grado · PK, FK, índices · <b>cardinalidad y modalidad</b> · N:M</td><td>HOJA 1</td></tr>
+              <tr><td><b>¿Cumple las 3 formas normales?</b> · qué problema hay · <b>frases para responder</b></td><td><b>HOJA 2</b></td></tr>
+              <tr><td><b>Desnormalización:</b> por consistencia o por performance · técnicas · costos</td><td><b>HOJA 3</b></td></tr>
+              <tr><td>ORM · <b>impedance mismatch</b> · hidratación · lazy/eager · cascada · caché del ORM</td><td>HOJA 4</td></tr>
+              <tr><td>Hibernate: annotations · <b>las 4 estrategias de herencia</b></td><td>HOJA 5</td></tr>
+              <tr><td><b>¿Qué base NoSQL propone?</b> · los 6 tipos · persistencia políglota</td><td>HOJA 6</td></tr>
+              <tr><td><b>Armar el DER paso a paso</b> · disparadores · tipos de dato · siglas · justificación</td><td><b>HOJA 7</b></td></tr>
+              <tr><td>Las 6 decisiones de un DER · <b>los 7 errores</b> · checklist</td><td>HOJA 7 BIS</td></tr>
+              <tr><td><b>Qué servicio me tocó</b> (gestión / transaccional / auditoría) y qué entidades buscar</td><td>HOJA 7 TER</td></tr>
+              <tr><td>Sesiones y cookies · <b>stateless vs stateful con diagramas</b> · JWT · 401 vs 403</td><td>HOJA 8</td></tr>
+              <tr><td>Cliente liviano vs pesado · SPA · SEO · escalabilidad · balanceador · caché · CDN</td><td>HOJA 8</td></tr>
+              <tr><td><b>Cómo se dibuja el diagrama</b> · dónde va cada componente · cómo justificarlo</td><td><b>HOJA 8 BIS</b></td></tr>
+              <tr><td>Monolito vs SOA vs microservicios · falacias · Saga · Outbox · <b>nube vs on-premise</b></td><td>HOJA 9</td></tr>
+              <tr><td>Integración: API / cola / BD compartida / Kafka · REST, SOAP, gRPC, GraphQL · resiliencia</td><td>HOJA 10</td></tr>
+              <tr><td>Observabilidad · métricas · logs · trazas · alertas · SLI/SLO · despliegue · DR</td><td>HOJA 11</td></tr>
+              <tr><td><b>“El enunciado dice X, ¿qué respondo?”</b> · frases de justificación · checklist final</td><td><b>HOJA 12</b></td></tr>
+              <tr><td>Glosario de 45 términos · fórmulas · números para recordar</td><td>HOJA 13</td></tr>
+            </tbody>
+          </table></div>
+          <div class="callout key">
+            <div class="callout-title">LAS 4 HOJAS QUE MÁS VAS A USAR</div>
+            <p><b>HOJA 12</b> (el enunciado dice X → respondé Y) · <b>HOJA 7</b> (armar el DER) ·
+            <b>HOJA 2</b> (formas normales) · <b>HOJA 8 BIS</b> (cómo dibujar la arquitectura).
+            <b>Marcalas con un doblez en la esquina antes de entrar.</b></p>
+          </div>
+        </section>
+
+        <!-- ===================== HOJA 0 BIS ===================== -->
+        <section class="hoja">
+          <span class="hoja-num">HOJA 0 BIS · CÓMO RESPONDER EL PARCIAL</span>
+
+          <h3>Lo primero, apenas te lo dan</h3>
+          <ol>
+            <li><b>Leé el enunciado entero sin escribir nada.</b></li>
+            <li><b>Mirá el puntaje de cada punto y repartí el tiempo.</b> Si Datos vale 40 y Arquitectura 50, no puede pasar que llegues con 10 minutos a arquitectura.</li>
+            <li><b>Se exige no menos del 50% en CADA sección.</b> Una sección en blanco desaprueba el parcial entero, aunque las otras estén perfectas. <b>Mejor tres respuestas buenas que una excelente y dos vacías.</b></li>
+            <li>En la segunda lectura, <b>subrayá las frases que disparan decisiones</b> (hoja 7 y hoja 12).</li>
+          </ol>
+
+          <h3>El molde que sirve para CUALQUIER punto de arquitectura</h3>
+          <ol>
+            <li><b>Qué propongo</b> — el componente o patrón, con su nombre.</li>
+            <li><b>Por qué</b> — citando <b>la frase del enunciado</b> que lo justifica.</li>
+            <li><b>Cómo funciona</b> — dos o tres renglones.</li>
+            <li><b>Qué atributos de calidad mejora</b> — y <b>definilos</b>, porque la consigna lo pide textualmente.</li>
+            <li><b>Qué costo asumo</b> y <b>cómo lo mitigo</b>.</li>
+          </ol>
+          <p><b>El punto 5 es el que separa un 6 de un 9:</b> demuestra que no estás repitiendo una receta.</p>
+
+          <h3>Atributos de calidad: definilos así</h3>
+          <div class="table-wrap"><table class="data">
+            <tbody>
+              <tr><td><b>Performance</b></td><td>Capacidad de responder en el tiempo esperado bajo una carga dada</td></tr>
+              <tr><td><b>Escalabilidad</b></td><td>Capacidad de sostener más carga agregando recursos</td></tr>
+              <tr><td><b>Disponibilidad</b></td><td>Proporción del tiempo en que el sistema está operativo y responde</td></tr>
+              <tr><td><b>Mantenibilidad</b></td><td>Facilidad para modificar el sistema con bajo riesgo y costo</td></tr>
+              <tr><td><b>Usabilidad</b></td><td>Facilidad con la que el usuario logra su objetivo</td></tr>
+              <tr><td><b>Seguridad</b></td><td>Protección de la confidencialidad, integridad y disponibilidad de la información</td></tr>
+              <tr><td><b>Interoperabilidad</b></td><td>Capacidad de intercambiar información con otros sistemas</td></tr>
+              <tr><td><b>Tolerancia a fallos</b></td><td>Capacidad de seguir operando ante la falla de un componente</td></tr>
+            </tbody>
+          </table></div>
+
+          <h3>Reglas que valen puntos</h3>
+          <ul>
+            <li><b>Escribí los supuestos.</b> Un supuesto explícito convierte una ambigüedad en una decisión defendible.</li>
+            <li><b>Justificá todo, aunque parezca obvio.</b> “Usé una cola” no vale; “usé una cola porque el emisor no necesita la respuesta y hay picos de carga, lo que mejora disponibilidad y escalabilidad” sí.</li>
+            <li><b>Dibujá.</b> Los enunciados dicen literalmente “un diagrama es mucho mejor que texto”. Rotulá <b>todas</b> las flechas con su protocolo y marcá lo externo.</li>
+            <li><b>Si no te acordás un nombre propio, describí el mecanismo.</b> “Un componente que corta las llamadas cuando el servicio falla repetidamente y responde una alternativa degradada” suma casi lo mismo que escribir “circuit breaker”.</li>
+            <li><b>Un “Falso” sin justificar vale cero.</b> Y un “Sí, cumple” sin fundamentar, también.</li>
+            <li><b>No metas componentes de más:</b> la sobreingeniería resta. Si no podés señalar la frase del enunciado que lo justifica, sacalo.</li>
+            <li><b>Dejá 5 minutos</b> para releer el enunciado buscando requerimientos que no aparezcan en tu solución.</li>
+          </ul>
+        </section>
+
+        <!-- ===================== HOJA 0 TER ===================== -->
+        <section class="hoja">
+          <span class="hoja-num">HOJA 0 TER · PREGUNTAS DE PARCIALES, YA RESPONDIDAS</span>
+          <p>Preguntas textuales de los parciales y finales de la cátedra, con la respuesta armada. <b>Buscá la que se
+          parezca a la tuya y adaptá.</b></p>
+
+          <h3>Integración y asincronismo</h3>
+          <div class="table-wrap"><table class="data">
+            <thead><tr><th style="width:38%">Pregunta</th><th>Respuesta</th></tr></thead>
+            <tbody>
+              <tr><td><b>“¿Cómo integraría cientos de sensores/dispositivos que envían datos periódicamente?”</b></td><td><b>Asincrónica por mensajería: MQTT</b> (liviano, pub/sub, con QoS y tolerante a conectividad intermitente) contra un <b>broker</b>, con un <b>Edge Gateway</b> en el lugar que agrupa, bufferea y reintenta. Un servicio de <b>ingesta</b> valida y publica en un topic; los consumidores persisten en una <b>base de series temporales</b>. <b>Por qué no REST:</b> el dispositivo no necesita respuesta para continuar y una llamada sincrónica acoplaría la disponibilidad del sistema a la de cientos de dispositivos. <b>Consumidores idempotentes</b> (entrega at-least-once), reintentos limitados y <b>DLQ</b>.</td></tr>
+              <tr><td><b>“¿Cómo enviaría notificaciones / resúmenes por mail al final del día?”</b></td><td>Un <b>cron/scheduler</b> dispara y <b>publica un mensaje por destinatario en una cola</b>; un consumidor de Notificaciones envía. Desacopla en el tiempo (si el proveedor está caído, esperan), absorbe el pico y permite <b>escalar consumidores</b>. <b>Idempotencia</b> para no mandar dos veces, <b>backoff</b> y <b>DLQ</b>. Para no perder el evento por doble escritura, <b>Transactional Outbox</b>.</td></tr>
+              <tr><td><b>“Un servicio externo se cae seguido y responde lento. ¿Qué hace?”</b></td><td><b>Timeout</b> siempre definido · <b>reintentos limitados con backoff</b> (sólo si es idempotente) · <b>circuit breaker</b> que abre tras N fallos y <b>falla rápido</b> con un <b>fallback</b> · <b>clave de idempotencia</b> para no duplicar si hubo timeout · y <b>Adapter</b> contra una interfaz propia, para que cambiar de proveedor sea otro adapter. Si no necesito la respuesta ya, lo paso a <b>cola</b>.</td></tr>
+              <tr><td><b>“Timeout, pero el otro sistema igual procesó. ¿Qué hace?”</b></td><td><b>Clave de idempotencia.</b> Tras el timeout <b>consulto</b> el estado de esa clave, o <b>reintento con la misma clave</b>: el otro sistema reconoce la operación y devuelve el mismo resultado <b>sin volver a procesarla</b>. Nunca se genera una clave nueva para un reintento, y se guarda el id externo con <b>UNIQUE</b> para que la base impida el duplicado.</td></tr>
+              <tr><td><b>“Terceros quieren consultar datos con flexibilidad y minimizando llamadas”</b></td><td><b>GraphQL:</b> un único endpoint, el cliente <b>pide exactamente lo que necesita</b>, esquema tipado y autodocumentado; evita el over-fetching y no acopla los contratos internos a cada tercero. <b>Mitigaciones:</b> límites de profundidad y complejidad, paginación, rate limiting y caché del lado del servidor.</td></tr>
+            </tbody>
+          </table></div>
+
+          <h3>Escalabilidad, caché y contenido</h3>
+          <div class="table-wrap"><table class="data">
+            <thead><tr><th style="width:38%">Pregunta</th><th>Respuesta</th></tr></thead>
+            <tbody>
+              <tr><td><b>“Picos de tráfico / se multiplica por 10 / miles de acciones al mismo horario”</b></td><td><b>Escalado horizontal</b>: N instancias <b>stateless</b> detrás de un <b>balanceador L7 con health checks</b> y autoescalado, más una <b>cola</b> que amortigua el pico y permite escalar consumidores, y <b>caché</b> para las consultas repetidas. <b>Atributos:</b> escalabilidad, disponibilidad, performance y tolerancia a fallos — y decí <b>cómo</b> se garantiza cada uno.</td></tr>
+              <tr><td><b>“Las imágenes/videos tardan y consumen mucho ancho de banda”</b></td><td><b>Object storage + CDN.</b> El backend <b>deja de transferir bytes</b>: sólo entrega la <b>URL</b>, y la CDN sirve desde el nodo más cercano. Mejora tiempos de carga, <b>reduce el costo de ancho de banda</b>, agrega redundancia y <b>mitiga DDoS</b>. <b>Nunca</b> guardar binarios en la base.</td></tr>
+              <tr><td><b>“Se repiten las mismas consultas y saturan la base”</b></td><td><b>Caché</b> (Redis, o caché HTTP) <b>con TTL</b> + <b>réplicas de lectura</b>. Justificá el TTL por <b>cuánta desactualización tolera el negocio</b>, y combinalo con <b>invalidación por evento</b> cuando el dato cambia. Si es analítica, <b>read model</b> o almacén <b>columnar</b>.</td></tr>
+              <tr><td><b>“Los componentes escalan bien pero igual hay latencia”</b></td><td>Buscar el <b>cuello de botella compartido</b>: casi siempre la <b>base de datos</b> (índices, réplicas de lectura, caché, particionamiento) o un <b>servicio externo lento</b>. Escalar más instancias no arregla un cuello de botella aguas abajo.</td></tr>
+              <tr><td><b>“Un proceso batch tarda horas y a veces no termina en el día”</b></td><td><b>Paralelizar</b>: partir el trabajo en unidades, publicarlas en una <b>cola</b> y procesarlas con <b>N workers</b> que escalan horizontalmente. Es más barato que comprar una máquina más grande (que además tiene <b>techo físico</b>).</td></tr>
+            </tbody>
+          </table></div>
+
+          <h3>Seguridad, clientes y arquitectura</h3>
+          <div class="table-wrap"><table class="data">
+            <thead><tr><th style="width:38%">Pregunta</th><th>Respuesta</th></tr></thead>
+            <tbody>
+              <tr><td><b>“¿Cómo aplicaría JWT y qué ventajas tiene frente a la sesión?”</b></td><td>El usuario se autentica una vez contra el <b>IdM</b>, que devuelve un <b>JWT firmado</b> con id, roles y expiración; el cliente lo manda en <code>Authorization: Bearer</code> en cada request y el <b>API Gateway</b> valida la firma y propaga la identidad. <b>Ventajas:</b> escalado horizontal <b>sin sticky sessions</b>, sirve para web/mobile/terceros, autocontenido (sin viaje a la base), desacopla la autenticación y usa menos memoria. <b>Desventajas:</b> no se revoca fácil (expiración corta + refresh token), viaja en cada request y el payload <b>es legible</b>. <b>Ver hoja 8.</b></td></tr>
+              <tr><td><b>“¿Qué componente propone para el inicio de sesión?”</b></td><td><b>IdM / IdP con SSO</b> (Keycloak, Auth0, Entra ID), con <b>MFA</b> para usuarios internos y <b>login federado por OpenID Connect</b> si los usuarios entran sólo para eso. Se delega la custodia de credenciales, se gana usabilidad y el backend queda <b>stateless</b> validando el token. <b>El IdP es crítico:</b> necesita alta disponibilidad.</td></tr>
+              <tr><td><b>“¿Qué mecanismos garantizan la confidencialidad de datos sensibles?”</b></td><td><b>TLS</b> en tránsito (también interno) · <b>cifrado en reposo</b> y por columna para los campos sensibles, con claves en una <b>bóveda</b> y rotación · contraseñas <b>hasheadas con salt</b> · <b>control de acceso por roles y permisos con alcance</b>, validado en el backend · <b>minimización</b> y enmascaramiento · <b>anonimizar</b> antes de copiar a testing (Ley 25.326) · <b>auditoría</b> de accesos.</td></tr>
+              <tr><td><b>“¿Y la integridad?”</b></td><td><b>Hash/checksum</b> del contenido · <b>firma digital o HMAC</b> del documento generado · constraints e <b>integridad referencial</b> en la base · transacciones · y un <b>log de auditoría append-only</b>.</td></tr>
+              <tr><td><b>“¿App nativa o híbrida?”</b></td><td><b>Híbrida</b> si el caso es consulta y configuración: una sola base de código → <b>mantenibilidad</b> y <b>time-to-market</b>. <b>Nativa</b> si hay <b>acceso intensivo al hardware</b> (cámara en vivo, BLE, GPS en background, push de baja latencia) o <b>performance de UI exigente</b>. <b>Definí cada atributo que nombres.</b></td></tr>
+              <tr><td><b>“¿Conviene pasar a cliente pesado / SPA?”</b></td><td><b>Depende del caso de uso.</b> Si hay <b>alta interactividad</b> o <b>varios clientes sobre la misma API</b>, sí. Si es sólo visualización y no se prevén otros clientes, <b>no</b>: agrega costo de construir y versionar una app aparte, primera carga más lenta y <b>SEO más difícil</b>. Camino intermedio: <b>cliente liviano desacoplado</b>, que deja el contrato estable para cambiar la vista después.</td></tr>
+              <tr><td><b>“Equipo chico y plazo corto, pero un servicio recibe mucho más tráfico: ¿monolito o microservicios?”</b></td><td><b>Monolito modular</b>, con el módulo de alta demanda <b>identificado como candidato a extracción</b> (Strangler). Razones: equipo chico, plazo corto, <b>límites todavía inciertos</b>, consistencia transaccional simple y <b>menor costo operativo</b> (“Monolith First”). <b>Y el tráfico se resuelve igual:</b> un monolito <b>stateless escala horizontalmente</b> con N réplicas detrás de un balanceador; lo que <b>no</b> puede es escalar partes por separado, y ese costo es menor que la complejidad de distribuir todo. <b>Decí qué evidencia cambiaría la decisión.</b></td></tr>
+              <tr><td><b>“Hay que cambiar el esquema sin downtime”</b></td><td><b>Expand and Contract:</b> ① <b>agregar</b> lo nuevo manteniendo lo viejo · ② desplegar la versión que <b>escribe en ambos</b> y migrar en segundo plano · ③ <b>eliminar</b> lo viejo cuando nadie lo consulta. Despliegue <b>rolling</b> (conviven dos versiones, por eso hacía falta el paso 1), y el release detrás de un <b>feature flag</b>.</td></tr>
+            </tbody>
+          </table></div>
+        </section>
+
         <!-- ===================== HOJA 1 ===================== -->
         <section class="hoja">
           <span class="hoja-num">HOJA 1 · PERSISTENCIA + MODELO RELACIONAL</span>
@@ -633,7 +763,7 @@
         </section>
 
         <!-- ===================== HOJA 8 ===================== -->
-        <section class="hoja">
+        <section class="hoja hoja-diag">
           <span class="hoja-num">HOJA 8 · ARQUITECTURA WEB II: SESIONES, CLIENTES, ESCALAR</span>
           <p class="mini"><b>Cookie:</b> archivo de datos <b>creado por el servidor</b> pero <b>almacenado en el cliente</b>; <b>viaja al servidor que la creó en cada request</b>; sirve para <b>identificar y reconocer</b> al usuario. (HttpOnly, Secure, SameSite.)</p>
           <div class="table-wrap"><table class="data">
@@ -644,6 +774,46 @@
               <tr><td>Identificación</td><td><b>En cada solicitud</b>, con un <b>token</b> que el servidor <b>decodifica</b></td><td><b>Una sola vez</b>; el servidor crea un espacio con un <b>id</b> y lo setea en la <b>cookie</b>; luego recupera la sesión por ese id</td></tr>
             </tbody>
           </table></div>
+          <h3>Cómo funciona cada uno, paso a paso</h3>
+          ${APP.uml(`sequenceDiagram
+    autonumber
+    participant C as Cliente
+    participant S as Servidor
+    Note over C,S: ① STATEFUL · la sesión vive en el SERVIDOR
+    C->>S: POST /login (usuario + contraseña)
+    Note right of S: valida, CREA un espacio en memoria<br/>y le asigna un id de sesión
+    S-->>C: 200 + Set-Cookie: JSESSIONID=abc123
+    Note left of C: el cliente sólo guarda el ID
+    C->>S: GET /pedidos · Cookie: JSESSIONID=abc123
+    Note right of S: busca la sesión por ese id<br/>y así sabe quién es
+    S-->>C: 200 OK (sus pedidos)`, "STATEFUL: viaja un ID; el estado queda en el servidor")}
+          ${APP.uml(`sequenceDiagram
+    autonumber
+    participant C as Cliente
+    participant S as Servidor
+    Note over C,S: ② STATELESS · el servidor NO guarda nada
+    C->>S: POST /login (usuario + contraseña)
+    Note right of S: valida y FIRMA un JWT<br/>con id, roles y expiración
+    S-->>C: 200 { token: eyJhbGciOi... }
+    Note left of C: el cliente guarda el TOKEN entero
+    C->>S: GET /pedidos · Authorization Bearer eyJ...
+    Note right of S: verifica la FIRMA y lee los claims<br/>sin consultar ninguna base
+    S-->>C: 200 OK (sus pedidos)`, "STATELESS: viaja la identidad firmada; el servidor no recuerda nada")}
+          <div class="table-wrap"><table class="data">
+            <thead><tr><th></th><th>STATEFUL</th><th>STATELESS</th></tr></thead>
+            <tbody>
+              <tr><td><b>Qué guarda el servidor</b></td><td>Un <b>espacio de sesión</b> por usuario conectado</td><td><b>Nada</b></td></tr>
+              <tr><td><b>Qué guarda el cliente</b></td><td>Una <b>cookie</b> con el id de sesión</td><td>El <b>token</b> completo</td></tr>
+              <tr><td><b>Qué viaja en cada request</b></td><td><code>Cookie: JSESSIONID=abc123</code> — <b>sólo un id</b></td><td><code>Authorization: Bearer eyJ...</code> — <b>id + roles + expiración, firmados</b></td></tr>
+              <tr><td><b>Cómo sabe quién sos</b></td><td><b>Busca</b> la sesión por el id</td><td><b>Verifica la firma</b> y lee los claims</td></tr>
+              <tr><td><b>Si agregás un segundo servidor</b></td><td>❌ El nuevo <b>no tiene esa sesión</b> → sticky sessions o Redis</td><td>✅ <b>Cualquiera puede atender</b>: el token se valida solo</td></tr>
+              <tr><td><b>Si el servidor se cae</b></td><td>❌ Se <b>pierden las sesiones</b> en memoria</td><td>✅ No se pierde nada</td></tr>
+            </tbody>
+          </table></div>
+          <p><b>La frase que resume todo:</b> en stateful <b>viaja un ID y el estado está en el servidor</b>; en
+          stateless <b>viaja el estado (firmado) y el servidor no recuerda nada</b>. Por eso stateless es lo que
+          <b>habilita el escalado horizontal</b>.</p>
+
           <h3>JWT (JSON Web Token)</h3>
           <p><b>Qué es:</b> <code>header . payload . firma</code>. En el payload van los <i>claims</i>:
           <code>sub</code> (quién), <code>roles</code>, <code>iat</code> (emitido) y <code>exp</code> (expira).
@@ -703,24 +873,100 @@
             </tbody>
           </table></div>
           <p class="mini"><b>Balanceador:</b> reparte solicitudes (performance), <b>redirige si un servidor falla</b> (disponibilidad), permite sumar/quitar nodos (escalabilidad). <b>Algoritmos:</b> Round Robin · Least Connections · Weighted · <b>Sticky Sessions</b> (no es algoritmo: <b>política</b> que fuerza el mismo servidor; <b>atenta contra escalabilidad y disponibilidad</b> → mejor <b>stateless + sesión externalizada</b>). <b>L4</b> = IP y puerto, no mira el contenido; <b>L7</b> = entiende HTTP, decide por <b>URL/headers/cookies</b>. <b>Health checks:</b> <b>activo</b> (GET /health periódico, saca de rotación) y <b>pasivo</b> (observa timeouts y 5xx reales).</p>
-          <h3>Caché</h3>
+          <h3>Caché: qué es y cómo funciona</h3>
+          <p><b>Una caché es una copia guardada de algo que ya se calculó o ya se pidió, para no volver a hacerlo.</b>
+          Nada más que eso.</p>
+          <p><b>La analogía:</b> si te preguntan cinco veces el mismo dato, la primera vez vas a buscarlo al archivo y
+          las otras cuatro lo contestás de memoria. La caché es esa memoria: la primera consulta es cara, las
+          siguientes son gratis <b>hasta que el dato se pone viejo</b>.</p>
+
+          <p><b>El mecanismo, paso a paso (HIT y MISS)</b></p>
+          <ol>
+            <li>Llega una petición y <b>primero se mira la caché</b>.</li>
+            <li><b>HIT:</b> hay una copia y <b>todavía es válida</b> (no venció su TTL) → <b>se responde con esa copia</b>. El servidor de origen <b>ni se entera</b>.</li>
+            <li><b>MISS:</b> no está o ya venció → se va al <b>origen</b> (la base, el servicio), <b>se guarda una copia</b> y se responde.</li>
+            <li>El <b>siguiente</b> que pida lo mismo ya tiene un HIT.</li>
+          </ol>
+          ${APP.uml(`graph LR
+    U["👤 Petición"] --> C{"¿Está en la caché<br/>y sigue válida?"}
+    C -->|"HIT · sí"| R1["Responde la copia<br/>⚡ el origen ni se entera"]
+    C -->|"MISS · no o venció"| O["Va al ORIGEN<br/>(base / servicio)"]
+    O --> G["Guarda la copia<br/>con su TTL"]
+    G --> R2["Responde"]
+    style C fill:#fffbeb,stroke:#b45309,color:#0f172a
+    style R1 fill:#ecfdf5,stroke:#059669,color:#0f172a`, "HIT y MISS: el origen sólo trabaja cuando hay MISS")}
+          <p><b>Por qué baja tanto la carga:</b> en un HIT el origen <b>no parsea, no enruta, no consulta la base y no
+          renderiza nada</b>. No es que trabaje menos: <b>no trabaja</b>.</p>
+          <p><b>El indicador:</b> <b>Cache Hit Ratio = HITs / (HITs + MISSes) × 100</b>. Cuanto más alto, menos carga
+          en el origen.</p>
+
+          <div class="callout key">
+            <div class="callout-title">EJEMPLO CON NÚMEROS (usalo en el parcial)</div>
+            <p>El listado de lockers disponibles se consulta <b>10.000 veces por minuto</b>. Sin caché, son
+            <b>10.000 consultas por minuto a la base</b>.</p>
+            <p>Con una caché de <b>TTL = 30 segundos</b>: en cada ventana de 30 s hay <b>1 MISS</b> (que va a la base) y
+            <b>4.999 HITs</b>. Es decir, la base pasa a recibir <b>2 consultas por minuto</b> en vez de 10.000 —
+            una reducción del <b>99,98%</b>— y el <b>hit ratio es del 99,98%</b>.</p>
+            <p><b>El costo:</b> durante esos 30 segundos alguien puede ver un casillero como “libre” cuando ya se
+            ocupó. <b>La pregunta de diseño no es “¿puede estar desactualizado?” sino “¿cuánto tiempo lo tolera el
+            negocio?”</b></p>
+          </div>
+
+          <p><b>TTL (Time To Live) = cuánto tiempo la copia se considera fresca.</b> Es <b>la</b> decisión de la caché:</p>
           <div class="table-wrap"><table class="data">
-            <thead><tr><th>Tipo</th><th>Qué guarda</th><th>Atributo que mejora</th></tr></thead>
+            <thead><tr><th>Qué dato</th><th>TTL</th><th>Por qué</th></tr></thead>
             <tbody>
-              <tr><td>De <b>aplicación</b></td><td>Datos ya calculados, consultas costosas</td><td><b>Performance</b></td></tr>
-              <tr><td>De <b>contenido</b></td><td>Estáticos: imágenes, CSS, JS</td><td><b>Uso de recursos</b></td></tr>
-              <tr><td>De <b>navegador</b></td><td>Recursos en el cliente final</td><td><b>Tiempo de respuesta</b></td></tr>
+              <tr><td>Fotos, CSS, JS, logos</td><td><b>Días o meses</b> + versión en el nombre del archivo</td><td>Casi nunca cambian; y cuando cambian, <b>cambia el nombre</b> y no hay que invalidar nada</td></tr>
+              <tr><td>Listado de puntos / catálogo</td><td><b>Minutos</b></td><td>Cambia poco y lo consultan muchos</td></tr>
+              <tr><td>Disponibilidad en tiempo real</td><td><b>10–30 segundos</b> + invalidación por evento</td><td>Cambia todo el tiempo, pero sin caché la base no aguanta</td></tr>
+              <tr><td>El estado de <b>mi</b> pedido, mi saldo</td><td><b>Sin caché</b> o muy corto</td><td>Es lo que el usuario está mirando: una respuesta vieja genera un reclamo</td></tr>
+              <tr><td>Credenciales, códigos de retiro</td><td><b>Nunca se cachean</b></td><td>Son secretos, no datos</td></tr>
             </tbody>
           </table></div>
-          <p><b>Dónde vive:</b> <b>privada</b> (navegador) · <b>compartida</b> (proxy) · <b>compartida y administrada</b>
-          (<b>CDN</b>). <b>Siempre con tiempo de expiración definido.</b></p>
-          <p><b>Caché HTTP:</b> reutiliza la respuesta guardada y <b>el origen no procesa la solicitud</b> — no parsea,
-          no enruta, no consulta la base, no renderiza. <b>Eso es lo que baja su carga.</b></p>
-          <h3>CDN</h3>
-          <ul>
-            <li>Servidores <b>distribuidos geográficamente</b> que entregan HTML, JS, CSS, imágenes y video <b>desde el nodo más cercano</b> al usuario.</li>
-            <li><b>Ventajas:</b> mejores tiempos de carga · <b>reducción de los costos de ancho de banda</b> · más disponibilidad y redundancia · <b>mitiga DDoS</b>.</li>
-          </ul>
+          <p><b>El trade-off del TTL:</b> largo → más HITs y menos carga, pero <b>más riesgo de contenido viejo</b>.
+          Corto → siempre fresco, pero <b>más MISS</b> y más carga.</p>
+
+          <p><b>Dónde vive cada caché</b></p>
+          <div class="table-wrap"><table class="data">
+            <thead><tr><th>Tipo</th><th>Dónde está</th><th>Para qué sirve</th></tr></thead>
+            <tbody>
+              <tr><td><b>Privada</b></td><td>En el <b>navegador</b> del usuario</td><td>La más rápida: <b>ni sale a la red</b>. Sólo para ese usuario</td></tr>
+              <tr><td><b>Compartida</b></td><td>Un <b>proxy</b> de la empresa o del ISP</td><td>Compartida entre varios usuarios de esa red</td></tr>
+              <tr><td><b>Compartida administrada</b></td><td>Los nodos de una <b>CDN</b></td><td>Sirve a millones de usuarios en todo el mundo</td></tr>
+              <tr><td><b>De aplicación</b></td><td><b>Redis / Memcached</b>, al lado del servicio</td><td>Evita <b>recalcular o reconsultar la base</b>; compartida por todas las instancias</td></tr>
+              <tr><td><b>Del ORM</b></td><td>Dentro de Hibernate</td><td>1er nivel = la <b>sesión</b> · 2do nivel = la <b>SessionFactory</b> (ver hoja 4)</td></tr>
+            </tbody>
+          </table></div>
+          <p><b>Cabeceras HTTP (si piden la especificación):</b> <code>Cache-Control: max-age=N</code> (TTL para
+          cualquiera) · <code>s-maxage=N</code> (TTL <b>sólo para cachés compartidas</b>) · <code>public</code> /
+          <code>private</code> (<b>private</b> = sólo el navegador del usuario, para datos personales) ·
+          <code>no-cache</code> (se guarda pero <b>hay que revalidar</b>) · <code>no-store</code> (<b>no se guarda en
+          ninguna</b>) · <code>ETag</code> + <code>If-None-Match</code> → <b>304 Not Modified</b> sin cuerpo ·
+          <code>Vary</code> (una copia por cabecera, ej. por idioma).</p>
+
+          <h3>CDN: qué es y por qué se usa</h3>
+          <p><b>Una CDN es una red de servidores repartidos por el mundo (nodos de borde) que guardan copias de tus
+          archivos y se los entregan al usuario desde el más cercano.</b></p>
+          <p><b>La analogía:</b> en vez de que todos los clientes del país vayan a tu depósito central, ponés una
+          sucursal en cada ciudad con la mercadería más pedida. <b>El viaje es más corto y el depósito deja de
+          atender.</b></p>
+          <p><b>El orden de una petición en el borde:</b> Usuario → <b>DNS</b> (lo manda al nodo más cercano) →
+          <b>CDN + WAF</b> (sirve los estáticos desde su caché y filtra ataques) → <b>sólo si hay MISS o es tráfico
+          dinámico</b> → Balanceador → API Gateway → servicios → base.</p>
+          <div class="table-wrap"><table class="data">
+            <thead><tr><th>Qué gana</th><th>Por qué</th></tr></thead>
+            <tbody>
+              <tr><td><b>Performance</b></td><td>El contenido viaja <b>desde el nodo más cercano</b>: menos latencia y mejor tiempo de carga</td></tr>
+              <tr><td><b>Costo de ancho de banda</b></td><td>Los bytes <b>los pone la CDN, no tu servidor</b>. Es el argumento más fuerte cuando el enunciado habla de “ancho de banda consumido”</td></tr>
+              <tr><td><b>Escalabilidad</b></td><td>Absorbe picos globales <b>sin tocar el origen</b></td></tr>
+              <tr><td><b>Disponibilidad</b></td><td>Nodos distribuidos y redundancia: puede seguir sirviendo contenido <b>aunque el origen se degrade</b></td></tr>
+              <tr><td><b>Seguridad</b></td><td><b>Mitiga DDoS</b> absorbiendo el ataque en el borde, y oculta la IP del origen</td></tr>
+            </tbody>
+          </table></div>
+          <p><b>Variantes:</b> <b>Pull CDN</b> (trae del origen en el primer pedido; es lo habitual) ·
+          <b>Push CDN</b> (se sube de antemano) · <b>origin shield</b> (una capa intermedia que junta los MISS de varios
+          nodos para que al origen le llegue uno solo).</p>
+
           <h3>API Gateway y BFF</h3>
           <ul>
             <li><b>API Gateway:</b> <b>único punto de entrada</b>; enruta a cada servicio y centraliza <b>autenticación, rate limiting y logging</b>. Puede hacer de LB L7. <b>Sin él, cada cliente se acopla a la topología interna</b> del backend.</li>
@@ -862,8 +1108,51 @@
         <section class="hoja">
           <span class="hoja-num">HOJA 9 · MONOLITO · SOA · MICROSERVICIOS · NUBE</span>
           <p class="mini"><b>Monolito:</b> todas las responsabilidades se <b>construyen, versionan y despliegan como una única unidad</b>; módulos en <b>memoria</b>, una sola base. <b>Lo que lo define no es el tamaño, es que TODO SE DESPLIEGA JUNTO.</b> Pregunta guía: ¿puedo desplegar un cambio en Facturación sin desplegar Ventas? <b>Separar el frontend NO lo convierte en distribuido:</b> la pregunta es cuántas <b>unidades de despliegue</b> tiene el <b>backend</b>. <b>Capas ≠ despliegue:</b> las capas mejoran mantenibilidad y testeabilidad pero <b>no cambian cómo se escala ni se despliega</b>.</p>
-          <p class="mini"><b>✅ Monolito:</b> simplicidad (un repo, un build), <b>ACID local</b>, performance interna (<b>nanosegundos</b> vs milisegundos), testing/debugging, despliegue simple, menor costo operativo. <b>⚠️:</b> despliegue “todo o nada”, <b>escalado en bloque</b>, <b>falla propagada</b>, lock-in tecnológico, coordinación de equipos, builds lentos. <b>Mito:</b> “no escala” es <b>falso</b> — escala horizontalmente con N réplicas <b>si es stateless</b>; lo que <b>no</b> puede es escalar partes <b>independientemente</b>, y la <b>base compartida</b> suele ser el cuello de botella real. <b>Monolith First (Fowler):</b> casi todos los microservicios exitosos <b>empezaron como monolito</b>. <b>Big Ball of Mud</b> (cualquier clase llama a cualquier otra, todos leen todas las tablas) vs. <b>Monolito Modular</b> (módulos por capacidad de negocio, <b>interfaz pública explícita</b>, <b>cada módulo dueño de sus tablas</b>).</p>
-          <p class="mini"><b>8 falacias de la computación distribuida:</b> ① la red es confiable (→ timeouts, reintentos, fallas parciales) ② la latencia es cero (→ evitar diálogos <b>chatty</b>) ③ el ancho de banda es infinito (→ paginar, comprimir, filtrar) ④ la red es segura (→ <b>TLS y autenticación también interna</b>) ⑤ la topología no cambia (→ <b>descubrimiento</b>) ⑥ hay un solo administrador ⑦ el transporte no tiene costo (CPU y <b>egress</b>) ⑧ la red es homogénea.</p>
+          <div class="grid-2">
+            <div class="card">
+              <p><b>✅ Ventajas del monolito</b></p>
+              <ul>
+                <li><b>Simplicidad:</b> un repo, un build, un entorno local.</li>
+                <li><b>Transacciones ACID locales:</b> una sola base, un commit o rollback atómico.</li>
+                <li><b>Performance interna:</b> llamadas en memoria (<b>nanosegundos</b>) en vez de por red (<b>milisegundos</b>).</li>
+                <li><b>Testing y debugging:</b> un test end-to-end levanta todo; el stack trace recorre el flujo completo.</li>
+                <li><b>Despliegue simple:</b> un artefacto, un pipeline, una versión.</li>
+                <li><b>Menor costo operativo:</b> menos infraestructura, monitoreo y perfiles especializados.</li>
+              </ul>
+            </div>
+            <div class="card">
+              <p><b>⚠️ Desventajas</b></p>
+              <ul>
+                <li><b>Despliegue “todo o nada”:</b> una línea implica desplegar y re-testear todo.</li>
+                <li><b>Escalado en bloque:</b> si sólo un módulo necesita recursos, <b>replicás el sistema entero</b>.</li>
+                <li><b>Falla propagada:</b> un memory leak en un módulo <b>tira abajo todo el proceso</b>.</li>
+                <li><b>Lock-in tecnológico:</b> un solo lenguaje y framework para todo.</li>
+                <li><b>Coordinación de equipos:</b> conflictos de merge y releases coordinados.</li>
+                <li><b>Builds y arranques lentos</b> a medida que crece.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="callout key">
+            <div class="callout-title">MITO: “un monolito no escala” → FALSO</div>
+            <p><b>Sí escala horizontalmente</b> con N réplicas detrás de un balanceador. <b>Requisito:</b> ser
+            <b>stateless</b> (sesión externalizada), si no volvés a las sticky sessions. <b>Lo que NO puede</b> es
+            escalar <b>partes de forma independiente</b>: para dar más capacidad a un módulo replicás también los
+            otros. Y <b>la base compartida suele ser el verdadero cuello de botella</b>.</p>
+          </div>
+          <h3>Las 8 falacias de la computación distribuida</h3>
+          <div class="table-wrap"><table class="data">
+            <thead><tr><th style="width:40%">La falacia</th><th>Lo que hay que diseñar</th></tr></thead>
+            <tbody>
+              <tr><td>1 · La red es confiable</td><td><b>Timeouts, reintentos</b> y manejo de fallas parciales, desde el inicio</td></tr>
+              <tr><td>2 · La latencia es cero</td><td><b>Evitar diálogos “chatty”</b>: cada llamada remota cuesta milisegundos</td></tr>
+              <tr><td>3 · El ancho de banda es infinito</td><td><b>Paginar, comprimir, filtrar</b></td></tr>
+              <tr><td>4 · La red es segura</td><td><b>TLS y autenticación también en el tráfico interno</b></td></tr>
+              <tr><td>5 · La topología no cambia</td><td><b>Descubrimiento de servicios</b>: las instancias aparecen y desaparecen</td></tr>
+              <tr><td>6 · Hay un solo administrador</td><td>Distintos equipos y proveedores, con configuraciones distintas</td></tr>
+              <tr><td>7 · El transporte no tiene costo</td><td>Serializar y transferir consume CPU… y dinero (<b>egress</b>)</td></tr>
+              <tr><td>8 · La red es homogénea</td><td>Conviven protocolos, formatos y versiones diferentes</td></tr>
+            </tbody>
+          </table></div>
           <div class="table-wrap"><table class="data">
             <thead><tr><th>Criterio</th><th>MONOLITO</th><th>SOA</th><th>MICROSERVICIOS</th></tr></thead>
             <tbody>
@@ -877,9 +1166,115 @@
             </tbody>
           </table></div>
           <p class="mini"><b>SOA:</b> descompone <b>capacidades del negocio</b> en servicios <b>autónomos</b> con <b>contratos estandarizados</b>; resuelve la <b>integración punto a punto</b> (n·(n−1)/2: 6 sistemas → 15 integraciones → 6 contra contratos comunes). Servicio = unidad con <b>significado de negocio</b>, accedida <b>sólo por su contrato</b>, implementación <b>encapsulada</b>, <b>granularidad gruesa</b>. Actores: <b>consumidor / proveedor / registro</b> (publica–descubre–invoca). Principios (Erl): contrato estandarizado, bajo acoplamiento, abstracción, <b>reutilización</b>, autonomía, <b>sin estado</b>, descubrimiento, composición. <b>Tipos de servicio:</b> de <b>proceso/tarea</b> (orquestan, poco reutilizables), de <b>entidad</b> (agnósticos del proceso, <b>muy reutilizables</b>), <b>utilitarios</b> (transversales: notificaciones, auditoría). <b>ESB:</b> enrutamiento, transformación, mediación de protocolos, virtualización, orquestación, seguridad/monitoreo; ⚠️ <b>punto único de falla</b>, <b>smart pipes</b>, cuello de botella <b>organizacional</b>, licencias.</p>
-          <p class="mini"><b>Microservicios:</b> servicios <b>pequeños y autónomos</b>, cada uno en su <b>proceso</b>, por <b>capacidad de negocio</b>, <b>despliegue independiente</b>, <b>gestión descentralizada</b>, <b>datos propios</b>, <b>APIs bien definidas</b>. Corte por <b>BOUNDED CONTEXT</b> (DDD): un único modelo para todo el dominio genera contradicciones; <b>el mismo concepto tiene modelos distintos en cada contexto</b>. <b>BD por servicio:</b> autoridad, encapsulamiento, IDs independientes, <b>referencias lógicas</b>, <b>sin integridad referencial entre servicios</b>, ACID sólo interno. Acceso a datos ajenos: <b>A)</b> referencia + API (<i>API Composition</i>; ⚠️ latencia y dependencia) <b>B)</b> réplica local / read model por eventos (⚠️ consistencia eventual) <b>C)</b> base compartida controlada (⚠️ acoplamiento al esquema). <b>Infra:</b> API Gateway (Facade), <b>Service Registry/Discovery</b> (Eureka, Consul), orquestador de contenedores, <b>Circuit Breaker</b>, <b>Correlation ID + Log Aggregator</b>. <b>⚠️ Desafíos:</b> complejidad, pruebas, gobernanza, <b>red y latencia</b>, integridad de datos, administración (DevOps), versionado, experiencia del equipo. <b>El dato:</b> 0,99³ ≈ <b>97%</b> — <b>cada salto entre servicios resta</b>. <b>Antipatrones:</b> <b>nanoservicios</b> (un servicio por tabla) y <b>teraservicios</b>. <b>Migración:</b> <b>Strangler</b> (gradual, por partes) y <b>Adaptador</b> (SOAP legado → REST).</p>
-          <p class="mini"><b>SAGA:</b> sin transacción que abarque varios servicios → <b>secuencia de transacciones locales</b>; si una falla, <b>se compensan las anteriores en orden inverso</b> (por <b>coreografía</b> o por <b>orquestación</b>). <b>Outbox/Inbox:</b> resuelve la <b>doble escritura</b> — el evento se guarda <b>en la misma transacción</b> que el cambio y un <b>relay</b> lo publica (<b>at-least-once</b>); el receptor registra el id del mensaje en su transacción y <b>descarta duplicados</b> (idempotente). <b>Orquestación</b> (coordinador central: control, visibilidad y errores centralizados; ⚠️ acoplamiento y cuello de botella; típica de SOA/BPM) vs. <b>Coreografía</b> (reaccionan a eventos: desacople y escalabilidad; ⚠️ flujo <b>poco visible</b> y difícil de depurar; típica de microservicios). <b>Ley de Conway:</b> las organizaciones producen diseños que <b>copian sus estructuras de comunicación</b>.</p>
-          <p class="mini"><b>NUBE — despliegue:</b> On-Premise · <b>Housing/Colocation</b> (servidores propios en datacenter de terceros) · Nube pública · privada · <b>híbrida</b> · <b>multicloud</b>. <b>Servicio:</b> <b>IaaS</b> (gestionás desde el SO: EC2) · <b>PaaS</b> (app y datos: App Service, Heroku) · <b>FaaS</b> (la función: Lambda) · <b>SaaS</b> (sólo tus datos: M365). <i>Pizza: casa / para hornear / delivery / restaurante.</i> <b>Responsabilidad compartida:</b> el proveedor protege la nube (datacenter, hardware, hipervisor), el cliente protege lo que construye <b>EN</b> la nube (datos, IAM, configuración, app, cifrado y —en IaaS— el SO). <b>Contratar nube no transfiere la responsabilidad sobre los datos</b>; la mayoría de los incidentes son <b>malas configuraciones del cliente</b>. <b>Región</b> = área con varias <b>AZ</b> (datacenters con energía, red y clima <b>independientes</b>): 2 AZ protegen de la caída de un datacenter; multi-región, de un desastre regional. <b>Tiers:</b> I 99,671% · II (N+1) 99,741% · <b>III mantenible concurrentemente 99,982%</b> · <b>IV tolerante a fallas 99,995%</b>. <b>✅ nube:</b> elasticidad, <b>pago por uso (OPEX)</b>, alcance global, servicios administrados, time-to-market, alta disponibilidad. <b>⚠️:</b> costos variables (<b>FinOps</b>), <b>egress</b>, <b>vendor lock-in</b>, ubicación de los datos, dependencia de conectividad, nuevas competencias. <b>✅ on-premise:</b> control total, <b>soberanía/regulación (Ley 25.326, BCRA)</b>, <b>latencia local</b> (SCADA), costo predecible con carga estable, <b>independencia de Internet</b>, legacy. <b>CAPEX vs OPEX:</b> carga variable → nube; carga alta, estable y predecible → on-premise puede ganar. <b>Comparar TCO</b> (personal, energía, clima, renovación, licencias).</p>
+          <h3>Microservicios</h3>
+          <p><b>Qué son:</b> servicios <b>pequeños y autónomos</b>, cada uno en <b>su propio proceso</b>, construidos
+          alrededor de una <b>capacidad de negocio</b>, con <b>despliegue independiente</b>, <b>gestión
+          descentralizada</b>, <b>datos propios</b> y <b>APIs bien definidas</b>.</p>
+          <p><b>Dónde se corta:</b> por <b>BOUNDED CONTEXT</b> (DDD). Un único modelo para todo el dominio genera
+          contradicciones: <b>el mismo concepto tiene modelos distintos en cada contexto</b>.</p>
+          <p><b>Base de datos por servicio — los 6 principios</b></p>
+          <ul>
+            <li><b>Autoridad:</b> cada servicio es dueño de sus datos y sus reglas.</li>
+            <li><b>Encapsulamiento:</b> no se tocan las tablas internas de otro servicio.</li>
+            <li><b>IDs independientes</b> por servicio.</li>
+            <li><b>Referencias externas</b> guardadas como <b>IDs lógicos</b>.</li>
+            <li><b>No hay integridad referencial entre servicios:</b> se valida en la aplicación.</li>
+            <li><b>ACID sólo dentro</b> de cada servicio; lo que cruza varios, con <b>Saga</b>.</li>
+          </ul>
+          <p><b>Cómo acceder a datos de otro servicio — 3 opciones</b></p>
+          <div class="table-wrap"><table class="data">
+            <thead><tr><th>Opción</th><th>Cómo</th><th>Trade-off</th></tr></thead>
+            <tbody>
+              <tr><td><b>A · Referencia + API</b><br><span class="mini">(API Composition)</span></td><td>Guardo el ID externo y le pregunto al dueño</td><td>Datos frescos, pero <b>latencia y dependencia de disponibilidad</b></td></tr>
+              <tr><td><b>B · Réplica local</b><br><span class="mini">(read model)</span></td><td>Replico sólo los atributos que necesito, sincronizando por eventos</td><td>Más autonomía, pero <b>consistencia eventual</b> y hay que sincronizar</td></tr>
+              <tr><td><b>C · Base compartida</b></td><td>Excepción: vistas y permisos de lectura</td><td><b>Acoplamiento al esquema</b> y menos independencia</td></tr>
+            </tbody>
+          </table></div>
+          <p><b>⚠️ Los desafíos:</b> más complejidad operativa · pruebas difíciles · gobernanza · <b>latencia por cada
+          salto</b> · integridad de datos · requiere cultura DevOps · versionado entre servicios · experiencia del
+          equipo.</p>
+          <p><b>El número que hay que citar:</b> si cada servicio funciona el 99% del tiempo, una operación que pasa por
+          tres funciona el <b>0,99³ ≈ 97%</b>. <b>Cada salto resta.</b></p>
+          <p><b>Antipatrones:</b> <b>nanoservicios</b> (un servicio por tabla: la red y la operación cuestan más que el
+          beneficio) y <b>teraservicios</b> (tan grandes que son casi un monolito).</p>
+          <p><b>Migración:</b> <b>Strangler</b> (una fachada va derivando funcionalidad al servicio nuevo, sin big bang)
+          y <b>Adaptador</b> (envolver un SOAP legado y exponerlo como REST).</p>
+          <h3>SAGA, Outbox y coordinación</h3>
+          <p><b>SAGA.</b> Como no hay una transacción que abarque varios servicios, el flujo se hace con una
+          <b>secuencia de transacciones locales</b>; si una falla, <b>se compensan las anteriores en orden inverso</b>
+          con operaciones de negocio inversas (cancelar el pedido, liberar el stock). Se puede coordinar por
+          <b>coreografía</b> (cada servicio reacciona al evento del anterior) o por <b>orquestación</b> (un orquestador
+          indica cada paso y cada compensación).</p>
+          <p><b>Outbox / Inbox.</b> Resuelve el <b>problema de la doble escritura</b>: guardar el cambio y publicar el
+          evento son <b>dos operaciones</b> y si una falla quedan inconsistentes.</p>
+          <ul>
+            <li><b>Outbox (emisor):</b> el evento se guarda <b>en la misma transacción</b> que el cambio, en una tabla; un proceso aparte (relay o CDC) lo publica. Garantía <b>at-least-once</b>.</li>
+            <li><b>Inbox (receptor):</b> registra el id del mensaje ya procesado en su propia transacción y <b>descarta los duplicados</b>.</li>
+          </ul>
+          <div class="table-wrap"><table class="data">
+            <thead><tr><th></th><th>Orquestación</th><th>Coreografía</th></tr></thead>
+            <tbody>
+              <tr><td>Control</td><td><b>Centralizado</b> (un orquestador)</td><td><b>Distribuido</b>: reaccionan a eventos</td></tr>
+              <tr><td>Comunicación</td><td>Predominantemente sincrónica</td><td>Predominantemente asincrónica</td></tr>
+              <tr><td>Acoplamiento</td><td>Mayor</td><td><b>Bajo</b></td></tr>
+              <tr><td>Trazabilidad</td><td><b>Alta:</b> el flujo se ve</td><td><b>Baja:</b> difícil de depurar</td></tr>
+              <tr><td>Típica de</td><td><b>SOA</b> (BPM, BPEL)</td><td><b>Microservicios</b> y eventos</td></tr>
+            </tbody>
+          </table></div>
+          <p><b>Ley de Conway:</b> “las organizaciones producen diseños que <b>copian sus estructuras de
+          comunicación</b>”. Equipos por capa técnica → arquitectura por capas; equipos por capacidad de negocio →
+          servicios de negocio.</p>
+          <h3>Nube vs. On-Premise</h3>
+          <p><b>Modelos de despliegue (es un espectro, no binario):</b> <b>On-Premise</b> (todo propio) ·
+          <b>Housing/Colocation</b> (servidores propios en datacenter de terceros) · <b>Nube pública</b> ·
+          <b>Nube privada</b> · <b>Híbrida</b> · <b>Multicloud</b>.</p>
+          <div class="table-wrap"><table class="data">
+            <thead><tr><th>Modelo</th><th>Vos gestionás</th><th>Ejemplo</th></tr></thead>
+            <tbody>
+              <tr><td><b>On-Premise</b></td><td><b>Todo</b></td><td>Datacenter propio</td></tr>
+              <tr><td><b>IaaS</b></td><td>Desde el <b>sistema operativo</b> para arriba</td><td>EC2, Azure VMs</td></tr>
+              <tr><td><b>PaaS</b></td><td><b>La aplicación y los datos</b></td><td>App Service, Heroku</td></tr>
+              <tr><td><b>FaaS</b> (serverless)</td><td><b>La función</b> y los datos</td><td>AWS Lambda</td></tr>
+              <tr><td><b>SaaS</b></td><td><b>Sólo tus datos</b> y su configuración</td><td>Microsoft 365, Gmail</td></tr>
+            </tbody>
+          </table></div>
+          <p><i>La analogía de la pizza:</i> hecha en casa = On-Premise · para hornear = IaaS · delivery = PaaS · en el
+          restaurante = SaaS.</p>
+          <p><b>Responsabilidad compartida.</b> El proveedor protege la <b>infraestructura</b> (“seguridad <b>DE</b> la
+          nube”: datacenters, hardware, hipervisor). El cliente protege <b>lo que construye encima</b> (“seguridad
+          <b>EN</b> la nube”: datos, IAM, configuración, cifrado y —en IaaS— el SO). <b>Contratar nube no transfiere la
+          responsabilidad sobre los datos</b>, y <b>la mayoría de los incidentes son configuraciones incorrectas del
+          cliente</b>.</p>
+          <div class="grid-2">
+            <div class="card">
+              <p><b>✅ Nube</b></p>
+              <ul>
+                <li><b>Elasticidad:</b> escalar arriba y abajo en minutos</li>
+                <li><b>Pago por uso (OPEX)</b>, sin inversión inicial</li>
+                <li><b>Alcance global</b> y alta disponibilidad nativa</li>
+                <li><b>Servicios administrados</b> y mejor <b>time-to-market</b></li>
+              </ul>
+              <p><b>⚠️</b> costos variables (<b>FinOps</b>) · <b>egress</b> · <b>vendor lock-in</b> · ubicación de los datos · depende de la conectividad</p>
+            </div>
+            <div class="card">
+              <p><b>✅ On-Premise</b></p>
+              <ul>
+                <li><b>Control total</b> del hardware y las ventanas de mantenimiento</li>
+                <li><b>Soberanía y regulación</b> (Ley 25.326, BCRA)</li>
+                <li><b>Latencia local</b> e <b>independencia de Internet</b> (SCADA, planta)</li>
+                <li><b>Costo predecible</b> con carga alta y estable</li>
+              </ul>
+              <p><b>⚠️</b> sala, energía (UPS, grupo electrógeno), clima, seguridad física, personal 24×7, renovación de hardware cada 3-5 años</p>
+            </div>
+          </div>
+          <p><b>Región y zonas:</b> una <b>región</b> agrupa varias <b>zonas de disponibilidad (AZ)</b>, que son
+          datacenters con energía, red y clima <b>independientes</b>. <b>2 o más AZ</b> protegen de la caída de un
+          datacenter; <b>multi-región</b>, de un desastre regional.</p>
+          <p><b>Tiers:</b> I 99,671% · II 99,741% · <b>III mantenible concurrentemente 99,982%</b> ·
+          <b>IV tolerante a fallas 99,995%</b>.</p>
+          <p><b>CAPEX vs OPEX:</b> carga <b>variable o incierta</b> → gana la nube. Carga <b>alta, estable y
+          predecible</b> → on-premise puede ganar. <b>Siempre comparando TCO</b> (personal, energía, clima, renovación,
+          licencias), no el precio del servidor.</p>
         </section>
 
         <!-- ===================== HOJA 10 ===================== -->
@@ -906,9 +1301,43 @@
               <tr><td>Igual hay que responder</td><td><b>Fallback</b></td><td>Degradar: “pendiente de pago”, datos en caché</td></tr>
             </tbody>
           </table></div>
-          <p class="mini"><b>COLAS:</b> <b>mensaje</b> · <b>productor</b> · <b>cola</b> (FIFO; <b>un solo consumidor</b> por mensaje) · <b>consumidor</b> · <b>broker</b> (aloja y administra las colas). <b>Casos borde:</b> ① <b>B caída</b> → la cola acepta igual, los mensajes se acumulan, B drena al volver: <b>nada se pierde</b>, es <b>consistencia eventual</b> ② <b>B lenta / pico</b> → la cola <b>amortigua</b> (backlog); se escalan consumidores (<i>competing consumers</i>); ⚠️ <b>con varios consumidores el orden ya no es estricto</b> ③ <b>B cae antes del ACK</b> → el mensaje <b>se borra al recibir el ACK, no al entregarlo</b>: se <b>reentrega</b> (visibility timeout) y <b>puede llegar dos veces</b> → <b>consumidor IDEMPOTENTE</b> ④ <b>mensaje venenoso</b> (CUIT inválido) → reintentos limitados y <b>DLQ</b>: aparta el mensaje sin perderlo, no frena a los demás, se alerta y se reprocesa o descarta (llega por máximo de reintentos, formato inválido, <b>TTL</b> vencido o rechazo). <b>Garantías:</b> <b>at-most-once</b> (puede perderse) · <b>at-least-once</b> (<b>el habitual</b>: no se pierde, puede duplicarse → <b>idempotencia</b>) · <b>exactly-once</b> (ideal, difícil y costoso → en la práctica at-least-once + <b>deduplicación</b>). <b>ORDEN → cola · EVENTO → topic.</b> <b>Monitorear:</b> tamaño de la cola, <b>antigüedad del mensaje más viejo</b>, mensajes en DLQ.</p>
+          <h3>Colas de mensajes</h3>
+          <p><b>Las 5 piezas:</b> <b>mensaje</b> · <b>productor</b> (lo deja) · <b>cola</b> (FIFO; <b>cada mensaje lo
+          procesa UN solo consumidor</b>) · <b>consumidor</b> (lo toma) · <b>broker</b> (el software que aloja las
+          colas: RabbitMQ, SQS).</p>
+          <p><b>Los 4 casos borde — es lo que preguntan</b></p>
+          <div class="table-wrap"><table class="data">
+            <thead><tr><th style="width:22%">Escenario</th><th>Qué pasa</th><th>Qué hay que decir</th></tr></thead>
+            <tbody>
+              <tr><td><b>1 · B está caído</b></td><td>La cola <b>acepta igual</b>; los mensajes se acumulan y A ni se entera. Cuando B vuelve, <b>drena en orden</b></td><td><b>No se pierde nada:</b> sale más tarde, pero sale. Es <b>consistencia eventual</b></td></tr>
+              <tr><td><b>2 · B lento o pico</b></td><td>La cola <b>amortigua</b> (crece el backlog) y A no se frena. Se <b>escalan consumidores</b></td><td>⚠️ Con varios consumidores <b>el orden ya no es estricto</b></td></tr>
+              <tr><td><b>3 · B cae antes del ACK</b></td><td>El mensaje <b>se borra al recibir el ACK, no al entregarlo</b>: se <b>reentrega</b></td><td>Puede llegar <b>dos veces</b> → el consumidor <b>debe ser IDEMPOTENTE</b></td></tr>
+              <tr><td><b>4 · Mensaje venenoso</b></td><td>Falla siempre (un CUIT inválido). Tras N reintentos va a la <b>DLQ</b></td><td>La DLQ lo <b>aparta sin perderlo</b> para no frenar a los demás; se alerta y se reprocesa</td></tr>
+            </tbody>
+          </table></div>
+          <p><b>Garantías de entrega:</b> <b>at-most-once</b> (puede perderse, nunca duplica) · <b>at-least-once</b>
+          (<b>el habitual</b>: no se pierde, puede duplicar ⇒ <b>idempotencia</b>) · <b>exactly-once</b> (ideal pero
+          caro; en la práctica at-least-once + deduplicación).</p>
+          <p><b>Cola o topic:</b> una <b>ORDEN</b> la hace alguien <b>una vez</b> → <b>cola</b>. Un <b>EVENTO</b> le
+          interesa a varios → <b>topic</b>.</p>
+          <p><b>Qué monitorear:</b> tamaño de la cola · <b>antigüedad del mensaje más viejo</b> · mensajes en DLQ.</p>
           <p class="mini"><b>BD COMPARTIDA:</b> no se llaman, <b>se comunican por los datos</b>; el <b>contrato es el esquema</b>. ✅ simple, consistencia fuerte, <b>JOINs</b> para reportes cruzados. ⚠️ <b>acoplamiento fuerte al esquema</b>, <b>punto único de falla y contención</b> (si cae, <b>caen los dos</b>; un reporte pesado de B <b>bloquea</b> a A), <b>cada cambio de tabla rompe al otro</b> (renombrar una columna rompe a B <b>sin que B haya cambiado nada</b>), B se entera por <b>polling</b>. <b>“Menor esfuerzo inicial, mayor costo de evolución.”</b> Aceptable sólo con mismo equipo y despliegue, legado sin otra interfaz, o consistencia fuerte con carga baja.</p>
-          <p class="mini"><b>KAFKA:</b> <b>el evento NO se borra al leerlo</b>; cada consumidor <b>recuerda su offset</b>. <b>Tópico</b> (categoría) · <b>partición</b> (tramo ordenado, reparte carga) · <b>offset</b> (posición) · <b>clave</b>: <code>partición = hash(clave) % N</code> → <b>misma clave, misma partición</b>; <b>orden garantizado DENTRO de la partición, NO global</b> → clave = la entidad que necesita orden. <b>Grupo de consumidores:</b> dentro del grupo cada partición la lee <b>una sola instancia</b> (reparte); <b>cada grupo recibe todo</b> (duplica); más instancias que particiones no sirve. <b>Retención</b> (ej. 7 días) → <b>replay</b>: un consumidor caído retoma desde su offset y un servicio nuevo <b>lee todo el historial</b>. <b>Broker/replicación:</b> líder + seguidoras (factor 3); si un broker cae, una seguidora <b>pasa a líder</b> (KRaft). <b>acks:</b> 0 (puede perder, latencia mínima) · 1 (líder) · <b>all</b> (líder + réplicas, el más seguro).</p>
+          <h3>Apache Kafka</h3>
+          <p><b>La idea clave:</b> el evento <b>NO se borra al leerlo</b>; se conserva y <b>cada consumidor recuerda
+          hasta dónde leyó</b> (su <i>offset</i>). Es un <b>diario</b>, no una cola.</p>
+          <div class="table-wrap"><table class="data">
+            <thead><tr><th style="width:22%">Concepto</th><th>Qué es</th></tr></thead>
+            <tbody>
+              <tr><td><b>Tópico</b></td><td>La categoría de eventos, como una carpeta</td></tr>
+              <tr><td><b>Partición</b></td><td>Un tramo ordenado del tópico; reparte la carga</td></tr>
+              <tr><td><b>Offset</b></td><td>La posición de cada evento dentro de su partición</td></tr>
+              <tr><td><b>Clave</b></td><td><code>partición = hash(clave) % N</code>. <b>Misma clave → misma partición → orden garantizado.</b> Entre particiones <b>no hay orden global</b>: por eso la clave es la entidad que necesita orden</td></tr>
+              <tr><td><b>Grupo de consumidores</b></td><td><b>Dentro</b> del grupo cada partición la lee <b>una sola</b> instancia (reparte); <b>cada grupo recibe todo</b> (duplica). Más instancias que particiones no sirve</td></tr>
+              <tr><td><b>Retención y replay</b></td><td>Conserva los eventos N días aunque ya se hayan leído: el consumidor caído <b>retoma desde su offset</b> y un servicio nuevo <b>lee todo el historial</b></td></tr>
+              <tr><td><b>Broker y réplicas</b></td><td>Cada partición tiene un <b>líder</b> y <b>seguidoras</b>. Si cae un broker, una seguidora <b>pasa a líder</b></td></tr>
+              <tr><td><b>acks</b></td><td><b>0</b> no espera (puede perder) · <b>1</b> espera al líder · <b>all</b> líder + réplicas (el más seguro)</td></tr>
+            </tbody>
+          </table></div>
           <div class="table-wrap"><table class="data">
             <thead><tr><th></th><th>API</th><th>COLA</th><th>BD COMPARTIDA</th><th>KAFKA</th></tr></thead>
             <tbody>
@@ -921,8 +1350,26 @@
             </tbody>
           </table></div>
           <p class="mini"><b>Cómo elegir:</b> ¿necesito la respuesta <b>ya</b>? → <b>API</b> (+ timeout, retry, circuit breaker). ¿Puede esperar y <b>no debe perderse</b>? → <b>cola</b>. ¿<b>Muchos lectores</b> o <b>historial/replay</b>? → <b>Kafka</b>. ¿Mismo equipo y legado? → recién ahí BD compartida. <b>Una solución suele COMBINAR:</b> API para cobrar, cola para facturar. <b>IoT/sensores:</b> <b>MQTT</b> (liviano, pub/sub, QoS, tolera conectividad intermitente) + broker + <b>Edge Gateway</b> que bufferea y reintenta → ingesta → <b>TSDB</b>.</p>
-          <p class="mini"><b>Resiliencia — lo que falta nombrar:</b> <b>Bulkhead (mamparo):</b> <b>aislar pools de recursos por dependencia</b>, para que una dependencia lenta <b>no consuma todos los hilos</b> del servicio (evita el <i>thread starvation</i>). Es el complemento del timeout. · <b>Circuit breaker en detalle:</b> <b>CLOSED</b> (tráfico normal, se mide la tasa de fallas) → supera el <b>umbral</b> (ej. 50%) → <b>OPEN</b> (intercepta sin tocar al destino y responde el <b>fallback</b> durante la <b>sleep window</b>) → <b>HALF-OPEN</b> (deja pasar unas pocas llamadas de prueba, <b>probes</b>) → vuelve a CLOSED si tienen éxito, a OPEN si fallan. <b>Beneficios:</b> evita la falla en cascada, <b>libera hilos</b>, le da tiempo de recuperación al servicio dañado y permite <b>degradar con gracia</b>.</p>
-          <p class="mini"><b>Otros patrones que pueden pedir:</b> <b>CQRS</b> (separar el modelo de <b>escritura</b> del de <b>lectura</b>; junto con <b>API Composition</b> es la forma de resolver consultas que cruzan servicios <b>sin joins entre bases</b>) · <b>CDC — Change Data Capture</b> (un motor como <b>Debezium</b> lee el <b>log de transacciones</b> de la base y publica los cambios como eventos: es la alternativa al <i>relay</i> por polling del <b>Outbox</b>, y el mecanismo típico para sincronizar datos entre sistemas) · <b>2PC (commit de dos fases)</b>: coordina una transacción entre varios sistemas con un coordinador que primero pregunta “¿pueden?” y después ordena commit; <b>es lento, bloqueante y poco disponible</b> — <b>por eso en microservicios se usa SAGA</b> con compensaciones y consistencia eventual. <b>Consumer lag</b> (Kafka): atraso del consumidor respecto del último mensaje; es <b>la métrica de saturación</b> que hay que monitorear.</p>
+          <h3>El circuit breaker, estado por estado</h3>
+          <div class="table-wrap"><table class="data">
+            <thead><tr><th>Estado</th><th>Qué hace</th><th>Cuándo cambia</th></tr></thead>
+            <tbody>
+              <tr><td><b>CERRADO</b></td><td>Pasa el tráfico normal y <b>mide la tasa de fallas</b></td><td>Supera el <b>umbral</b> (ej. 50%) → <b>ABIERTO</b></td></tr>
+              <tr><td><b>ABIERTO</b></td><td><b>Intercepta sin tocar al destino</b> y responde el <b>fallback</b></td><td>Vence la <b>sleep window</b> → <b>SEMIABIERTO</b></td></tr>
+              <tr><td><b>SEMIABIERTO</b></td><td>Deja pasar unas pocas llamadas de prueba (<b>probes</b>)</td><td>Funcionan → CERRADO · fallan → ABIERTO</td></tr>
+            </tbody>
+          </table></div>
+          <p><b>Para qué sirve:</b> evita la <b>falla en cascada</b>, <b>libera hilos</b>, le da tiempo de recuperación
+          al servicio dañado y permite <b>degradar con gracia</b>.</p>
+          <p><b>Bulkhead (mamparo):</b> <b>aislar los pools de recursos por dependencia</b>, para que una dependencia
+          lenta <b>no consuma todos los hilos</b>. Es el complemento del timeout.</p>
+          <h3>Otros patrones que pueden pedir</h3>
+          <ul>
+            <li><b>CQRS:</b> separar el modelo de <b>escritura</b> del de <b>lectura</b>. Con <b>API Composition</b>, es cómo se resuelven consultas que cruzan servicios <b>sin joins entre bases</b>.</li>
+            <li><b>CDC (Change Data Capture):</b> <b>Debezium</b> lee el <b>log de transacciones</b> de la base y publica los cambios como eventos. Alternativa al relay por polling del <b>Outbox</b>.</li>
+            <li><b>2PC (commit de dos fases):</b> coordina entre sistemas pero es <b>lento, bloqueante y poco disponible</b> → <b>por eso se usa SAGA</b>.</li>
+            <li><b>Consumer lag:</b> atraso del consumidor Kafka respecto del último mensaje. Es <b>la métrica de saturación</b> a monitorear.</li>
+          </ul>
         </section>
 
         <!-- ===================== HOJA 11 ===================== -->
@@ -941,11 +1388,76 @@
           <p class="mini"><b>“El monitoreo busca ALERTAR; la observabilidad busca ENTENDER” — y el monitoreo es una PARTE de ser observable.</b> <b>Trazabilidad</b> = seguir <b>una operación de punta a punta</b> (trace_id): responde <b>¿DÓNDE pasó y cuánto tardó cada parte?</b>; es <b>uno de los 3 pilares</b>. <b>Observabilidad</b> (Kálmán, teoría de control): inferir los <b>estados internos</b> a partir de las <b>salidas externas</b> (telemetría). <i>Monitoreo = tablero del auto; observabilidad = scanner del mecánico.</i> <b>3 niveles:</b> lo conocido (dashboards/health checks) · sabemos que puede fallar (alertas con umbrales) · <b>lo que nunca imaginamos</b> (sólo observabilidad).</p>
           <p class="mini"><b>LOS 3 PILARES:</b> <b>MÉTRICAS</b> = ¿qué y cuánto? (signos vitales; agregadas; costo bajo; <b>alertas y tendencias</b>) · <b>LOGS</b> = ¿por qué y qué exactamente? (diario detallado; muy verbosos; <b>diagnóstico profundo</b>) · <b>TRAZAS</b> = ¿dónde? (seguimiento de un envío; árbol de spans; se <b>muestrean</b>; <b>latencia entre servicios</b>). <b>Las métricas AVISAN, las trazas UBICAN, los logs EXPLICAN.</b> (4ª pata: <b>perfiles</b>/flame graph: en qué <b>función</b> se gasta el recurso.)</p>
           <p class="mini"><b>Logs — niveles:</b> TRACE · DEBUG · <b>INFO</b> (hitos normales) · <b>WARN</b> (algo raro, sigue funcionando) · <b>ERROR</b> (falló una operación) · <b>FATAL</b> (el proceso no puede continuar). En producción <b>INFO o superior</b>; DEBUG se activa <b>temporalmente sin redeploy</b>. <b>Estructurados (JSON)</b>: filtrar por campo, agrupar y contar, <b>unir con trazas por trace_id</b>, sin regex frágiles. <b>Evitar:</b> datos sensibles (<b>Ley 25.326</b>), payloads enteros, logs en ciclos calientes, mensajes sin contexto, usarlos como <b>única fuente de métricas</b>. <b>Pipeline:</b> app → agente (Fluent Bit/OTel) → almacenamiento (Elastic/Loki) → visualizador (Kibana/Grafana), con <b>retención y rotación</b>.</p>
-          <p class="mini"><b>Métricas:</b> <b>nombre + etiquetas + valor + timestamp</b>. Tipos: <b>Counter</b> (sólo crece → se grafica su <b>rate</b>) · <b>UpDownCounter</b> · <b>Gauge</b> (instantáneo) · <b>Histogram</b> (distribución en buckets). <b>El promedio miente:</b> usar <b>percentiles p95/p99</b> (la peor experiencia real). <b>Cardinalidad</b> = cada combinación de etiquetas es una serie: <b>nunca user_id/pedido_id/trace_id como etiqueta</b> (van en logs/trazas); es lo que <b>más encarece</b> la TSDB. <b>GOLDEN SIGNALS (SRE Google):</b> <b>LATENCIA</b> (p95/p99, por endpoint y por dependencia; éxitos y fallas separados) · <b>TRÁFICO</b> (RPS, pedidos/min; “sin errores y sin tráfico = <b>silencio sospechoso</b>”) · <b>ERRORES</b> (explícitos 5xx, <b>implícitos</b> 200 OK incorrecto o que incumple el SLO, de negocio) · <b>SATURACIÓN</b> (CPU, memoria, <b>pool de BD</b>, profundidad de cola — <b>la señal ADELANTADA</b>). Equivalentes: <b>RED</b> (Rate, Errors, Duration) para servicios y <b>USE</b> (Utilization, Saturation, Errors) para recursos.</p>
+          <h3>Métricas</h3>
+          <p>Una métrica es <b>un número con contexto</b>: <code>nombre + etiquetas + valor + timestamp</code>.</p>
+          <div class="table-wrap"><table class="data">
+            <thead><tr><th>Tipo</th><th>Qué mide</th><th>Ejemplo</th></tr></thead>
+            <tbody>
+              <tr><td><b>Counter</b></td><td><b>Sólo crece.</b> Se grafica su <b>rate</b>, no el crudo</td><td><code>pedidos_creados_total</code></td></tr>
+              <tr><td><b>UpDownCounter</b></td><td>Sube y baja: lo que entra y sale</td><td><code>pedidos_en_preparacion</code></td></tr>
+              <tr><td><b>Gauge</b></td><td>Valor <b>instantáneo</b></td><td><code>memoria_usada_mb</code></td></tr>
+              <tr><td><b>Histogram</b></td><td><b>Distribución</b> en rangos</td><td><code>duracion_pedido_ms</code></td></tr>
+            </tbody>
+          </table></div>
+          <p><b>⚠️ El promedio miente.</b> Promedio ~250 ms, mediana 105 ms, <b>p95</b> 1,1 s, <b>p99</b> 2,8 s.
+          <b>Siempre percentiles:</b> muestran lo que viven los usuarios con peor experiencia.</p>
+          <p><b>⚠️ Cardinalidad.</b> Cada combinación de etiquetas es <b>una serie</b>. <b>Buenas:</b> service, method,
+          status, region. <b>Malas:</b> <code>user_id</code>, <code>pedido_id</code>, <code>trace_id</code>, URL
+          completa → esos van en <b>logs o trazas</b>. <b>Es lo que más encarece una TSDB.</b></p>
           <p class="mini"><b>Trazas:</b> <b>trace</b> (recorrido completo) · <b>span</b> (unidad de trabajo con inicio/fin; <b>parent_span_id</b> arma el árbol) · <b>attributes</b> (clave-valor de contexto) · <b>events</b> (marca puntual) · kind SERVER/CLIENT, status OK/ERROR. El <b>trace_id nace en el gateway</b> y <b>se propaga en cada llamada</b>. <b>Cascada:</b> ancho = duración, sangría = padre-hijo, huecos = espera. <b>Muestreo:</b> <b>head-based</b> (al inicio, simple y barato; ⚠️ descarta justo los errores) vs. <b>tail-based</b> (al final, <b>conserva errores y lentas</b>; ⚠️ buffer y recursos). <b>Regla: muestrear mucho lo normal y conservar SIEMPRE errores y latencia alta.</b></p>
-          <p class="mini"><b>Alertas:</b> umbral estático · tendencia/anomalía · <b>basada en SLO</b> · <b>ausencia de datos</b> · compuesta. <b>Alertar por SÍNTOMAS, no por causas</b> (“% de pedidos fallidos &gt; 1%”, no “CPU &gt; 80%”). Accionable, urgente, con <b>dueño y runbook</b>, con <b>severidad</b>. <b>Alert fatigue:</b> si todo alerta, nada se atiende. Parámetros: <b>umbral</b>, <b>duración (for)</b>, agregación, recuperación (evita <b>flapping</b>). <b>SLI</b> (medición real) · <b>SLO</b> (meta interna) · <b>SLA</b> (contrato <b>con penalidades</b>). <b>Error budget</b> = 100% − SLO (99,5% → <b>216 min/mes</b>): con presupuesto se puede arriesgar; al <b>80%</b> se frenan cambios riesgosos; al <b>100%</b> se <b>congelan los lanzamientos</b>. <b>Disponibilidad compuesta:</b> 99,9% × 99,9% ≈ <b>99,8%</b> — <b>cada dependencia resta</b>. 99,9% = 8,76 h/año · 99,99% = 52,6 min/año.</p>
-          <p class="mini"><b>Infra:</b> bare metal → <b>VM</b> (SO completo, GBs, minutos, aislamiento fuerte) → <b>contenedor</b> (<b>comparte el kernel</b>, MBs, segundos, portabilidad: “fin del <i>en mi máquina funciona</i>”) → <b>Kubernetes</b> (<b>estado deseado</b>, scheduling, <b>self-healing</b>, autoescalado, rolling updates, descubrimiento) → <b>serverless</b>. <b>Ambientes:</b> Dev (ficticios) · QA (de prueba) · <b>Staging/UAT</b> (<b>réplica fiel</b>, datos <b>anonimizados</b>) · Producción. <b>Paridad entre ambientes</b> = menos sorpresas; <b>nunca copiar datos reales sin anonimizar</b> (Ley 25.326). <b>Mutable (“mascotas”)</b> → configuration drift, servidores “copo de nieve” vs. <b>INMUTABLE (“ganado”)</b> → se <b>reemplaza</b>, no se parchea; <b>rollback = redeploy de la imagen anterior</b>; <b>IaC</b> (Terraform) versionada y auditable. <b>CI/CD:</b> el <b>artefacto se construye una sola vez</b> y recorre todos los ambientes; <b>Delivery</b> (con aprobación) vs. <b>Deployment</b> (sin intervención) = <b>decisión de negocio</b>. <b>RPO</b> (cuántos datos tolero perder: 24 h → backup diario; ≈0 → <b>replicación sincrónica</b>) · <b>RTO</b> (cuánto sin servicio). <b>DR:</b> Backup&amp;Restore (horas/días) · <b>Pilot Light</b> (min/decenas de min) · <b>Warm Standby</b> (seg-min/min) · <b>Activo-Activo</b> (≈0/≈0).</p>
-          <p class="mini"><b>Despliegue — DEPLOY ≠ RELEASE</b> (técnico vs. <b>negocio</b>; dimensiones: downtime, <b>radio de impacto</b>, costo de infra, velocidad de rollback). <b>Recreate</b>: se detiene todo y se levanta la nueva (<b>downtime garantizado</b>; útil si dos versiones <b>no pueden convivir</b>). <b>Rolling update</b>: progresivo, sin downtime ni infra extra, <b>conviven v1 y v2</b> (API y base <b>compatibles con ambas</b>); rollback lento; <b>default de Kubernetes</b>. <b>Blue/Green</b>: dos ambientes idénticos, switch y <b>rollback inmediatos</b>; ⚠️ <b>duplica la infra</b>, base compartida y sesiones en curso. <b>Canary</b>: 1→5→25→50→100% <b>según métricas</b>; <b>limita el radio de impacto</b>; requiere <b>observabilidad y LB L7</b>. <b>Canary</b> (técnico: ¿es estable?) vs. <b>A/B testing</b> (negocio: ¿qué variante convierte más?) vs. <b>Shadow</b> (copia del tráfico real, <b>respuesta descartada</b>; ⚠️ no cobrar/mailear dos veces). <b>Feature flags:</b> separan deploy de release, activación gradual, <b>kill switch</b>; ⚠️ deuda técnica si no se eliminan.</p>
+          <h3>Alertas</h3>
+          <p><b>Los 5 tipos:</b> umbral estático · tendencia/anomalía · basada en <b>SLO</b> · <b>ausencia de datos</b>
+          (silencio) · compuesta.</p>
+          <div class="table-wrap"><table class="data">
+            <thead><tr><th>❌ Por CAUSA (frágil)</th><th>✅ Por SÍNTOMA (lo que sufre el usuario)</th></tr></thead>
+            <tbody>
+              <tr><td>CPU &gt; 80% en una instancia</td><td>p95 de “crear pedido” &gt; 2 s durante 5 min</td></tr>
+              <tr><td>Un contenedor se reinició</td><td>% de pedidos fallidos &gt; 1%</td></tr>
+              <tr><td>La cola tiene 500 mensajes</td><td>La factura tarda más de 2 min</td></tr>
+              <tr><td>El disco está al 70%</td><td>El disco se llena en menos de 4 horas</td></tr>
+            </tbody>
+          </table></div>
+          <p><b>Una buena alerta:</b> accionable · urgente · con <b>dueño y runbook</b> · con severidad.
+          <b>Alert fatigue:</b> si todo alerta, nada se atiende. <b>Parámetros:</b> umbral + <b>duración (for)</b> —sin
+          ella, un pico de un segundo despierta a alguien a las 3 AM— + agregación + umbral de recuperación.</p>
+          <p><b>SLI / SLO / SLA</b> = la medición · el objetivo interno · el contrato con penalidad.
+          <b>Error budget</b> = 100% − SLO (99,5% → <b>216 min/mes</b>). Al <b>80%</b> se frenan cambios riesgosos; al
+          <b>100%</b> se congelan los lanzamientos.</p>
+          <h3>Infraestructura</h3>
+          <p><b>La escalera (de más control a más abstracción):</b> <b>bare metal</b> → <b>VM</b> (SO completo, GBs,
+          minutos, aislamiento fuerte) → <b>contenedor</b> (<b>comparte el kernel</b>, MBs, segundos; fin del “en mi
+          máquina funciona”) → <b>Kubernetes</b> → <b>serverless</b>.</p>
+          <p><b>Kubernetes:</b> declarás el <b>estado deseado</b> y él lo mantiene · decide en qué nodo corre cada
+          contenedor · <b>self-healing</b> · autoescalado · <b>rolling updates</b> y rollback.</p>
+          <p><b>Ambientes:</b> Dev (ficticios) · QA (de prueba) · <b>Staging</b> (réplica fiel, datos
+          <b>anonimizados</b>) · Producción. <b>Paridad = menos sorpresas</b>; <b>nunca copiar datos reales sin
+          anonimizar</b> (Ley 25.326).</p>
+          <p><b>Mutable vs inmutable:</b> “<b>mascotas</b>” (se parchean en vivo → <i>drift</i>, servidores copo de
+          nieve) vs “<b>ganado</b>” (<b>se reemplaza la imagen</b>; rollback = redesplegar la anterior). Se apoya en
+          <b>IaC</b>: infraestructura versionada y auditable.</p>
+          <p><b>CI/CD:</b> el <b>artefacto se construye una sola vez</b> y recorre todos los ambientes.
+          <b>Delivery</b> = con aprobación manual · <b>Deployment</b> = sin intervención. Es una <b>decisión de
+          negocio</b>.</p>
+          <p><b>RPO / RTO</b> = cuántos <b>datos</b> tolero perder / cuánto <b>tiempo</b> sin servicio. <b>DR:</b>
+          Backup &amp; Restore (horas/días) → <b>Pilot Light</b> → <b>Warm Standby</b> → <b>Activo-Activo</b> (≈0/≈0).</p>
+          <h3>Estrategias de despliegue</h3>
+          <p><b>DEPLOY ≠ RELEASE.</b> Deploy = decisión <b>técnica</b> (puede no notarlo nadie). Release = decisión de
+          <b>negocio</b>. Toda estrategia balancea <b>4 dimensiones</b>: downtime · <b>radio de impacto</b> · costo de
+          infra · velocidad de rollback.</p>
+          <div class="table-wrap"><table class="data">
+            <thead><tr><th>Estrategia</th><th>Cómo</th><th>Downtime</th><th>Rollback</th><th>Costo</th></tr></thead>
+            <tbody>
+              <tr><td><b>Recreate</b></td><td>Se baja todo y se sube lo nuevo</td><td><b>SÍ</b> (el único)</td><td>Lento</td><td>Bajo</td></tr>
+              <tr><td><b>Rolling</b></td><td>De a una instancia. <b>Conviven v1 y v2</b>: API y base compatibles con ambas. Default de K8s</td><td>No</td><td>Lento</td><td>Bajo</td></tr>
+              <tr><td><b>Blue/Green</b></td><td>Dos entornos idénticos, se conmuta el tráfico</td><td>No</td><td><b>Inmediato</b></td><td><b>2× (el único)</b></td></tr>
+              <tr><td><b>Canary</b></td><td>1% → 5% → 25% → 50% → 100% <b>según métricas</b></td><td>No</td><td>Rápido</td><td>Medio</td></tr>
+            </tbody>
+          </table></div>
+          <p><b>No confundir:</b> <b>Canary</b> = técnico (¿es estable?) · <b>A/B testing</b> = de negocio (¿cuál
+          convierte más?) · <b>Shadow</b> = copia el tráfico y <b>descarta la respuesta</b> (⚠️ no cobrar ni mailear dos
+          veces).</p>
+          <p><b>Feature flags:</b> separan deploy de release, activación gradual, <b>kill switch</b>. ⚠️ Deuda técnica
+          si no se eliminan.</p>
           <div class="callout key">
             <div class="callout-title">⭐ EXPAND AND CONTRACT — cambiar el esquema sin downtime</div>
             <p class="mini">Es la respuesta a “<b>durante un rolling update conviven v1 y v2, así que la base tiene que ser compatible con ambas</b>”. Tres fases:</p>

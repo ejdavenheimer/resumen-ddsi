@@ -451,77 +451,167 @@
 
         <!-- ===================== HOJA 7 ===================== -->
         <section class="hoja">
-          <span class="hoja-num">HOJA 7 · ARMAR EL MODELO DE DATOS (40 pts)</span>
-          <p class="mini"><b>Consigna de todos los años:</b> “indicando las entidades con sus respectivos campos, <b>claves primarias</b>, <b>foráneas</b>, <b>cardinalidad</b>, <b>modalidad</b> y <b>restricciones</b> según corresponda”. Y además: <b>enumerar las entidades</b>, <b>indicar supuestos</b> y <b>justificar</b>.</p>
+          <span class="hoja-num">HOJA 7 · CÓMO ARMAR EL MODELO DE DATOS (40 pts)</span>
+
+          <p><b>Lo que piden, textual, todos los años:</b> “indicando las entidades con sus respectivos campos,
+          <b>claves primarias</b>, <b>foráneas</b>, <b>cardinalidad</b>, <b>modalidad</b> y <b>restricciones</b> según
+          corresponda”. Y además: <b>enumerar las entidades</b>, <b>indicar los supuestos</b> y <b>justificar</b>.
+          Son <b>tres entregables</b>, no uno: la lista, el dibujo y el texto. <b>El texto vale casi tanto como el
+          dibujo.</b></p>
+
+          <h3>PASO 1 · Leé entero sin escribir. En la segunda pasada, subrayá</h3>
           <div class="table-wrap"><table class="data">
-            <thead><tr><th>En el enunciado</th><th>En el modelo</th></tr></thead>
+            <thead><tr><th style="width:38%">Si el enunciado dice…</th><th>Poné en el modelo…</th></tr></thead>
             <tbody>
-              <tr><td>Sustantivo que el sistema “registra/administra”</td><td><b>Entidad</b> (tabla con PK)</td></tr>
-              <tr><td>“de cada X se conoce A, B, C”</td><td>Atributos de X</td></tr>
-              <tr><td>“datos <b>opcionales</b> como…”</td><td>Columna <b>NULL</b> (modalidad 0)</td></tr>
-              <tr><td>“(por ejemplo A, B, C o D)” — conjunto cerrado</td><td><b>Enum</b> con CHECK</td></tr>
-              <tr><td>“los configura un <b>administrador</b>” / “pueden agregarse”</td><td><b>Tabla maestra</b> + FK</td></tr>
-              <tr><td>“<b>historial</b> de…”</td><td>Entidad propia, 1 fila por evento (+ datos congelados)</td></tr>
-              <tr><td>“puede incluir <b>archivos adjuntos</b>”</td><td>Tabla hija 1:N con la <b>URL</b> (object storage, nunca el binario)</td></tr>
-              <tr><td>Lista de valores simples (alergias, horarios)</td><td><b>Tabla hija</b> / <code>@ElementCollection</code> (1FN)</td></tr>
-              <tr><td>Value Object (dirección, dinero, coordenadas)</td><td>Columnas <b>embebidas</b> en la tabla del dueño</td></tr>
-              <tr><td>Composición ◆ (la parte no vive sin el todo)</td><td>FK <b>NOT NULL</b> + <b>cascada de borrado</b></td></tr>
-              <tr><td>Agregación ◇ (la parte vive por su cuenta)</td><td>FK que puede ser <b>NULL</b>, sin cascada</td></tr>
-              <tr><td>Herencia</td><td>Elegir <b>y justificar</b> SINGLE_TABLE / JOINED / TABLE_PER_CLASS / MappedSuperclass</td></tr>
-              <tr><td>Método o cálculo</td><td><b>No se persiste</b> (salvo desnormalización justificada)</td></tr>
-              <tr><td>Patrón <b>State</b> en el diagrama de clases</td><td><b>No se persisten las clases de estado</b>: sólo <b>el estado actual</b> como atributo</td></tr>
-              <tr><td>“<b>historial</b>”, “bitácora”, “trazabilidad”, “qué pasó y cuándo”</td><td><b>Tabla de eventos</b> con <code>fecha_hora</code>, <b>una fila por hecho</b> (1,N). <b>Aparece en 23 de 24 enunciados</b></td></tr>
-              <tr><td>“<b>estadísticas</b>”, “el más…”, “top 10”, “promedio”</td><td><b>No se modela la estadística: el HECHO que permite calcularla.</b> Si no podés escribir el COUNT/SUM + GROUP BY, <b>te falta una tabla</b></td></tr>
-              <tr><td>“<b>predefinido</b>”, “catálogo”, “tipos posibles”</td><td><b>Tabla catálogo</b> + <b>intermedia</b> con lo elegido</td></tr>
-              <tr><td>“<b>puede ajustar los parámetros</b>”, “configurable”</td><td>El valor va <b>en la INTERMEDIA</b>, <b>no en el catálogo</b> (el catálogo lo comparten todos)</td></tr>
-              <tr><td>“estado”, “pasa por…”, “acepta o rechaza”</td><td><code>estado VARCHAR</code> + <b>CHECK</b> — <b>NUNCA BOOLEAN</b> si hay más de dos valores</td></tr>
-              <tr><td>“vigente desde”, “cambia en el tiempo”, “histórico de precios”</td><td><code>vigente_desde</code> <b>DENTRO de la PK</b> + <code>vigente_hasta</code> NULL en la fila actual</td></tr>
-              <tr><td>“único”, “identificatorio”, “código”, “nro. de serie”</td><td><b>UNIQUE</b> (clave natural); la PK puede seguir siendo subrogada</td></tr>
-              <tr><td>Microservicios (base por servicio)</td><td>Referencias entre servicios = <b>ID lógico, NO FK</b> (sin integridad referencial; se valida en la app)</td></tr>
+              <tr><td>Un sustantivo con datos propios (Mascota, Zona, Técnico)</td><td><b>Entidad</b> → una tabla con PK</td></tr>
+              <tr><td>“De cada X se conoce…”</td><td><b>Atributos</b> de X</td></tr>
+              <tr><td>“tiene varios”, “uno o más”, “puede incluir”</td><td><b>1:N</b> → la FK va del lado <b>N</b></td></tr>
+              <tr><td>“múltiples… y a su vez…”</td><td><b>N:M</b> → tabla <b>intermedia</b> con PK compuesta</td></tr>
+              <tr><td>“al menos uno”</td><td>Modalidad <b>obligatoria</b> → FK <b>NOT NULL</b></td></tr>
+              <tr><td>“puede tener”, “opcional”</td><td>Modalidad <b>opcional</b> → FK admite <b>NULL</b></td></tr>
+              <tr><td>“único”, “identificatorio”, “código”, “nro. de serie”</td><td><b>UNIQUE</b> (la PK puede seguir siendo subrogada)</td></tr>
+              <tr><td>“<b>historial</b>”, “bitácora”, “trazabilidad”, “qué pasó y cuándo”</td><td><b>Tabla de eventos</b> con <code>fecha_hora</code>, una fila por hecho. <b>Está en 23 de 24 enunciados</b></td></tr>
+              <tr><td>“<b>estadísticas</b>”, “el más…”, “top 10”, “promedio”</td><td>La estadística <b>no es una tabla</b>: modelá el <b>hecho</b>. Si no podés escribir el COUNT/SUM, <b>falta una tabla</b></td></tr>
+              <tr><td>“<b>predefinido</b>”, “catálogo”, “lo configura un administrador”</td><td><b>Tabla catálogo</b> + <b>intermedia</b> con lo elegido (no un enum)</td></tr>
+              <tr><td>“<b>puede ajustar los parámetros</b>”, “configurable”</td><td>El valor va <b>en la intermedia</b>, <b>nunca en el catálogo</b></td></tr>
+              <tr><td>“estado”, “pasa por…”, “acepta o rechaza”</td><td><code>estado VARCHAR</code> + <b>CHECK</b>. <b>Nunca BOOLEAN</b> si hay más de dos valores</td></tr>
+              <tr><td>“vigente desde”, “cambia en el tiempo”, “histórico de precios”</td><td><code>vigente_desde</code> <b>dentro de la PK</b> + <code>vigente_hasta</code> NULL en la fila actual</td></tr>
+              <tr><td>“adjuntos”, “fotos”, “documentos”</td><td>Tabla hija con la <b>URL</b> (object storage). <b>Nunca un BLOB</b></td></tr>
+              <tr><td>“al momento de”, “el precio aplicado”, “comprobante”</td><td><b>Dato congelado</b> (desnormalización por consistencia), <b>conservando la FK</b></td></tr>
             </tbody>
           </table></div>
-          <div class="callout key">
-            <div class="callout-title">LAS 6 DECISIONES DE UN DER DE GESTIÓN (es el que más se toma)</div>
-            <p class="mini"><b>① Jerarquía anidada:</b> si el dominio tiene <b>contenedor → equipo → unidad</b>
-            (punto → locker → casillero · estación → cargador → conector), son <b>tres tablas</b>, cada una con FK al
-            padre. <b>El error grave es colapsarla</b> o poner las unidades como columnas. La PK de la unidad suele ser
-            <b>compuesta</b> (<code>nro_serie_equipo + nro_unidad</code>), porque el número sólo identifica dentro de su
-            equipo — <b>y la FK hacia ella también debe ser compuesta</b>.
-            <b>② Dirección / dato estructurado:</b> ¿entidad o <b>embebida</b>? Embebida si es un <b>Value Object sin
-            identidad</b> que no se reutiliza ni se consulta solo; entidad si se comparte, se valida contra un catálogo
-            o necesita <b>historial</b>. <b>Lo que puntúa es que lo discutas, no cuál elijas.</b>
-            <b>③ N:M vs 1:N:</b> “servicios complementarios” (un servicio está en muchos lugares) → <b>catálogo +
-            tabla intermedia</b>; “horarios de atención” (cada franja es de un solo lugar) → <b>tabla hija 1:N</b>.
-            <b>Confundirlos es el error más común.</b>
-            <b>④ Atributos del tipo → catálogo:</b> medidas del tamaño, potencia del tipo de conector. Si quedan como
-            columnas de la unidad, <b>dependen del tipo y no de la unidad</b> → 2FN/3FN.
-            <b>⑤ Historial + estado actual:</b> tabla <code>HISTORIAL(…, desde, hasta, motivo)</code> para la
-            trazabilidad <b>más</b> el campo <code>estado_actual</code> en la unidad, <b>declarado como desnormalización
-            por performance</b>, con el historial como <b>fuente de verdad</b> y proceso de recálculo. Sin declararlo,
-            es violación de 3FN.
-            <b>⑥ Tarifa / precio con vigencia:</b> si piden <b>conservar el histórico</b>, <code>vigente_desde</code>
-            <b>es parte de la PK</b> (cada cambio es una fila, no un UPDATE) y <code>vigente_hasta</code> queda NULL en
-            la vigente. Si varía por franja, la <b>franja va a su tabla</b> (columnas <code>precio_pico</code>,
-            <code>precio_valle</code> serían grupo repetitivo). <b>Definí el grano:</b> la tarifa es por
-            <b>tipo</b>, no por unidad física.</p>
+
+          <h3>PASO 2 · Dibujá el esqueleto ANTES que los atributos</h3>
+          <p>Sólo las <b>cajas con su nombre, la PK y las FK</b>, y las <b>líneas</b> entre ellas. Nada más.</p>
+          <p><b>Por qué:</b> si empezás escribiendo los atributos de la primera entidad, llegás a la mitad de la hoja y
+          descubrís que falta una tabla en el medio. Con el esqueleto, <b>mover una caja todavía cuesta cero</b>. Es el
+          paso que más tiempo ahorra y el que casi nadie hace.</p>
+
+          <h3>PASO 3 · Recién ahora completá atributos, tipos y restricciones</h3>
+          <div class="grid-2">
+            <div class="card">
+              <p><b>Tipos de dato</b></p>
+              <div class="table-wrap"><table class="data">
+                <tbody>
+                  <tr><td><code>INT</code> / <code>BIGINT</code></td><td>ids, cantidades</td></tr>
+                  <tr><td><b><code>DECIMAL(p,s)</code></b></td><td><b>dinero y medidas exactas</b></td></tr>
+                  <tr><td><code>FLOAT</code> / <code>DOUBLE</code></td><td>medidas aproximadas (lat/long, temperatura)</td></tr>
+                  <tr><td><code>VARCHAR(n)</code></td><td>texto corto o mediano</td></tr>
+                  <tr><td><code>CHAR(n)</code></td><td>largo fijo (país, moneda)</td></tr>
+                  <tr><td><code>TEXT</code></td><td>texto largo (descripción)</td></tr>
+                  <tr><td><code>BOOLEAN</code></td><td>sí/no <b>real</b>, sólo dos valores</td></tr>
+                  <tr><td><code>DATE</code> · <code>TIME</code> · <code>DATETIME</code></td><td>fecha · hora · ambas</td></tr>
+                  <tr><td><code>BLOB</code></td><td><b>evitalo: guardá la URL</b></td></tr>
+                </tbody>
+              </table></div>
+              <p><b>DNI, CUIT, teléfono y CP → <code>VARCHAR</code></b> (no se hacen cuentas y pueden tener ceros a la
+              izquierda o guiones). <b>Dinero nunca en <code>DOUBLE</code></b>.</p>
+            </div>
+            <div class="card">
+              <p><b>Claves y restricciones</b></p>
+              <div class="table-wrap"><table class="data">
+                <tbody>
+                  <tr><td><b>PK</b></td><td>único por fila, <b>no puede ser NULL</b></td></tr>
+                  <tr><td><b>FK</b></td><td>referencia a la PK de otra tabla</td></tr>
+                  <tr><td><b>PK FK</b></td><td>parte de la PK <b>y</b> FK: lo típico de la <b>intermedia</b></td></tr>
+                  <tr><td><b>UNIQUE</b></td><td>no se repite, pero no es la PK</td></tr>
+                  <tr><td><b>NOT NULL</b></td><td>obligatorio ↔ <b>modalidad 1</b></td></tr>
+                  <tr><td><b>NULL</b></td><td>opcional ↔ <b>modalidad 0</b></td></tr>
+                  <tr><td><b>CHECK</b></td><td><code>(estado IN (…))</code>, <code>(peso &gt; 0)</code></td></tr>
+                  <tr><td><b>DEFAULT</b></td><td><code>activo DEFAULT true</code></td></tr>
+                  <tr><td><b>AI</b></td><td>el id se genera solo → clave <b>subrogada</b></td></tr>
+                  <tr><td><b>PK compuesta</b></td><td><code>(id_locker, nro_casillero)</code></td></tr>
+                  <tr><td><b>UK compuesta</b></td><td><code>UNIQUE (id_rutina, nombre)</code></td></tr>
+                </tbody>
+              </table></div>
+            </div>
           </div>
-          <p class="mini"><b>Notación:</b> <code>1,1</code> exactamente uno · <code>0,1</code> cero o uno · <code>1,N</code> uno o muchos · <code>0,N</code> cero o muchos. Y <b>escribí la lectura en palabras</b> al lado: “un Domicilio tiene <b>cero o muchos</b> Dispositivos / un Dispositivo pertenece a <b>exactamente un</b> Domicilio”.</p>
-          <div class="callout key">
-            <div class="callout-title">LOS 3 PÁRRAFOS DE JUSTIFICACIÓN (vale 5-10 pts y es siempre igual)</div>
-            <p class="mini"><b>a) Qué persistir:</b> “Persisto las <b>entidades con identidad y ciclo de vida propio</b> que el sistema debe recuperar entre ejecuciones. <b>No persisto</b>: objetos de cálculo ni resultados derivables, DTOs de presentación, las clases de comportamiento (State/Strategy) ni los archivos binarios (van a object storage; la base guarda la URL). Los <b>Value Objects</b> sin identidad se persisten <b>embebidos</b>.”</p>
-            <p class="mini"><b>b) Impedance mismatches:</b> “<b>Identidad:</b> PK subrogada en todas, salvo donde hay clave natural clara (nro. de serie); UNIQUE en las claves naturales (email, microchip, código). <b>Tipos:</b> VARCHAR con longitud, DATE/DATETIME, <b>DECIMAL</b> para importes (no DOUBLE). <b>Cardinalidad:</b> las relaciones bidireccionales se implementan con <b>una sola FK</b> del lado muchos; las N:M se parten en dos 1:N con tabla intermedia. <b>Herencia:</b> [estrategia] porque [razón]. <b>Enums:</b> STRING con CHECK; catálogos administrables como tabla maestra. <b>Colecciones simples:</b> tabla hija, porque un atributo multivaluado rompe 1FN.”</p>
-            <p class="mini"><b>c) Qué desnormalizar:</b> “Por <b>consistencia</b>: [dato] queda congelado en [entidad] porque es un registro histórico inmutable. Por <b>performance</b>: nada por ahora; si [consulta] se vuelve crítica, replicaría [atributo] <b>conservando la FK</b>, declarando [tabla] como <b>fuente de verdad</b>, con la propagación encapsulada y un <b>proceso de recálculo</b>.”</p>
-          </div>
-          <p class="mini"><b>MÉTODO EN 7 PASOS:</b> ① leé el enunciado entero <b>sin escribir</b>; ② <b>esqueleto primero</b>: sólo cajas con nombre, PK y FK, y las líneas (mover una caja todavía cuesta cero); ③ recién ahí atributos, tipos y restricciones; ④ revisá <b>línea por línea</b>: la <b>pata de gallo va del lado de la FK</b>, <code>o</code> si puede existir sin la otra / <code>|</code> si no puede, y <b>ninguna tabla suelta</b>; ⑤ releé el enunciado <b>oración por oración tachando</b> lo que ya está, y por cada estadística preguntate <b>“¿con qué COUNT o SUM la saco?”</b>; ⑥ escribí <b>3 a 5 supuestos</b>; ⑦ <b>pasalo en limpio</b>: nada tachado, ninguna nota suelta.</p>
-          <p class="mini"><b>TIPOS:</b> <code>INT/BIGINT</code> ids y cantidades · <code>DECIMAL(p,s)</code> <b>dinero y medidas exactas</b> · <code>FLOAT/DOUBLE</code> medidas aproximadas (lat/long, temperatura) · <code>VARCHAR(n)</code> texto · <code>CHAR(n)</code> largo fijo (país, moneda) · <code>TEXT</code> texto largo · <code>BOOLEAN</code> sí/no <b>real</b> · <code>DATE</code> / <code>TIME</code> / <code>DATETIME</code> · <code>BLOB</code> <b>evitalo, guardá la URL</b>. <b>DNI, CUIT, teléfono y CP van como VARCHAR</b> (no se hacen cuentas, pueden tener ceros a la izquierda o guiones). <b>Dinero NUNCA en DOUBLE.</b></p>
-          <p class="mini"><b>SIGLAS:</b> <b>PK</b> único y NOT NULL · <b>FK</b> referencia a la PK de otra · <b>PK FK</b> parte de la PK y a la vez FK (lo típico de la <b>intermedia</b>) · <b>UK/UNIQUE</b> no se repite pero no es la PK · <b>NN</b> obligatorio (modalidad 1) · <b>NULL</b> opcional (modalidad 0) · <b>CHECK</b> <code>(estado IN (…))</code>, <code>(hora_fin &gt; hora_inicio)</code>, <code>(peso &gt; 0)</code> · <b>DEFAULT</b> <code>activo DEFAULT true</code> · <b>AI</b> el id se genera solo (clave subrogada) · <b>PK compuesta</b> <code>(id_locker, nro_casillero)</code> · <b>UK compuesta</b> <code>UNIQUE (id_rutina, nombre)</code> · <b>IDX</b> opcional (PK y FK ya son índices).</p>
-          <p class="mini"><b>⚠️ LOS 7 ERRORES QUE MÁS SE COBRAN:</b> ① el <b>parámetro configurable en el catálogo</b> en vez de en la intermedia ② <b>olvidar la tabla de historial</b> y después no poder calcular ninguna estadística ③ <b>BOOLEAN para un estado</b> de más de dos valores ④ <b>FK del lado equivocado</b>, redundante, o cardinalidades invertidas ⑤ olvidar <b>atributos que el enunciado nombra</b> y las restricciones (UNIQUE del “código único”, NOT NULL de lo obligatorio, CHECK del “puede ser A, B o C”) ⑥ <b>no escribir supuestos ni justificación</b> (es puntaje regalado) ⑦ dejar una <b>tabla suelta</b> sin relaciones.</p>
-          <p class="mini"><b>CHECKLIST:</b> ☐ PK en cada tabla (y dije de qué tipo) ☐ FK + cardinalidad + <b>modalidad</b> en cada relación ☐ N:M con tabla intermedia ☐ ningún atributo multivaluado ☐ NOT NULL / UNIQUE / CHECK donde el enunciado los exige ☐ herencia elegida <b>y justificada</b> ☐ <b>lista de supuestos</b> ☐ <b>3 párrafos de justificación</b> ☐ un diagrama <b>por servicio</b> si lo piden, con IDs lógicos entre servicios.</p>
+
+          <h3>PASO 4 · Revisá línea por línea</h3>
+          <ul>
+            <li>La <b>pata de gallo</b> va del lado donde está la <b>FK</b> (el lado “muchos”).</li>
+            <li>Si la entidad <b>puede existir sin</b> la otra → <code>o</code> (opcional). Si <b>no puede</b> → <code>|</code> (obligatoria).</li>
+            <li><b>Ninguna tabla queda suelta</b> sin relaciones.</li>
+            <li>Escribí la lectura <b>en palabras</b> al lado: “un Locker tiene <b>uno o muchos</b> Casilleros / un Casillero pertenece a <b>exactamente un</b> Locker”.</li>
+          </ul>
+          <p><b>Notación:</b> <code>1,1</code> exactamente uno · <code>0,1</code> cero o uno · <code>1,N</code> uno o
+          muchos · <code>0,N</code> cero o muchos.</p>
+
+          <h3>PASO 5 · Escribí 3 a 5 supuestos</h3>
+          <p>Un supuesto convierte una ambigüedad en una <b>decisión defendible</b>. Ejemplos de arranque:
+          “<i>asumo que una mascota tiene un solo dueño</i>”, “<i>asumo que no existe locker sin casilleros, por eso la
+          modalidad es 1</i>”, “<i>asumo que los tipos de evento los administra la plataforma, por eso van como tabla y
+          no como enum</i>”.</p>
+
+          <h3>PASO 6 · Escribí la justificación: son 3 párrafos y son siempre los mismos</h3>
+          <p><b>a) Qué elementos es necesario persistir</b></p>
+          <p>“Persisto las entidades con <b>identidad y ciclo de vida propio</b> que el sistema debe recuperar entre
+          ejecuciones. <b>No persisto</b>: los objetos de cálculo ni los resultados derivables, los DTOs de la capa de
+          presentación, las clases que sólo son comportamiento (State, Strategy) ni los archivos binarios — van a
+          <b>object storage</b> y la base guarda la <b>URL</b>. Los <b>Value Objects</b> sin identidad propia se
+          persisten <b>embebidos</b> en la tabla de su dueño.”</p>
+          <p><b>b) Cómo resolví los impedance mismatches</b></p>
+          <p>“<b>Identidad:</b> PK <b>subrogada</b> en todas, salvo donde hay clave natural clara (nro. de serie), y
+          <b>UNIQUE</b> sobre las claves naturales del negocio. <b>Tipos:</b> VARCHAR con longitud, DATE/DATETIME y
+          <b>DECIMAL</b> para importes (no DOUBLE). <b>Cardinalidad:</b> las relaciones bidireccionales se implementan
+          con <b>una sola FK</b> del lado muchos; las N:M se parten en dos 1:N con tabla intermedia. <b>Herencia:</b>
+          [estrategia] porque [razón]. <b>Enums:</b> STRING con CHECK; los catálogos administrables, como tabla maestra.
+          <b>Colecciones simples:</b> tabla hija, porque un atributo multivaluado rompe 1FN.”</p>
+          <p><b>c) Qué estructuras desnormalizo</b></p>
+          <p>“Por <b>consistencia</b>: [dato] queda congelado en [entidad] porque es un registro inmutable con valor
+          probatorio. Por <b>performance</b>: [nada por ahora / replicaría [atributo] <b>conservando la FK</b>,
+          declarando [tabla] como <b>fuente de verdad</b>, con la propagación encapsulada en un único punto y un
+          <b>proceso de recálculo</b>].”</p>
+
+          <h3>PASO 7 · Pasalo en limpio</h3>
+          <p>Nada tachado, ninguna nota suelta al margen. <b>El corrector corrige lo que ve.</b></p>
         </section>
 
         <!-- ===================== HOJA 7 BIS ===================== -->
         <section class="hoja">
-          <span class="hoja-num">HOJA 7 BIS · LOS 3 TIPOS DE SERVICIO (te toca uno de estos)</span>
+          <span class="hoja-num">HOJA 7 BIS · LAS 6 DECISIONES Y LOS 7 ERRORES</span>
+
+          <h3>Las 6 decisiones de un DER de gestión (es el que más se toma)</h3>
+          <div class="table-wrap"><table class="data">
+            <thead><tr><th style="width:26%">Decisión</th><th>Qué hacer</th></tr></thead>
+            <tbody>
+              <tr><td><b>1 · Jerarquía anidada</b></td><td>Si el dominio tiene <b>contenedor → equipo → unidad</b> (punto → locker → casillero · estación → cargador → conector) son <b>tres tablas</b>, cada una con FK al padre. <b>El error grave es colapsarla</b> o poner las unidades como columnas. La PK de la unidad suele ser <b>compuesta</b> (<code>nro_serie + nro_unidad</code>) — <b>y la FK hacia ella también</b>.</td></tr>
+              <tr><td><b>2 · Dirección o dato estructurado</b></td><td>¿<b>entidad</b> o <b>embebida</b>? <b>Embebida</b> si es un Value Object sin identidad que no se reutiliza ni se consulta solo. <b>Entidad</b> si se comparte, se valida contra un catálogo o necesita <b>historial</b>. <b>Lo que puntúa es que lo discutas</b>, no cuál elijas.</td></tr>
+              <tr><td><b>3 · N:M vs 1:N</b></td><td>“Servicios complementarios” (un servicio está en muchos lugares) → <b>catálogo + intermedia</b>. “Horarios de atención” (cada franja es de un solo lugar) → <b>tabla hija 1:N</b>. <b>Confundirlos es el error más común.</b></td></tr>
+              <tr><td><b>4 · Atributos del tipo</b></td><td>Medidas del tamaño, potencia del tipo de conector → <b>catálogo aparte</b>. Si quedan como columnas de la unidad, <b>dependen del tipo y no de la unidad</b> → 2FN/3FN.</td></tr>
+              <tr><td><b>5 · Historial + estado actual</b></td><td>Tabla <code>HISTORIAL(…, desde, hasta, motivo)</code> para la trazabilidad <b>más</b> <code>estado_actual</code> en la unidad, <b>declarado como desnormalización por performance</b>, con el historial como <b>fuente de verdad</b>. Sin declararlo, es violación de 3FN.</td></tr>
+              <tr><td><b>6 · Precio o tarifa con vigencia</b></td><td>Si piden <b>conservar el histórico</b>, <code>vigente_desde</code> <b>es parte de la PK</b>: cada cambio es una fila nueva, no un UPDATE. Si varía por franja, la franja va <b>a su tabla</b>. <b>Definí el grano:</b> la tarifa es por <b>tipo</b>, no por unidad física.</td></tr>
+            </tbody>
+          </table></div>
+
+          <h3>Los 7 errores que más se cobran</h3>
+          <ol>
+            <li><b>El parámetro configurable puesto en el catálogo</b> en vez de en la tabla intermedia. El catálogo lo comparten todos; el valor que ajustó <b>este</b> usuario es de <b>esa</b> configuración.</li>
+            <li><b>Olvidar la tabla de historial</b> — y después no poder calcular ninguna de las estadísticas que pide el enunciado.</li>
+            <li><b>Usar BOOLEAN para un estado</b> de más de dos valores. Casi siempre aparece un tercero (cancelado, vencido, en revisión).</li>
+            <li><b>FK del lado equivocado</b> (va del lado “muchos”), <b>FK redundante</b> (la misma relación por dos caminos) o <b>cardinalidades invertidas</b>.</li>
+            <li><b>Olvidar atributos que el enunciado nombra</b>, y las restricciones: UNIQUE del “código único”, NOT NULL de lo obligatorio, CHECK del “puede ser A, B o C”.</li>
+            <li><b>No escribir los supuestos ni la justificación.</b> Es puntaje regalado.</li>
+            <li><b>Dejar una tabla suelta</b>, sin ninguna relación con el resto.</li>
+          </ol>
+
+          <h3>Checklist antes de entregar</h3>
+          <ul>
+            <li>☐ <b>PK</b> en cada tabla, y dije si es natural, subrogada o compuesta.</li>
+            <li>☐ Cada relación con <b>FK + cardinalidad + modalidad</b>.</li>
+            <li>☐ Todas las <b>N:M</b> resueltas con tabla intermedia (y las que tienen datos propios, con nombre de dominio).</li>
+            <li>☐ Ningún atributo <b>multivaluado</b>.</li>
+            <li>☐ <b>NOT NULL / UNIQUE / CHECK</b> donde el enunciado los exige.</li>
+            <li>☐ <b>Herencia</b> elegida <b>y justificada</b>, si la hay.</li>
+            <li>☐ Lista de <b>supuestos</b> escrita.</li>
+            <li>☐ Los <b>3 párrafos</b> de justificación escritos.</li>
+            <li>☐ Si pidieron <b>un diagrama por servicio</b>: uno por servicio, con <b>IDs lógicos</b> entre servicios y la aclaración de que <b>no hay integridad referencial entre bases</b>.</li>
+          </ul>
+        </section>
+
+        <!-- ===================== HOJA 7 TER ===================== -->
+        <section class="hoja">
+          <span class="hoja-num">HOJA 7 TER · LOS 3 TIPOS DE SERVICIO (te toca uno de estos)</span>
           <p class="mini">Los enunciados describen <b>tres servicios con su propia base</b> y te piden el DER de <b>uno</b>. Siempre son las mismas tres familias. <b>Identificá cuál te tocó y ya sabés qué entidades buscar.</b></p>
           <div class="table-wrap"><table class="data">
             <thead><tr><th></th><th>① GESTIÓN / RED<br><span class="mini">infraestructura, maestros</span></th><th>② TRANSACCIONAL<br><span class="mini">la operación del negocio</span></th><th>③ OPERACIÓN / AUDITORÍA<br><span class="mini">eventos y métricas</span></th></tr></thead>

@@ -95,6 +95,52 @@
               <p class="mini">Ahora cada teléfono es <b>una fila</b>. Buscar, agregar y borrar es trivial, y se puede validar el formato.</p>
             </div>
           </div>
+
+          <div class="callout key">
+            <div class="callout-title">❓ ¿Qué quiere decir “atómico”? Las 3 cosas que se confunden</div>
+            <p class="mini"><b>Atómico = el valor no se puede partir en pedazos que al negocio le sirvan por separado.</b>
+            La pregunta que resuelve todas las dudas es siempre la misma:
+            <b>“¿el sistema necesita usar las partes por separado?”</b> Si la respuesta es sí, hay que separarlas.</p>
+            <div class="table-wrap"><table class="data">
+              <thead><tr><th>Caso</th><th>¿Rompe 1FN?</th><th>Por qué</th><th>Cómo se arregla</th></tr></thead>
+              <tbody>
+                <tr><td><code>telefonos = "1133-4455 / 1166-7788"</code></td><td><b>SÍ</b>, siempre</td><td><b>Varios valores del mismo tipo</b> apilados en una celda: es una <b>lista</b></td><td><b>Tabla hija</b> <code>TELEFONO</code> (1:N)</td></tr>
+                <tr><td><code>tel_1, tel_2, tel_3</code></td><td><b>SÍ</b>, siempre</td><td>La misma lista, disfrazada de columnas (<b>grupo repetitivo</b>)</td><td><b>Tabla hija</b> (1:N)</td></tr>
+                <tr><td><code>nombre_completo = "Ana Pérez"</code></td><td><b>SÍ</b>, si el negocio usa las partes</td><td>Son <b>dos hechos distintos</b> (nombre y apellido) metidos en un campo. Si hay que <b>ordenar por apellido</b> o saludar por el nombre, no es atómico</td><td><b>Dos columnas</b> <code>nombre</code> y <code>apellido</code>, <b>en la misma tabla</b></td></tr>
+                <tr><td><code>direccion = "Av. Mitre 742, Avellaneda"</code></td><td><b>SÍ</b>, mismo motivo</td><td>Calle, altura y localidad son <b>datos distintos</b>; si hay que filtrar por localidad, el campo no sirve</td><td><b>Columnas separadas</b> (o un Value Object embebido)</td></tr>
+                <tr><td><code>latitud</code> y <code>longitud</code></td><td><b>NO</b></td><td><b>Cada una ya es un número indivisible.</b> Están bien como están</td><td>Nada que arreglar <i>por 1FN</i></td></tr>
+                <tr><td><code>fecha_nacimiento</code>, <code>peso_kg</code>, <code>cuit</code></td><td><b>NO</b></td><td>Un valor único cada uno</td><td>—</td></tr>
+              </tbody>
+            </table></div>
+            <p class="mini"><b>⚠️ El detalle que casi nadie dice:</b> la 1FN se arregla de <b>dos maneras distintas</b> según el caso.
+            Si hay <b>varios valores del mismo tipo</b> (una lista) → <b>tabla hija</b>. Si hay <b>un valor con partes</b>
+            (nombre completo, dirección) → <b>columnas separadas en la misma tabla</b>. Mandar “nombre y apellido” a una
+            tabla hija sería un disparate; y poner los teléfonos como tres columnas, también.</p>
+            <p class="mini"><b>Y la atomicidad depende del negocio.</b> Si a este sistema <b>nunca</b> le interesa el
+            apellido por separado, <code>nombre_completo</code> puede quedarse como está. Por eso, si lo dejás junto,
+            <b>escribilo como supuesto</b>: “<i>asumo que no se requiere ordenar ni buscar por apellido, por lo que
+            guardo el nombre completo en un solo campo</i>”. Un supuesto declarado nunca se cobra como error.</p>
+          </div>
+          <div class="callout warn">
+            <div class="callout-title">🚫 Lo que NO es 1FN (acá está la confusión más común)</div>
+            <p class="mini"><b>“Que no se mezclen datos de cosas distintas en una misma tabla” NO es la primera forma
+            normal.</b> Que en <code>PERSONA</code> aparezcan <code>latitud</code> y <code>longitud</code> no viola 1FN:
+            cada uno es un número atómico. La pregunta correcta ahí es otra: <b>¿esos datos describen a la persona, o
+            describen a un domicilio?</b></p>
+            <ul class="mini">
+              <li>Si describen <b>a la persona</b> (dónde está parada, su ubicación actual) → <b>está bien ahí</b>.</li>
+              <li>Si describen <b>a otra entidad</b> —el domicilio, que además tiene calle, altura y localidad, y que
+              podría repetirse o tener historial— y vos ya tenés un <code>id_domicilio</code> en la tabla, entonces
+              <b>sí hay un problema, pero es de 3FN</b> (el dato depende de <code>id_domicilio</code>, no de la
+              persona), no de 1FN.</li>
+              <li>Si <b>no</b> hay otra entidad y simplemente son los datos de contacto de esa persona, embeberlos es una
+              <b>decisión de modelado válida</b> (<b>Value Object</b>): se justifica diciendo que <b>no se reutilizan ni
+              se consultan por sí mismos</b>.</li>
+            </ul>
+            <p class="mini"><b>Resumiendo las tres en una línea:</b> <b>1FN</b> mira <b>adentro de la celda</b> ·
+            <b>2FN</b> mira <b>la clave compuesta</b> · <b>3FN</b> mira <b>de quién habla cada columna</b>.</p>
+          </div>
+
           <p class="mini"><b>Dónde aparece en los parciales:</b> “alergias”, “servicios que ofrece el lugar”, “zonas que cubre”, “horarios de atención”, “archivos adjuntos”. <b>Todo lo que en el enunciado esté en plural y separado por comas es una tabla hija.</b></p>
 
           <h3>2FN — “si la clave son DOS columnas, todo tiene que depender de LAS DOS”</h3>

@@ -65,34 +65,154 @@
 
         <!-- ===================== HOJA 2 ===================== -->
         <section class="hoja">
-          <span class="hoja-num">HOJA 2 · FORMAS NORMALES (lo que tomaron el 17/11)</span>
-          <p class="mini"><b>Normalización:</b> proceso de estructurar un modelo relacional <b>eliminando redundancia y dependencias mal ubicadas</b> mediante la aplicación sucesiva de las formas normales (1FN, 2FN, 3FN, BCNF). <b>Regla de oro: un dato, un solo lugar.</b> <b>Beneficio:</b> evita anomalías de inserción, actualización y borrado; la integridad la garantiza el modelo. <b>Costo:</b> más tablas, más JOINs. <b>Conclusión: optimiza la ESCRITURA y la INTEGRIDAD, no la lectura.</b></p>
-          <div class="table-wrap"><table class="data">
-            <thead><tr><th>FN</th><th>Exige</th><th>Se rompe cuando…</th><th>Se corrige</th></tr></thead>
-            <tbody>
-              <tr><td><b>1FN</b></td><td>Atributos <b>atómicos</b>, sin grupos repetitivos, con PK, un dominio por columna</td><td>Celda con lista (“pollo, maní”), columnas <code>tel_1, tel_2</code>, tabla sin PK</td><td>El multivaluado sale a una <b>tabla hija</b> con FK (1:N)</td></tr>
-              <tr><td><b>2FN</b></td><td>1FN + todo atributo no clave depende de la <b>PK COMPLETA</b></td><td><b>Dependencia parcial:</b> con PK compuesta, un atributo depende de <b>una sola parte</b> (<code>nombre_producto</code> en DETALLE)</td><td>Cada atributo con la clave de la que depende</td></tr>
-              <tr><td><b>3FN</b></td><td>2FN + ningún atributo no clave depende de <b>otro no clave</b></td><td><b>Dependencia transitiva:</b> PK→A→B (<code>nombre_depto</code> en EMPLEADO) o campo <b>calculable</b> (<code>subtotal</code>)</td><td>Extraer la entidad y dejar sólo la <b>FK</b></td></tr>
-              <tr><td><b>BCNF</b></td><td>3FN + <b>todo determinante es clave candidata</b></td><td>Un atributo no clave determina parte de una clave</td><td>Descomponer</td></tr>
-            </tbody>
-          </table></div>
-          <p class="mini"><b>Atajo:</b> si la PK es de <b>una sola columna</b> y está en 1FN, <b>la 2FN se cumple sola</b> (las dependencias parciales sólo existen con PK compuesta).</p>
-          <h3>Las 3 anomalías (el “qué problema hay”)</h3>
-          <div class="table-wrap"><table class="data">
-            <thead><tr><th>Anomalía</th><th>Qué pasa</th><th>Ejemplo</th></tr></thead>
-            <tbody>
-              <tr><td><b>Inserción</b></td><td>No se puede dar de alta un hecho sin inventar otro</td><td>No puedo crear un Departamento sin un empleado</td></tr>
-              <tr><td><b>Actualización</b></td><td>El dato vive en N filas: o lo actualizo en todas o queda inconsistente</td><td>Cambia el piso del depto → tocar todas las filas</td></tr>
-              <tr><td><b>Borrado</b></td><td>Al borrar un registro pierdo info de otra entidad</td><td>Borro al último empleado y pierdo el departamento</td></tr>
-            </tbody>
-          </table></div>
-          <h3>Auditar un DER en 60 segundos</h3>
-          <p class="mini"><b>1)</b> ¿Celdas con listas o columnas numeradas? → 1FN. <b>2)</b> ¿PK compuestas? ¿algún atributo depende de una sola parte? → 2FN. <b>3)</b> ¿Hay un nombre/descripción “de otra entidad” metido (nombre_depto, nombre_cliente, nombre_categoria)? → 3FN. <b>4)</b> ¿Campo calculable (total, subtotal, edad, cantidad_de_X)? → 3FN. <b>5)</b> ¿El mismo dato en dos tablas? → ¿error o <b>desnormalización deliberada</b>?</p>
-          <div class="callout key">
-            <div class="callout-title">PLANTILLA DE RESPUESTA (2 renglones)</div>
-            <p class="mini"><b>Si NO cumple:</b> “<b>No cumple la 3FN</b>: en <i>TABLA</i>, <code>campo</code> no depende de la PK sino de <code>otro_campo</code>, que es atributo no clave (<b>dependencia transitiva</b>). Genera <b>redundancia</b> y <b>anomalías de actualización y borrado</b>: [ejemplo concreto]. <b>Se corrige</b> extrayendo <i>ENTIDAD(PK, …)</i> y dejando sólo la FK. <b>1FN y 2FN sí se cumplen</b> (atributos atómicos y PK simple).”</p>
-            <p class="mini"><b>Si cumple:</b> “<b>Sí, cumple las tres:</b> atributos atómicos y PK en cada tabla (1FN); en las PK compuestas ningún atributo depende de una sola de sus partes (2FN); ningún atributo no clave depende de otro no clave — cada entidad en su tabla, referenciada por FK (3FN).”</p>
+          <span class="hoja-num">HOJA 2 · LAS 3 FORMAS NORMALES, EN CRIOLLO</span>
+          <p class="mini"><b>Normalizar</b> es acomodar las tablas para que <b>cada dato esté escrito en un solo lugar</b>. Si un dato está repetido en muchas filas, tarde o temprano alguien lo cambia en una y se olvida de las otras: ahí el sistema empieza a tener <b>dos verdades</b>. Las tres formas normales son <b>tres preguntas</b> que le hacés a cada tabla, en orden. <b>Sirve para escribir bien, no para leer rápido:</b> el precio de tener todo ordenado es más tablas y más JOINs.</p>
+
+          <h3>1FN — “un solo dato por casillero”</h3>
+          <p class="mini"><b>La pregunta:</b> <i>¿hay alguna celda con más de un dato adentro?</i> Si la respuesta es sí, no cumple.</p>
+          <div class="grid-2">
+            <div class="card">
+              <p class="mini"><b>❌ MAL</b></p>
+              <div class="table-wrap"><table class="data">
+                <thead><tr><th>id</th><th>nombre</th><th>telefonos</th></tr></thead>
+                <tbody>
+                  <tr><td>1</td><td>Ana</td><td>1133-4455 <b>/</b> 1166-7788</td></tr>
+                  <tr><td>2</td><td>Luis</td><td>1144-2200</td></tr>
+                </tbody>
+              </table></div>
+              <p class="mini"><b>Por qué molesta, en concreto:</b> ¿cómo buscás quién tiene el 1166-7788? Tenés que partir el texto. ¿Cómo agregás un tercero? Reescribiendo toda la cadena. Y nada impide que mañana alguien escriba “11 66 77 88”. <b>Variante del mismo error:</b> columnas <code>tel_1, tel_2, tel_3</code> — ¿y el cuarto teléfono dónde va?</p>
+            </div>
+            <div class="card">
+              <p class="mini"><b>✅ BIEN</b> — el dato repetido sale a su propia tabla</p>
+              <div class="table-wrap"><table class="data">
+                <thead><tr><th>id_tel</th><th>id_cliente</th><th>numero</th></tr></thead>
+                <tbody>
+                  <tr><td>1</td><td>1</td><td>1133-4455</td></tr>
+                  <tr><td>2</td><td>1</td><td>1166-7788</td></tr>
+                  <tr><td>3</td><td>2</td><td>1144-2200</td></tr>
+                </tbody>
+              </table></div>
+              <p class="mini">Ahora cada teléfono es <b>una fila</b>. Buscar, agregar y borrar es trivial, y se puede validar el formato.</p>
+            </div>
           </div>
+          <p class="mini"><b>Dónde aparece en los parciales:</b> “alergias”, “servicios que ofrece el lugar”, “zonas que cubre”, “horarios de atención”, “archivos adjuntos”. <b>Todo lo que en el enunciado esté en plural y separado por comas es una tabla hija.</b></p>
+
+          <h3>2FN — “si la clave son DOS columnas, todo tiene que depender de LAS DOS”</h3>
+          <p class="mini"><b>Ojo:</b> esto <b>sólo puede fallar si la clave primaria es compuesta</b> (dos o más columnas). Si la PK es una sola columna y ya cumpliste 1FN, <b>la 2FN se cumple sola</b>. No pierdas tiempo buscándola.</p>
+          <p class="mini"><b>La pregunta:</b> <i>¿hay algún dato que se sepa mirando sólo MEDIA clave?</i></p>
+          <div class="card">
+            <p class="mini"><b>❌ MAL</b> — <code>DETALLE_FACTURA</code>, con PK = <b>(nro_factura, cod_producto)</b></p>
+            <div class="table-wrap"><table class="data">
+              <thead><tr><th>nro_factura <span class="mini">(PK)</span></th><th>cod_producto <span class="mini">(PK)</span></th><th>cantidad</th><th>nombre_producto</th></tr></thead>
+              <tbody>
+                <tr><td>A-100</td><td>P7</td><td>2</td><td><b>Teclado</b></td></tr>
+                <tr><td>A-101</td><td>P7</td><td>1</td><td><b>Teclado</b></td></tr>
+                <tr><td>A-102</td><td>P7</td><td>5</td><td><b>Teclado</b></td></tr>
+              </tbody>
+            </table></div>
+            <p class="mini"><b>El truco del dedo:</b> tapá <code>nro_factura</code> con el dedo. ¿Podés saber igual el <code>nombre_producto</code>? <b>Sí</b>, con sólo mirar <code>P7</code>. Entonces ese dato <b>no es del detalle: es del producto</b>, y por eso aparece repetido en las tres filas. En cambio <code>cantidad</code> <b>sí</b> necesita las dos columnas: “2 teclados <b>en la factura A-100</b>”.</p>
+            <p class="mini"><b>✅ BIEN:</b> <code>DETALLE_FACTURA(nro_factura, cod_producto, cantidad)</code> y el nombre vive <b>una sola vez</b> en <code>PRODUCTO(cod_producto, nombre)</code>.</p>
+            <p class="mini"><b>Qué se rompe si lo dejás:</b> si corregís el nombre a “Teclado mecánico”, tenés que tocar <b>las tres filas</b> (y todas las futuras). Si te olvidás de una, el mismo producto figura con dos nombres distintos.</p>
+          </div>
+
+          <h3>3FN — “si el dato describe a OTRA cosa, no va acá”</h3>
+          <p class="mini"><b>La pregunta:</b> <i>¿este dato habla del dueño de la fila, o habla de otra cosa?</i></p>
+          <div class="card">
+            <p class="mini"><b>❌ MAL</b> — <code>EMPLEADO</code>, con PK = <b>legajo</b></p>
+            <div class="table-wrap"><table class="data">
+              <thead><tr><th>legajo <span class="mini">(PK)</span></th><th>nombre</th><th>cod_depto</th><th>nombre_depto</th><th>piso</th></tr></thead>
+              <tbody>
+                <tr><td>101</td><td>Ana</td><td>D3</td><td><b>Sistemas</b></td><td><b>3</b></td></tr>
+                <tr><td>102</td><td>Luis</td><td>D3</td><td><b>Sistemas</b></td><td><b>3</b></td></tr>
+                <tr><td>103</td><td>Sol</td><td>D3</td><td><b>Sistemas</b></td><td><b>3</b></td></tr>
+              </tbody>
+            </table></div>
+            <p class="mini"><b>Preguntale a cada columna de quién habla:</b> <code>nombre</code> habla <b>del empleado</b> ✅. <code>piso</code>… <b>no es el piso de Ana: es el piso del departamento</b> ❌. Y se nota a simple vista: “Sistemas / 3” está copiado en todas las filas. La cadena es <code>legajo → cod_depto → piso</code>: el piso depende de <b>algo que no es la clave</b>.</p>
+            <p class="mini"><b>✅ BIEN:</b> <code>EMPLEADO(legajo, nombre, cod_depto)</code> + <code>DEPARTAMENTO(cod_depto, nombre, piso)</code>. El piso queda escrito <b>una sola vez</b>.</p>
+            <p class="mini"><b>El otro caso de 3FN: los datos que se pueden calcular.</b> <code>subtotal = cantidad × precio</code>, <code>total = neto + iva</code>, <code>edad</code> (sale de la fecha de nacimiento), <code>cantidad_de_items</code> (es un COUNT). <b>Si se puede calcular, no se guarda</b> — salvo que lo justifiques como desnormalización (hoja 3).</p>
+          </div>
+
+          <h3>Qué pasa si lo dejás mal: las 3 anomalías</h3>
+          <div class="table-wrap"><table class="data">
+            <thead><tr><th>Anomalía</th><th>En criollo</th><th>Con el ejemplo de arriba</th></tr></thead>
+            <tbody>
+              <tr><td><b>De inserción</b></td><td>No podés cargar una cosa sin inventar otra</td><td>No podés dar de alta el departamento “Marketing” hasta que no tengas un empleado para poner ahí</td></tr>
+              <tr><td><b>De actualización</b></td><td>Tenés que cambiar lo mismo en muchos lugares</td><td>Sistemas se muda al piso 5 → hay que editar <b>las tres filas</b>; si fallás en una, quedan dos pisos distintos para el mismo depto</td></tr>
+              <tr><td><b>De borrado</b></td><td>Borrás una cosa y se te va otra de regalo</td><td>Se va el último empleado de Sistemas → <b>desaparece el departamento</b> y nadie sabe más que estaba en el piso 3</td></tr>
+            </tbody>
+          </table></div>
+
+          <div class="callout key">
+            <div class="callout-title">CÓMO AUDITAR UN DER EN 60 SEGUNDOS (3 preguntas, en orden)</div>
+            <p class="mini"><b>① ¿Hay alguna celda con varios datos adentro, o columnas numeradas (<code>tel_1, tel_2</code>), o una tabla sin PK?</b> → rompe <b>1FN</b>.<br>
+            <b>② ¿Hay alguna PK compuesta?</b> Si no hay, saltealo. Si hay: tapá una mitad de la clave con el dedo; <b>si algún dato se sigue sabiendo igual</b> → rompe <b>2FN</b>.<br>
+            <b>③ ¿Hay algún nombre o descripción “de otra cosa” metido en la tabla</b> (<code>nombre_depto</code>, <code>nombre_cliente</code>, <code>nombre_categoria</code>, datos del técnico)<b>, o algún campo calculable</b> (<code>total</code>, <code>subtotal</code>, <code>edad</code>, <code>cantidad_de…</code>)? → rompe <b>3FN</b>.</p>
+            <p class="mini"><b>Atajo visual:</b> mirá las columnas buscando <b>valores repetidos verticalmente</b>. Si ves la misma palabra copiada en muchas filas (“Sistemas”, “Teclado”, “Palermo”), ahí está la violación: <b>eso es un dato que pertenece a otra tabla</b>.</p>
+          </div>
+
+          <div class="callout key">
+            <div class="callout-title">CÓMO SE ESCRIBE LA RESPUESTA (son 2 renglones)</div>
+            <p class="mini"><b>Fórmula:</b> veredicto + <b>en qué tabla y qué columna</b> + <b>de qué depende en realidad</b> + <b>qué problema causa</b> + <b>cómo se arregla</b> + qué formas <b>sí</b> cumple.</p>
+            <p class="mini"><b>Si NO cumple:</b> “<b>No cumple la 3FN</b>: en <i>EMPLEADO</i>, <code>nombre_depto</code> y <code>piso</code> no describen al empleado sino al departamento, o sea que dependen de <code>cod_depto</code>, que no es clave (<b>dependencia transitiva</b>). Eso repite el mismo dato en todas las filas del departamento y genera <b>anomalías de actualización y de borrado</b>: cambiar el piso obliga a editar todas las filas y, al borrar al último empleado, se pierde el departamento. <b>Se corrige</b> sacando <i>DEPARTAMENTO(cod_depto, nombre, piso)</i> y dejando en <i>EMPLEADO</i> sólo la FK. <b>1FN y 2FN sí se cumplen:</b> los campos son atómicos y la PK es simple.”</p>
+            <p class="mini"><b>Si SÍ cumple</b> (también hay que fundamentarlo): “<b>Sí, cumple las tres.</b> Cada celda tiene un solo dato y toda tabla tiene PK (1FN); donde la PK es compuesta, ningún campo se puede deducir de una sola de sus partes (2FN); y ningún campo describe a otra entidad ni es calculable: lo de cada cosa vive en su tabla y se referencia por FK (3FN).”</p>
+          </div>
+          <!-- banco de frases -->
+          <h3>Banco de frases: qué escribir en cada caso</h3>
+          <p class="mini">Dos situaciones distintas y <b>dos frases distintas</b>: cuando te <b>dan</b> un DER y tenés que decir si cumple, y cuando <b>vos</b> diseñaste y tenés que justificar qué hiciste para normalizar. Adaptá lo que está entre corchetes.</p>
+          <div class="table-wrap"><table class="data">
+            <thead><tr><th>Lo que ves</th><th>❌ Si te preguntan si cumple</th><th>✅ Si lo normalizaste vos</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><b>Una celda con varios datos</b><br><span class="mini">“pollo, maní, lácteos” · “Palermo / Belgrano”</span></td>
+                <td>“<b>No cumple 1FN</b>: <code>[campo]</code> guarda <b>varios valores en una sola celda</b>, así que no es atómico. No se puede buscar ni validar por uno de ellos sin partir el texto, agregar uno obliga a reescribir toda la cadena y nada impide que se carguen con formatos distintos.”</td>
+                <td>“Para cumplir <b>1FN</b> saqué <code>[campo]</code> a la tabla <b><code>[HIJA]</code></b>, con <b>una fila por valor</b> y FK a <code>[PADRE]</code>. Así cada dato es <b>atómico</b>, se puede buscar, validar e indexar, y no hay límite de cuántos.”</td>
+              </tr>
+              <tr>
+                <td><b>Columnas numeradas</b><br><span class="mini"><code>tel_1, tel_2, tel_3</code> · <code>conector_1..3</code></span></td>
+                <td>“<b>No cumple 1FN</b>: <code>[campo]_1..n</code> es un <b>grupo repetitivo</b>. Limita artificialmente la cantidad —el cuarto valor <b>no entra sin modificar la tabla</b>—, deja columnas nulas cuando hay menos, y obliga a repetir la misma consulta por cada columna.”</td>
+                <td>“Para cumplir <b>1FN</b> convertí el grupo repetitivo en la <b>entidad</b> <code>[HIJA]</code>, relación <b>1,N</b> con <code>[PADRE]</code>. Ahora se pueden tener <b>cuantos haga falta</b> sin tocar el esquema, y además cada uno puede tener <b>sus propios atributos</b> (estado, número, tipo).”</td>
+              </tr>
+              <tr>
+                <td><b>Tabla sin clave primaria</b></td>
+                <td>“<b>No cumple 1FN</b>: la tabla <b>no tiene PK</b>, así que nada impide <b>filas duplicadas</b> y no hay forma de referenciar una fila concreta ni de actualizarla o borrarla con seguridad.”</td>
+                <td>“Le puse <b>PK</b> a cada tabla: subrogada por defecto, y <b>UNIQUE</b> sobre la clave natural del negocio (<code>[campo]</code>) para no perder esa restricción.”</td>
+              </tr>
+              <tr>
+                <td><b>PK compuesta y un campo que depende de media clave</b><br><span class="mini"><code>nombre_producto</code> en el detalle</span></td>
+                <td>“<b>No cumple 2FN</b>: la PK es <b>compuesta</b> <code>([A], [B])</code> y <code>[campo]</code> depende <b>sólo de <code>[B]</code></b>, no de la clave completa (<b>dependencia parcial</b>). Por eso el mismo valor aparece repetido en todas las filas de ese <code>[B]</code>, y corregirlo obliga a actualizarlas todas.”</td>
+                <td>“Para cumplir <b>2FN</b>, <code>[campo]</code> lo dejé en <code>[TABLA_DE_B]</code>, que es de quien realmente depende, y en la intermedia quedó <b>sólo lo que necesita las dos partes de la clave</b> (<code>[cantidad]</code>). Así el dato está escrito <b>una sola vez</b>.”</td>
+              </tr>
+              <tr>
+                <td><b>Nombre o descripción “de otra cosa”</b><br><span class="mini"><code>nombre_depto</code>, <code>nombre_categoria</code>, datos del técnico</span></td>
+                <td>“<b>No cumple 3FN</b>: <code>[campo]</code> <b>no describe a <code>[la entidad]</code> sino a <code>[la otra]</code></b>, o sea que depende de <code>[fk]</code>, que <b>no es clave</b> (<b>dependencia transitiva</b>). Genera <b>redundancia</b> y <b>anomalías de actualización y borrado</b>: cambiar <code>[el dato]</code> obliga a editar N filas, y al borrar la última se pierde la información de <code>[la otra entidad]</code>.”</td>
+                <td>“Para cumplir <b>3FN</b> extraje la entidad <code>[OTRA]</code> con sus propios atributos y dejé en <code>[ESTA]</code> <b>sólo la FK</b>. El dato queda en <b>un único lugar</b>, se actualiza una sola vez y <code>[OTRA]</code> puede existir aunque no tenga ninguna <code>[ESTA]</code> asociada.”</td>
+              </tr>
+              <tr>
+                <td><b>Campo que se puede calcular</b><br><span class="mini"><code>total</code>, <code>subtotal</code>, <code>edad</code>, <code>cantidad_de…</code></span></td>
+                <td>“<b>No cumple 3FN</b>: <code>[campo]</code> es un <b>dato derivado</b> —se obtiene con <code>[SUM/COUNT/resta de fechas]</code>—, así que <b>no aporta información nueva</b> y <b>se desincroniza</b> en cuanto cambia el origen, dejando dos valores que no coinciden.”</td>
+                <td>“No almaceno <code>[campo]</code>: lo <b>calculo</b> con <code>[la consulta]</code>. <i>(Y si decidís guardarlo igual:)</i> lo guardo como <b>desnormalización por performance</b> porque <code>[la consulta]</code> se ejecuta <code>[N]</code> veces; declaro <code>[TABLA]</code> como <b>fuente de verdad</b>, encapsulo la actualización en un único punto y dejo un <b>proceso de recálculo</b>.”</td>
+              </tr>
+              <tr>
+                <td><b>Un dato repetido que SÍ tiene que estar</b><br><span class="mini"><code>precio_aplicado</code> en la factura</span></td>
+                <td>“<b>Esto NO es una violación:</b> <code>[campo]</code> es el valor <b>al momento del hecho</b>, no una copia del maestro. Si se referenciara el vigente, un cambio posterior <b>reescribiría el pasado</b> y el comprobante dejaría de ser reimprimible. Es <b>desnormalización por consistencia</b>, y lo correcto es <b>conservar también la FK</b>.”</td>
+                <td>“Congelé <code>[campo]</code> en <code>[TABLA]</code> porque el documento es <b>inmutable</b>: necesita el valor <b>de ese momento</b>, no el vigente. Conservo la FK para navegar al maestro actual y <b>declaro la decisión</b> para que no se lea como un error de normalización.”</td>
+              </tr>
+              <tr>
+                <td><b>Está todo bien</b></td>
+                <td colspan="2">“<b>Sí, cumple las tres.</b> Cada celda tiene <b>un solo dato</b> y toda tabla tiene <b>PK</b> (1FN). Donde la PK es <b>compuesta</b>, ningún campo se puede deducir mirando una sola de sus partes (2FN). Y <b>ningún campo describe a otra entidad ni es calculable</b>: lo de cada cosa vive en su tabla y se referencia por <b>FK</b> (3FN). <i>[Si hay algo replicado:]</i> El único dato repetido es <code>[campo]</code>, y <b>es deliberado</b>: es una desnormalización por <code>[consistencia/performance]</code>, declarada y con la FK conservada.”</td>
+              </tr>
+            </tbody>
+          </table></div>
+          <div class="callout key">
+            <div class="callout-title">SI TE PIDEN “¿QUÉ HIZO PARA NORMALIZAR?” — el proceso en 3 movimientos</div>
+            <p class="mini"><b>①</b> “Saqué los <b>datos multivaluados</b> (<code>[campo]</code>) a <b>tablas hijas</b> con FK, para que cada celda tenga un solo valor → <b>1FN</b>.”<br>
+            <b>②</b> “Revisé las <b>claves compuestas</b> y moví a su tabla todo lo que dependía de <b>una sola parte</b> de la clave (<code>[campo]</code> → <code>[TABLA]</code>) → <b>2FN</b>.”<br>
+            <b>③</b> “Extraje como <b>entidades propias</b> los conjuntos de datos que describían <b>a otra cosa</b> (<code>[OTRA]</code>) y dejé sólo la <b>FK</b>; y <b>eliminé los campos calculables</b> → <b>3FN</b>.”<br>
+            <b>Y el cierre:</b> “Con eso el modelo queda en <b>3FN</b>: cada hecho está escrito <b>una sola vez</b>, lo que evita las anomalías de <b>inserción, actualización y borrado</b>. Las únicas redundancias que dejé son <b>deliberadas y declaradas</b>: <code>[las que sean]</code>.”</p>
+          </div>
+          <p class="mini"><b>Dos reglas de oro al redactar:</b> ① <b>nunca digas sólo “no cumple”</b> — siempre <b>qué tabla, qué columna, de qué depende en realidad y qué problema causa</b>; ② <b>si decís que sí cumple, fundamentalo igual</b> recorriendo las tres: un “sí” sin argumento vale lo mismo que no contestar.</p>
+
+          <p class="mini"><b>BCNF</b>, por si la nombran: es un ajuste fino de la 3FN para tablas con <b>varias claves candidatas superpuestas</b> — pide que <b>todo lo que determina a otro dato sea una clave</b>. Prácticamente no cae en el parcial: si llegaste a 3FN limpia, decí que también cumple BCNF.</p>
         </section>
 
         <!-- ===================== HOJA 3 ===================== -->

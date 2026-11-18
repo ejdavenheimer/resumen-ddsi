@@ -214,9 +214,24 @@
     );
   };
 
-  /* Botón de imprimir/descargar PDF: cualquier elemento con clase .js-print */
+  /* Botón de imprimir/descargar PDF: cualquier elemento con clase .js-print.
+     Antes de imprimir abre TODOS los <details>, porque un details cerrado no
+     se imprime (y ahí viven las resoluciones de los modelos). */
+  APP.abrirTodosLosDetalles = function (root) {
+    var abiertos = [];
+    (root || document).querySelectorAll("details:not([open])").forEach(function (d) {
+      d.open = true; abiertos.push(d);
+    });
+    return abiertos;
+  };
   document.addEventListener("click", function (e) {
-    if (e.target.closest && e.target.closest(".js-print")) window.print();
+    if (!(e.target.closest && e.target.closest(".js-print"))) return;
+    var cerrados = APP.abrirTodosLosDetalles(document.getElementById("content"));
+    window.print();
+    // devolver la página a como estaba, una vez cerrado el diálogo
+    setTimeout(function () {
+      cerrados.forEach(function (d) { d.open = false; });
+    }, 1200);
   });
 
   document.addEventListener("click", function (e) {

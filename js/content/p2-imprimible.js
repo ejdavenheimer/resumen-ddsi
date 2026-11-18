@@ -20,13 +20,30 @@
           <p class="lead">Modelado de datos, persistencia y arquitectura, condensados. Descargalo en PDF y llevalo impreso.</p>
         </div>
         <div class="callout key resumen-print-btn">
-          <div class="callout-title">📥 Cómo bajarlo en PDF</div>
+          <div class="callout-title">📥 Cómo guardarlo como PDF (paso a paso)</div>
           <ol style="margin:.3rem 0 .6rem">
-            <li>Tocá <b>“Descargar PDF (A4)”</b>.</li>
-            <li>Destino <b>“Guardar como PDF”</b>, tamaño <b>A4</b>.</li>
-            <li>Activá <b>“Gráficos de fondo”</b> para que se vean los recuadros de color.</li>
+            <li>Tocá <b>“Guardar como PDF (A4)”</b>. Se abre el diálogo de impresión — <b>es el camino normal para
+            generar un PDF</b>, no vas a imprimir en papel todavía.</li>
+            <li>En <b>Destino</b> (arriba a la derecha) elegí <b>“Guardar como PDF”</b>.
+            <span class="mini">En Safari no hay “Destino”: usá el menú <b>PDF</b> de abajo a la izquierda →
+            <b>“Guardar como PDF”</b>.</span></li>
+            <li>Tamaño <b>A4</b>.</li>
+            <li>Abrí <b>“Más configuraciones”</b> y activá <b>“Gráficos de fondo”</b>, si no salen los recuadros en blanco.</li>
+            <li><b>Guardar.</b> Ya tenés el archivo.</li>
           </ol>
-          <button class="btn" id="p2rpPrint" type="button">📥 Descargar PDF (A4)</button>
+          <button class="btn" id="p2rpPrint" type="button">📥 Guardar como PDF (A4)</button>
+          <p class="mini" style="margin-top:.6rem"><b>Ojo:</b> este botón <b>abre todos los bloques plegados</b> antes
+          de generar el PDF, así que las resoluciones salen completas.</p>
+        </div>
+
+        <div class="callout tip resumen-print-btn">
+          <div class="callout-title">📄 Los modelos de parcial también se descargan</div>
+          <p>Cada uno tiene <b>su propio botón</b> adentro, con las <b>soluciones desplegadas</b> y los diagramas
+          grandes. Abrí el que quieras y bajalo igual que este:</p>
+          <p><a class="inline" data-go="p2-m1-paquered"><b>📦 Modelo 1 · PaqueRed</b></a> ·
+             <a class="inline" data-go="p2-m2-paquered-b"><b>📦 Modelo 2 · PaqueRed (otro turno)</b></a> ·
+             <a class="inline" data-go="p2-m2-voltared"><b>⚡ Modelo 3 · VoltaRed</b></a></p>
+          <p class="mini">Si ya te generé los PDF, están en la carpeta <code>pdf/</code> del proyecto.</p>
         </div>
 
         <!-- ===================== HOJA 0 · ÍNDICE ===================== -->
@@ -275,7 +292,33 @@
           <p class="mini"><b>Tipos:</b> VARCHAR, INTEGER, DOUBLE, DATETIME (dinero → DECIMAL). <b>Constraints:</b> NOT NULL · UNIQUE · CHECK (o enum) · PRIMARY KEY · FOREIGN KEY.</p>
           <div class="callout key"><p class="mini"><b>CARDINALIDAD = cantidad MÁXIMA</b> de relaciones de un registro respecto de la otra entidad (1, N). <b>MODALIDAD = cantidad MÍNIMA</b> (0 = opcional → FK NULL; 1 = obligatoria → FK NOT NULL). “<b>puede</b>” → 0 · “<b>debe</b>” → 1.</p></div>
           <p class="mini"><b>1:1</b> → FK + UNIQUE del lado dependiente (uni o bidireccional). <b>1:N / N:1</b> → <b>FK del lado “muchos”</b>; es <b>cuestión de perspectiva</b> (si A→B es 1:N, B→A es N:1). <b>N:M</b> → <b>NO es posible en el modelo relacional</b> (harían falta múltiples FKs sin saber cuántas): <b>se parte en dos 1:N con entidad intermedia C</b>, con FK a A y FK a B (PK compuesta) y <b>puede guardar datos extra de la relación</b> (si los guarda, deja de ser “simple tabla intermedia” y pasa a ser entidad del dominio: Cursada, Inscripción).</p>
-        </section>
+                  <div class="callout key">
+            <div class="callout-title">EJEMPLO: leer cardinalidad y modalidad de una frase</div>
+            <p><b>Frase:</b> “Un pedido <b>debe</b> tener un cliente y <b>puede</b> incluir un cupón de descuento.
+            Un cliente <b>puede</b> tener muchos pedidos.”</p>
+            <div class="table-wrap"><table class="data">
+              <thead><tr><th>Relación</th><th>Cardinalidad<br><span class="mini">(el máximo)</span></th><th>Modalidad<br><span class="mini">(el mínimo)</span></th><th>Cómo queda</th></tr></thead>
+              <tbody>
+                <tr><td>Pedido → Cliente</td><td><b>1</b> (“un cliente”)</td><td><b>1</b> — <b>“debe”</b></td><td><code>PEDIDO.id_cliente</code> FK <b>NOT NULL</b></td></tr>
+                <tr><td>Cliente → Pedido</td><td><b>N</b> (“muchos”)</td><td><b>0</b> — <b>“puede”</b></td><td>Sin columna: la FK ya está del lado <b>muchos</b>. Un cliente sin pedidos es válido</td></tr>
+                <tr><td>Pedido → Cupón</td><td><b>1</b></td><td><b>0</b> — <b>“puede”</b></td><td><code>PEDIDO.id_cupon</code> FK que admite <b>NULL</b></td></tr>
+              </tbody>
+            </table></div>
+            <p><b>El atajo:</b> buscá el verbo. <b>“debe” → NOT NULL</b> · <b>“puede” → NULL</b> ·
+            <b>“muchos / varios / uno o más” → la FK va de ese lado</b>.</p>
+          </div>
+          <div class="callout key">
+            <div class="callout-title">EJEMPLO: por qué N:M necesita una tabla en el medio</div>
+            <p>“Un alumno cursa <b>varias</b> materias y una materia la cursan <b>varios</b> alumnos.” Si quisieras
+            resolverlo con FK, <b>¿cuántas columnas le ponés a ALUMNO?</b> ¿<code>materia_1</code>…
+            <code>materia_8</code>? <b>No se puede</b>: no sabés cuántas van a ser. <b>Por eso la N:M no existe en el
+            modelo relacional</b> y se parte en dos 1:N:</p>
+            <p><code>ALUMNO(id_alumno PK)</code> → <code>CURSADA(id_alumno PK FK, id_materia PK FK, <b>nota_1p, nota_2p</b>)</code> ← <code>MATERIA(id_materia PK)</code></p>
+            <p><b>El salto de calidad:</b> si la relación <b>tiene datos propios</b> (las notas), deja de ser una
+            “simple tabla intermedia” y <b>merece nombre de dominio</b>: <code>CURSADA</code>, no
+            <code>ALUMNO_MATERIA</code>. Decilo en la justificación.</p>
+          </div>
+</section>
 
         <!-- ===================== HOJA 2 ===================== -->
         <section class="hoja">
@@ -641,12 +684,76 @@
             </tbody>
           </table></div>
           <div class="callout key"><p class="mini"><b>FRASE PARA JUSTIFICAR:</b> “Mapeo la jerarquía con <b>SINGLE_TABLE</b> y discriminador porque los subtipos agregan <b>pocos atributos propios</b> y <b>todas las consultas son polimórficas</b> (‘los dispositivos del domicilio’): evito JOINs y UNIONs, asumiendo columnas nulables. Si los subtipos tuvieran muchos atributos obligatorios propios, elegiría <b>JOINED</b> para no perder las restricciones NOT NULL.”</p></div>
-        </section>
+                  <div class="callout key">
+            <div class="callout-title">EJEMPLO: la MISMA jerarquía con las 3 estrategias</div>
+            <p><b>El modelo de objetos:</b> <code>Dispositivo(nro_serie, modelo)</code> y de él heredan
+            <code>Sensor(frecuencia_seg)</code> y <code>Actuador(tipo_accion)</code>.</p>
+            <div class="table-wrap"><table class="data">
+              <thead><tr><th style="width:18%">Estrategia</th><th>Tablas que genera</th><th>“Traeme todos los dispositivos del domicilio”</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><b>SINGLE_TABLE</b></td>
+                  <td><b>1 tabla:</b><br><code>dispositivo(nro_serie, <b>tipo</b>, modelo, frecuencia_seg, tipo_accion)</code><br><span class="mini">En un Sensor, <code>tipo_accion</code> queda <b>NULL</b>; en un Actuador, <code>frecuencia_seg</code> queda <b>NULL</b></span></td>
+                  <td><b>Un SELECT directo</b>, sin joins. <b>La más rápida.</b></td>
+                </tr>
+                <tr>
+                  <td><b>JOINED</b></td>
+                  <td><b>3 tablas:</b><br><code>dispositivo(nro_serie PK, modelo)</code><br><code>sensor(nro_serie PK <b>y FK</b>, frecuencia_seg)</code><br><code>actuador(nro_serie PK <b>y FK</b>, tipo_accion)</code></td>
+                  <td>Con <b>JOIN</b> a las hijas. <b>Sin columnas nulas</b>: se puede exigir NOT NULL por subtipo.</td>
+                </tr>
+                <tr>
+                  <td><b>TABLE_PER_CLASS</b></td>
+                  <td><b>2 tablas</b> (sólo las concretas):<br><code>sensor(nro_serie, <b>modelo</b>, frecuencia_seg)</code><br><code>actuador(nro_serie, <b>modelo</b>, tipo_accion)</code><br><span class="mini"><code>modelo</code> <b>se repite</b> en las dos</span></td>
+                  <td>Con <b>UNION</b> entre las dos tablas.</td>
+                </tr>
+                <tr>
+                  <td><b>MAPPED<br>SUPERCLASS</b></td>
+                  <td><b>2 tablas</b>, y <b>la superclase NO es entidad</b> (no tiene tabla ni se puede consultar)</td>
+                  <td><b>No se puede.</b> No existe la consulta polimórfica.</td>
+                </tr>
+              </tbody>
+            </table></div>
+            <p><b>Cómo se elige, en una pregunta:</b> <b>¿los subtipos agregan muchos atributos propios y
+            obligatorios?</b> Si <b>no</b> (uno o dos cada uno) y además siempre se consultan juntos →
+            <b>SINGLE_TABLE</b>, aceptando columnas nulas. Si <b>sí</b> → <b>JOINED</b>, para no perder los NOT NULL.
+            Si la superclase <b>sólo aporta comportamiento o un id y un “activo”</b> → <b>MappedSuperclass</b>.</p>
+          </div>
+</section>
 
         <!-- ===================== HOJA 6 ===================== -->
         <section class="hoja">
           <span class="hoja-num">HOJA 6 · NOSQL Y PERSISTENCIA POLÍGLOTA</span>
-          <p class="mini"><b>NoSQL:</b> almacenamiento y consulta <b>fuera de las estructuras tabulares</b>; esquema <b>dinámico</b> para datos no estructurados (menos necesidad de planificar; más fácil modificar). <b>Es además DISTRIBUIDA:</b> la información se <b>copia en varios servidores</b>, lo que garantiza disponibilidad y fiabilidad. <b>“La decisión relacional vs. no relacional es en gran medida CONTEXTUAL y varía según el CASO DE USO.”</b></p>
+          <h3>SQL vs NoSQL: la comparación que puede caer como pregunta</h3>
+          <div class="table-wrap"><table class="data">
+            <thead><tr><th style="width:19%"></th><th>RELACIONAL (SQL)</th><th>NO RELACIONAL (NoSQL)</th></tr></thead>
+            <tbody>
+              <tr><td><b>Cómo guarda</b></td><td><b>Tablas</b>: filas y columnas, con esquema <b>fijo</b> definido de antemano</td><td>Documentos, clave-valor, grafos, columnas… con <b>esquema dinámico</b></td></tr>
+              <tr><td><b>Esquema</b></td><td><b>Rígido:</b> cambiarlo exige <code>ALTER TABLE</code> y migración</td><td><b>Flexible:</b> se agregan campos sin migrar. <b>Menos necesidad de planificar de antemano</b></td></tr>
+              <tr><td><b>Relaciones</b></td><td><b>FK e integridad referencial garantizadas por el motor</b>; JOINs</td><td>Casi no hay: se <b>anida</b> o se guarda el id y se resuelve <b>en la aplicación</b></td></tr>
+              <tr><td><b>Transacciones</b></td><td><b>ACID completo</b></td><td>Habitualmente <b>limitadas</b>; muchas priorizan disponibilidad sobre consistencia inmediata</td></tr>
+              <tr><td><b>Consistencia</b></td><td><b>Fuerte:</b> leés lo último confirmado</td><td>Frecuentemente <b>eventual</b>: tarda en propagarse entre réplicas</td></tr>
+              <tr><td><b>Escalado</b></td><td>Naturalmente <b>vertical</b>; el horizontal exige sharding y es costoso</td><td><b>Horizontal nativo:</b> es <b>distribuida por diseño</b></td></tr>
+              <tr><td><b>Consultas</b></td><td><b>SQL</b>: potente y estándar, agregaciones y cruces arbitrarios</td><td>Lenguaje propio, <b>limitado al patrón de acceso</b> para el que fue diseñada</td></tr>
+              <tr><td><b>Modelado</b></td><td>Se <b>normaliza</b>: un dato, un solo lugar</td><td>Se <b>desnormaliza a propósito</b>: el modelo se diseña <b>para la consulta</b></td></tr>
+              <tr><td><b>Madurez</b></td><td>Ecosistema y perfiles muy maduros</td><td>Herramientas y gente capacitada <b>menos maduras</b></td></tr>
+              <tr><td><b>✅ Conviene si…</b></td><td>Hay <b>relaciones e integridad</b> que cuidar, se necesita <b>consistencia fuerte</b> y <b>transacciones</b>, y las consultas son variadas. <b>El dominio transaccional del parcial va acá</b></td><td>El <b>volumen es enorme</b>, el <b>esquema varía</b>, el <b>patrón de acceso es conocido y acotado</b>, y hace falta <b>escalar horizontalmente</b> y alta disponibilidad</td></tr>
+              <tr><td><b>⚠️ Su debilidad</b></td><td>Escalar horizontalmente y los esquemas muy variables</td><td><b>Pierde integridad referencial y ACID</b>, y <b>duplica datos</b>: las copias se mantienen a mano</td></tr>
+            </tbody>
+          </table></div>
+          <div class="callout key">
+            <div class="callout-title">LA FRASE QUE HAY QUE DECIR SIEMPRE</div>
+            <p>“<b>La decisión entre relacional y no relacional es en gran medida CONTEXTUAL y varía según el CASO DE
+            USO.</b>” <b>Nunca es “NoSQL es mejor”.</b> Y lo que más suma: proponer <b>persistencia políglota</b> — el
+            dominio transaccional en relacional y <b>sólo el servicio que lo necesita</b> en NoSQL — nombrando el costo
+            de operar dos motores.</p>
+          </div>
+
+          <h3>Qué es NoSQL</h3>
+          <p>Enfoque que permite <b>almacenar y consultar datos fuera de las estructuras tabulares</b> tradicionales,
+          con <b>esquema dinámico</b> para datos no estructurados. Es además una <b>base distribuida</b>: la información
+          <b>se copia en varios servidores</b>, lo que garantiza disponibilidad y fiabilidad — si algunos datos se
+          desconectan, <b>el resto sigue funcionando</b>.</p>
+
           <div class="table-wrap"><table class="data">
             <thead><tr><th>Tipo</th><th>Cómo guarda</th><th>Producto</th><th>Cuándo proponerla</th><th>⚠️ Límite</th></tr></thead>
             <tbody>
@@ -661,7 +768,24 @@
           <p class="mini"><b>⚠️ Familia de Columnas vs. Orientada a Columnas:</b> <b>Familia</b> (Cassandra/HBase) = modelo NoSQL <b>de agregados</b>, filas con columnas dinámicas, <b>OLTP distribuido de alto volumen</b> (acceso <b>por clave</b>). <b>Orientada</b> (BigQuery/Redshift) = <b>estrategia de almacenamiento físico columnar</b>, esquema fijo, <b>OLAP</b> analítico. Las orientadas a columnas se parecen al relacional (tablas, SQL) pero priorizan <b>velocidad de lectura y agregación</b> sobre la integridad transaccional: <b>no ACID completo</b>.</p>
           <p class="mini"><b>PERSISTENCIA POLÍGLOTA:</b> usar <b>diferentes tipos de bases en una misma aplicación o ecosistema</b>, eligiendo la tecnología que mejor se adapte a cada necesidad. ✅ la base adecuada para cada caso; mejor rendimiento y escalabilidad; flexibilidad de tipos de datos. ⚠️ más complejidad y costo de administración; hay que <b>integrar y sincronizar</b> para evitar inconsistencias y duplicados; desarrollo y pruebas más difíciles.</p>
           <div class="callout key"><p class="mini"><b>RESPUESTAS LISTAS:</b> lecturas de sensores → <b>TSDB</b> · estadísticas/reportes históricos → <b>columnar (OLAP)</b> · sesiones, tokens, caché de consultas repetidas → <b>clave-valor (Redis)</b> · catálogo con atributos variables / contenido → <b>documentos (MongoDB)</b> · recomendación, fraude, redes → <b>grafos (Neo4j)</b> · historial de mensajes/feeds a gran escala, IoT multi-región → <b>familia de columnas (Cassandra)</b>. Y agregá: “la decisión es contextual según el caso de uso; el resto del dominio transaccional sigue en relacional” → <b>persistencia políglota</b>.</p></div>
-        </section>
+                  <div class="callout key">
+            <div class="callout-title">EJEMPLO TRABAJADO: cómo se responde “¿qué base NoSQL propone?”</div>
+            <p><b>Enunciado:</b> “El Servicio de Recepción recibe lecturas de cientos de sensores de forma
+            <b>periódica y masiva</b>, que luego se consultan para graficar la evolución y calcular promedios por
+            franja horaria.”</p>
+            <p><b>Respuesta modelo:</b> “Propongo una <b>base de series temporales</b> (InfluxDB, TimescaleDB).
+            <b>Por qué:</b> el patrón de acceso es <b>escritura masiva append-only</b> con marca de tiempo y
+            <b>consulta por rango de fechas</b> con agregaciones, que es exactamente para lo que están optimizadas;
+            además ofrecen <b>retención y downsampling</b> (alta resolución poco tiempo, baja resolución mucho tiempo),
+            que resuelve el volumen. <b>Por qué no relacional:</b> millones de filas por día harían las agregaciones
+            cada vez más lentas, y el esquema fijo no aporta nada porque <b>acá no hay relaciones que cuidar</b>.
+            <b>Costo que asumo:</b> es poco flexible para consultas no temporales y suma un motor para operar, así que
+            el <b>resto del dominio sigue en relacional</b> — <b>persistencia políglota</b>.”</p>
+            <p><b>La plantilla, en 5 pasos:</b> ① el <b>tipo</b> (no la marca) · ② <b>el patrón de acceso</b> que lo
+            justifica · ③ <b>por qué no el relacional</b> · ④ el <b>costo</b> que asumís · ⑤ <b>qué queda</b> en
+            relacional.</p>
+          </div>
+</section>
 
         <!-- ===================== HOJA 7 ===================== -->
         <section class="hoja">

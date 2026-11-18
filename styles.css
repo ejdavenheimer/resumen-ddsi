@@ -99,7 +99,11 @@ body {
 .content:focus { outline: none; }
 
 /* ===================== LAYOUT ===================== */
-.app { display: grid; grid-template-columns: 300px 1fr; min-height: 100vh; }
+.app { display: grid; grid-template-columns: 300px minmax(0, 1fr); min-height: 100vh; }
+/* Un ítem de grid tiene min-width:auto, así que una tabla ancha o un <pre> largo
+   estiran la columna y desbordan la pantalla. min-width:0 lo impide. */
+.app > * { min-width: 0; }
+html, body { max-width: 100%; overflow-x: hidden; }
 
 .sidebar {
   background: var(--sidebar);
@@ -200,7 +204,16 @@ body {
 .content {
   padding: 2.6rem clamp(1.1rem, 4vw, 3.5rem) 5rem;
   max-width: 1020px; margin: 0 auto; width: 100%;
+  min-width: 0; overflow-wrap: anywhere;
 }
+/* Nada puede ser más ancho que su contenedor */
+.content img, .content svg, .content table, .content pre, .content .uml { max-width: 100%; }
+.table-wrap { max-width: 100%; }
+.uml, .uml pre.mermaid { max-width: 100%; overflow-x: auto; }
+.uml pre.mermaid svg { max-width: 100%; height: auto; }
+.code-pre { max-width: 100%; }
+.grid-2, .grid-3 { min-width: 0; }
+.grid-2 > *, .grid-3 > *, .cmp-grid > *, .cs-grid > * { min-width: 0; }
 
 .page-head { margin-bottom: 1.9rem; }
 .page-kicker {

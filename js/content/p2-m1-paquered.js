@@ -34,14 +34,19 @@
           su propia base de datos</b>.</p>
 
           <h3>Servicio I — Red y Lockers</h3>
-          <p>Administra la <b>infraestructura física</b> de la red. Cada <b>locker</b> es una torre instalada en un punto
-          (un local adherido, una estación de servicio, el hall de un edificio) y tiene una <b>dirección</b>, coordenadas
-          geográficas, una <b>zona</b> operativa a cargo de un responsable, y <b>horarios de atención</b> que pueden
-          variar por día de la semana. Cada locker está compuesto por varios <b>casilleros</b> numerados, y cada casillero
-          tiene un <b>tamaño</b> (S, M, L, XL) con sus medidas, y un <b>estado operativo</b> (libre, ocupado, fuera de
-          servicio). La empresa registra las <b>intervenciones de mantenimiento</b> sobre los casilleros, indicando fecha,
-          tipo de intervención y el técnico interviniente. Interesa saber, por locker, su <b>capacidad por tamaño</b> y
-          qué casilleros están disponibles en cada momento.</p>
+          <p>Administra la <b>infraestructura física</b> de la red. Un <b>punto de retiro</b> es el lugar donde PaqueRed
+          tiene presencia (un local adherido, una estación de servicio, el hall de un edificio): tiene <b>dirección</b> y
+          coordenadas, pertenece a una <b>zona</b> operativa a cargo de un responsable, ofrece <b>servicios
+          complementarios</b> (acceso 24 horas, estacionamiento, rampa de accesibilidad, cámara de seguridad) y tiene
+          <b>horarios de atención</b> que varían por día de la semana. En cada punto hay <b>uno o varios lockers</b>
+          —las torres—, de los que se conoce su <b>número de serie</b>, modelo, versión de firmware, fecha de instalación
+          y <b>estado operativo</b>. Cada <b>locker está compuesto por varios casilleros</b> numerados; cada casillero
+          tiene un <b>tamaño</b> (S, M, L, XL) con sus medidas y una <b>disponibilidad actual</b> (libre, ocupado, fuera
+          de servicio) de la que además interesa el <b>historial</b>. La empresa registra las <b>intervenciones de
+          mantenimiento</b> sobre los lockers, con fecha, tipo y el <b>técnico</b> interviniente. Por último, la
+          <b>tarifa</b> que se le cobra al comercio depende del <b>punto</b> y del <b>tamaño</b> del casillero, <b>varía
+          según la franja</b> (día hábil, fin de semana) y <b>cambia en el tiempo</b>: hay que conservar las
+          <b>tarifas históricas</b>.</p>
 
           <h3>Servicio II — Envíos y Entregas</h3>
           <p>Es el servicio transaccional. Los <b>comercios</b> (clientes de PaqueRed) generan <b>envíos</b>: cada envío
@@ -73,7 +78,186 @@
           </ol>
         </div>
 
-        <h2>Punto 1 — Modelo de Datos: DER con justificación</h2>
+        <div class="callout key">
+          <div class="callout-title">🎧 Calibrado con lo que contó tu compañero</div>
+          <p>Por cómo relató su resolución, el DER que tomaron fue el del <b>servicio de gestión de la red</b> (no el
+          transaccional), y lo que lo hacía grande era: una <b>jerarquía anidada de tres niveles</b>, <b>una relación
+          N:M</b> resuelta con tabla intermedia (los servicios complementarios), <b>horarios de atención</b> como tabla
+          hija, <b>historiales</b> (de mantenimiento y de disponibilidad), el <b>técnico</b> sacado a su propia tabla, y
+          la <b>tarifa con su franja horaria</b> aparte. Además tuvo que decidir si la <b>dirección</b> era una entidad
+          o iba embebida, y lo justificó por <b>reutilización</b>.</p>
+          <p>Traducido a PaqueRed, la jerarquía es <b>punto de retiro → locker (torre) → casillero</b>. Por eso agregué
+          este punto con <b>el DER del Servicio I resuelto</b>: es el escenario más probable. El del Servicio II queda
+          abajo por si te toca el transaccional.</p>
+        </div>
+
+        <h2>Punto 1 — DER del Servicio I (Red y Lockers)</h2>
+        <div class="card">
+          <p>Realice el <b>modelo de datos del Servicio I</b>, indicando las entidades con sus campos, <b>PK</b>,
+          <b>FK</b>, <b>cardinalidad</b>, <b>modalidad</b> y <b>restricciones</b>. Indique los <b>supuestos</b> y
+          <b>justifique</b> las decisiones de diseño.</p>
+        </div>
+        <details class="qa">
+          <summary>✅ Solución — DER del Servicio I</summary>
+          ${APP.uml(`erDiagram
+    ZONA ||--o{ PUNTO_RETIRO : agrupa
+    RESPONSABLE ||--o{ ZONA : "esta a cargo de"
+    PUNTO_RETIRO ||--|{ LOCKER : "aloja (1,N)"
+    LOCKER ||--|{ CASILLERO : "se compone de (1,N)"
+    TAMANIO_CASILLERO ||--o{ CASILLERO : clasifica
+    CASILLERO ||--o{ HISTORIAL_CASILLERO : registra
+    PUNTO_RETIRO ||--o{ HORARIO_ATENCION : "abre (1,N)"
+    PUNTO_RETIRO ||--o{ PUNTO_SERVICIO : ofrece
+    SERVICIO_COMPLEMENTARIO ||--o{ PUNTO_SERVICIO : "se ofrece en"
+    LOCKER ||--o{ MANTENIMIENTO : recibe
+    TECNICO ||--o{ MANTENIMIENTO : realiza
+    PUNTO_RETIRO ||--o{ TARIFA : define
+    TAMANIO_CASILLERO ||--o{ TARIFA : "se tarifa por"
+    FRANJA ||--o{ TARIFA : aplica
+    RESPONSABLE {
+      int id_responsable PK
+      string nombre "NOT NULL"
+      string email "UNIQUE"
+    }
+    ZONA {
+      int id_zona PK
+      string nombre "UNIQUE NOT NULL"
+      int id_responsable FK "NOT NULL"
+    }
+    PUNTO_RETIRO {
+      int id_punto PK
+      int id_zona FK "NOT NULL"
+      string nombre "NOT NULL"
+      string calle "NOT NULL - direccion EMBEBIDA"
+      string altura
+      string localidad "NOT NULL"
+      string provincia
+      string codigo_postal
+      decimal latitud "DECIMAL(9,6)"
+      decimal longitud "DECIMAL(9,6)"
+      string estado "CHECK (ACTIVO, INACTIVO, EN_INSTALACION)"
+    }
+    SERVICIO_COMPLEMENTARIO {
+      int id_servicio PK
+      string nombre "UNIQUE NOT NULL - 24HS, ESTACIONAMIENTO, RAMPA"
+    }
+    PUNTO_SERVICIO {
+      int id_punto PK "y FK"
+      int id_servicio PK "y FK"
+    }
+    HORARIO_ATENCION {
+      int id_horario PK
+      int id_punto FK "NOT NULL"
+      int dia_semana "CHECK (1..7) NOT NULL"
+      time hora_desde "NOT NULL"
+      time hora_hasta "NOT NULL"
+    }
+    LOCKER {
+      string nro_serie PK "clave natural"
+      int id_punto FK "NOT NULL"
+      string modelo
+      string version_firmware
+      date fecha_instalacion
+      string estado_operativo "CHECK (OPERATIVO, EN_REPARACION, BAJA)"
+    }
+    TAMANIO_CASILLERO {
+      string codigo_tamanio PK "S, M, L, XL"
+      string descripcion
+      int alto_cm "NOT NULL"
+      int ancho_cm "NOT NULL"
+      int profundidad_cm "NOT NULL"
+    }
+    CASILLERO {
+      string nro_serie PK "y FK al locker"
+      int nro_casillero PK "numero dentro del locker"
+      string codigo_tamanio FK "NOT NULL"
+      string disponibilidad_actual "CHECK (LIBRE, OCUPADO, FUERA_SERVICIO)"
+    }
+    HISTORIAL_CASILLERO {
+      int id_historial PK
+      string nro_serie FK "NOT NULL"
+      int nro_casillero FK "NOT NULL"
+      string disponibilidad "NOT NULL"
+      datetime desde "NOT NULL"
+      datetime hasta "NULL si es el estado vigente"
+      string motivo
+    }
+    TECNICO {
+      int id_tecnico PK
+      string legajo "UNIQUE NOT NULL"
+      string nombre "NOT NULL"
+      string especialidad
+    }
+    MANTENIMIENTO {
+      int id_mantenimiento PK
+      string nro_serie FK "NOT NULL - locker"
+      int id_tecnico FK "NOT NULL"
+      datetime fecha "NOT NULL"
+      string tipo "CHECK (PREVENTIVO, CORRECTIVO)"
+      string observaciones
+      decimal costo "DECIMAL(10,2)"
+    }
+    FRANJA {
+      int id_franja PK
+      string nombre "UNIQUE NOT NULL - HABIL, FIN_DE_SEMANA"
+      string descripcion
+    }
+    TARIFA {
+      int id_punto PK "y FK"
+      string codigo_tamanio PK "y FK"
+      int id_franja PK "y FK"
+      date vigente_desde PK "parte de la clave: conserva el historico"
+      decimal precio_dia "DECIMAL(10,2) NOT NULL CHECK > 0"
+      int plazo_permanencia_horas "NOT NULL"
+      date vigente_hasta "NULL si es la vigente"
+    }`, "Servicio I — Red y Lockers")}
+
+          <h3>Las 6 decisiones que se evalúan acá</h3>
+          <div class="table-wrap"><table class="data">
+            <thead><tr><th>Decisión</th><th>Qué hice y por qué</th></tr></thead>
+            <tbody>
+              <tr><td><b>1 · Jerarquía de 3 niveles</b></td><td><b>Punto de retiro → Locker → Casillero</b>, cada nivel con su tabla y su FK al padre. <b>El error grave es colapsarla:</b> poner los casilleros como columnas del locker, o colgar el casillero directo del punto perdiendo la torre. Ambos saltos son <b>1,N obligatorios</b> (<code>||--|{</code>): no hay punto sin lockers ni locker sin casilleros.</td></tr>
+              <tr><td><b>2 · Dirección: ¿entidad o embebida?</b></td><td>La <b>embebo</b> en PUNTO_RETIRO. <b>Justificación:</b> es un <b>Value Object sin identidad propia</b> — no se consulta por sí misma, no se comparte entre puntos y no tiene ciclo de vida independiente—, así que una tabla aparte sólo suma un JOIN. <b>Cuándo sí sería entidad:</b> si se reutilizara, si hubiera que validar localidad/provincia contra un catálogo, o si hiciera falta el <b>historial</b> de reubicaciones. <b>Lo que puntúa no es cuál elegís: es que lo discutas.</b></td></tr>
+              <tr><td><b>3 · N:M vs. 1:N</b></td><td><b>Servicios complementarios</b> → catálogo + intermedia <code>PUNTO_SERVICIO</code> con <b>PK compuesta</b>: un campo <code>servicios VARCHAR</code> rompería <b>1FN</b> y un CHECK fijo impediría agregar servicios sin tocar el esquema. Los <b>horarios</b>, en cambio, <b>NO son N:M</b>: son <b>1,N</b> (cada franja pertenece a un solo punto) → tabla hija. <b>Confundir esto es el error más común del punto.</b></td></tr>
+              <tr><td><b>4 · Tamaño como catálogo</b></td><td><code>TAMANIO_CASILLERO(codigo, alto, ancho, profundidad)</code>. Si las medidas quedaran como columnas del casillero, <b>dependerían del tamaño y no del casillero</b> → <b>dependencia parcial/transitiva</b>. Es literalmente el error que el punto siguiente te pide detectar.</td></tr>
+              <tr><td><b>5 · Historial + estado actual</b></td><td><code>HISTORIAL_CASILLERO</code> con <code>desde/hasta</code> da la trazabilidad; <code>CASILLERO.disponibilidad_actual</code> es un <b>campo derivado</b> del último registro abierto. <b>Lo declaro como desnormalización por performance</b> (buscar casilleros libres del tamaño pedido es la consulta dominante en cada depósito), con el historial como <b>fuente de verdad</b> y un proceso de recálculo. <b>Sin declararlo, es una violación de 3FN.</b></td></tr>
+              <tr><td><b>6 · Tarifa con franja y vigencia</b></td><td>PK compuesta <code>(id_punto, codigo_tamanio, id_franja, vigente_desde)</code>: como el enunciado pide <b>conservar las tarifas históricas</b>, la fecha <b>es parte de la clave</b> y cada cambio es una fila nueva, no un UPDATE. La franja va a su tabla porque <code>precio_habil</code> / <code>precio_finde</code> como columnas serían un <b>grupo repetitivo</b> (1FN). <b>El grano es el tamaño, no el casillero físico:</b> con FK al casillero habría que cargar la misma tarifa cientos de veces.</td></tr>
+            </tbody>
+          </table></div>
+          <h3>Supuestos</h3>
+          <ul>
+            <li>Un punto de retiro pertenece a <b>una</b> zona; una zona tiene <b>un</b> responsable y <b>muchos</b> puntos.</li>
+            <li><b>No existe punto sin lockers ni locker sin casilleros</b> (modalidad 1). Si el negocio admitiera dar de alta un punto “en instalación”, la modalidad pasaría a 0 y la relación sería <code>||--o{</code> — <b>decilo, no lo dejes implícito</b>.</li>
+            <li>El <b>número de serie</b> del locker es una <b>clave natural</b> única en toda la red; el <b>número de casillero</b> sólo identifica <b>dentro de su locker</b>, por eso la PK del casillero es <b>compuesta</b> y la FK hacia él también.</li>
+            <li>El <b>mantenimiento es sobre el locker</b>. Si el enunciado hablara de intervenir un casillero puntual, la FK sería la <b>compuesta</b> <code>(nro_serie, nro_casillero)</code>: es el detalle que más se pasa por alto.</li>
+            <li>Los <b>envíos, comercios y destinatarios</b> son del Servicio II: no se modelan acá, y las referencias entre servicios serían <b>IDs lógicos</b>, no FK.</li>
+            <li>Los <b>eventos de apertura</b> de casillero son del Servicio III y van a una <b>base de series temporales</b> por volumen y patrón de acceso.</li>
+            <li>La <b>capacidad por tamaño</b> y los <b>casilleros disponibles</b> que pide el enunciado <b>se consultan</b> (<code>GROUP BY codigo_tamanio</code> / <code>WHERE disponibilidad = 'LIBRE'</code>): <b>no se almacenan</b>, porque serían datos derivados.</li>
+          </ul>
+          <h3>Justificación (los 3 párrafos)</h3>
+          <p><b>a) Qué persistir.</b> Las entidades con identidad y ciclo de vida propio: Responsable, Zona, Punto,
+          Locker, Casillero, Tamaño, Servicio complementario, Horario, Técnico, Mantenimiento, Franja y Tarifa.
+          <b>No persisto</b> lo derivable —la cantidad de casilleros, la capacidad por tamaño, los disponibles— ni los
+          DTOs ni las clases de comportamiento; la <b>dirección</b> va <b>embebida</b> por ser Value Object y las fotos
+          del punto van a <b>object storage</b> guardando sólo la URL.</p>
+          <p><b>b) Impedance mismatches.</b> <b>Identidad:</b> PK subrogada, salvo en Locker donde uso la <b>clave
+          natural</b> (nro. de serie) y en Casillero, intermedia y Tarifa, donde es <b>compuesta</b>; UNIQUE en las
+          claves naturales (legajo, nombres de catálogo). <b>Tipos:</b> VARCHAR con longitud, DECIMAL para importes (no
+          DOUBLE), TIME para los horarios. <b>Cardinalidad:</b> una sola FK del lado “muchos”; la única N:M se parte en
+          dos 1:N con tabla intermedia, porque <b>el modelo relacional no admite N:M directa</b>. <b>Herencia:</b> si
+          hubiera subtipos de locker (refrigerado / estándar) con atributos propios, usaría <b>SINGLE_TABLE con
+          discriminador</b> por ser pocos atributos y consultarse siempre juntos; con muchos atributos obligatorios por
+          subtipo, <b>JOINED</b>. <b>Enums:</b> conjuntos cerrados como <b>STRING con CHECK</b>; lo <b>administrable</b>
+          (servicios, tamaños, franjas) como <b>tabla maestra</b> — esa distinción es la que hay que justificar.</p>
+          <p><b>c) Qué desnormalizo.</b> Por <b>performance</b>: <code>CASILLERO.disponibilidad_actual</code>, derivado
+          del historial, porque la asignación de casillero lo consulta en cada depósito; conservo el historial como
+          fuente de verdad, encapsulo la actualización en un único punto y dejo un proceso de recálculo. Por
+          <b>consistencia</b>: en <b>este</b> servicio no hace falta congelar nada — el histórico de tarifas ya está
+          resuelto <b>estructuralmente</b> con <code>vigente_desde</code> en la clave, que es mejor que una copia—;
+          <b>el congelamiento aparece en el Servicio II</b>, donde el envío guarda los datos del comprobante.</p>
+        </details>
+
+        <h2>Punto 1 bis — DER del Servicio II (por si te toca el transaccional)</h2>
         <div class="card">
           <p>Realice el <b>modelo de datos del Servicio II (Envíos y Entregas)</b>, indicando las entidades con sus
           respectivos campos, <b>claves primarias</b>, <b>foráneas</b>, <b>cardinalidad</b>, <b>modalidad</b> y
@@ -242,6 +426,9 @@
           <p>Se le presenta el modelo de datos ya construido del <b>Servicio I (Red y Lockers)</b>.
           <b>¿Cumple con las tres primeras formas normales?</b> Indique <b>sí o no</b> y explique <b>en dos renglones</b>
           qué problema existe.</p>
+          <p class="mini"><b>Nota:</b> en el parcial te van a dar el DER de <b>otro</b> servicio. Acá es a propósito el
+          mismo que modelaste en el Punto 1, en una versión defectuosa: primero lo diseñás bien y después entrenás el ojo
+          detectando los errores. Compará esta versión con la tuya y vas a ver cada violación.</p>
           ${APP.code(`SUCURSAL_LOCKER (
    id_locker            INTEGER     PK,
    nombre_sucursal      VARCHAR(60),

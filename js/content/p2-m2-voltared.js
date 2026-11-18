@@ -30,12 +30,16 @@
 
           <h3>Servicio I — Red y Estaciones</h3>
           <p>Administra la infraestructura. Cada <b>estación</b> pertenece a un <b>operador</b> (puede ser propia o de un
-          tercero adherido), tiene dirección, coordenadas, <b>servicios disponibles</b> en el lugar (baño, wifi,
-          cafetería) y <b>horarios de apertura</b> que varían por día. Cada estación tiene varios <b>conectores</b>, y
-          cada conector es de un <b>tipo</b> (Tipo 2, CCS, CHAdeMO) con una <b>potencia</b> en kW, y tiene un
-          <b>estado</b> (libre, ocupado, fuera de servicio). La <b>tarifa por kWh</b> se define por estación y tipo de
-          conector, y <b>cambia en el tiempo</b> (hay que conservar las tarifas históricas). Se registran las
-          <b>intervenciones de mantenimiento</b> sobre los conectores.</p>
+          tercero adherido), tiene <b>dirección</b> y coordenadas, ofrece <b>servicios complementarios</b> en el lugar
+          (baño, wifi, cafetería, estacionamiento techado) y tiene <b>horarios de atención</b> que varían por día de la
+          semana. Cada estación tiene varios <b>cargadores</b>, de los que se conoce su <b>número de serie</b>, la
+          <b>potencia máxima</b> en kW, el <b>tipo de corriente</b> (alterna o continua) y su <b>estado operativo</b>; y
+          <b>cada cargador tiene uno o varios conectores</b>. Cada conector es de un <b>tipo</b> (Tipo 2, CCS, CHAdeMO)
+          con una <b>potencia nominal</b>, y tiene una <b>disponibilidad actual</b> (libre, ocupado, fuera de servicio)
+          de la que además interesa el <b>historial</b>. La <b>tarifa por kWh</b> se define por estación y tipo de
+          conector, <b>varía según la franja horaria</b> (pico, valle, nocturna) y <b>cambia en el tiempo</b>: hay que
+          conservar las <b>tarifas históricas</b>. Se registran las <b>intervenciones de mantenimiento</b>, con su fecha,
+          tipo y el <b>técnico</b> interviniente.</p>
 
           <h3>Servicio II — Reservas y Sesiones de Carga</h3>
           <p>Es el servicio transaccional. Los <b>conductores</b> se registran con uno o varios <b>vehículos</b> (patente,
@@ -64,7 +68,183 @@
           </ol>
         </div>
 
-        <h2>Punto 1 — Modelo de Datos: DER con justificación</h2>
+        <div class="callout key">
+          <div class="callout-title">🎧 Calibrado con lo que contó tu compañero</div>
+          <p>Según el relato de cómo resolvió su parcial, el DER que tomaron fue el del <b>servicio de gestión de la
+          red</b> (no el transaccional), y lo que lo hacía “grande” era esto: una <b>jerarquía anidada de tres
+          niveles</b> (estación → <b>cargadores</b> → conectores), <b>dos relaciones N:M</b> resueltas con tablas
+          intermedias (servicios complementarios y horarios), <b>historiales</b> (de mantenimiento y de disponibilidad
+          del conector), un <b>técnico</b> sacado a su propia tabla, y la <b>tarifa con su franja horaria</b> en otra
+          tabla. Además tuvo que decidir si la <b>dirección</b> era una entidad aparte o iba dentro de la estación —y
+          lo justificó por <b>reutilización</b>—.</p>
+          <p>Por eso agregué este punto: <b>el DER del Servicio I resuelto</b>. Es el escenario más probable. El del
+          Servicio II queda abajo por si te toca el transaccional.</p>
+        </div>
+
+        <h2>Punto 1 — DER del Servicio I (Red y Estaciones)</h2>
+        <div class="card">
+          <p>Realice el <b>modelo de datos del Servicio I</b>, indicando entidades, campos, <b>PK</b>, <b>FK</b>,
+          <b>cardinalidad</b>, <b>modalidad</b> y <b>restricciones</b>. Indique los <b>supuestos</b> y <b>justifique</b>
+          las decisiones de diseño.</p>
+        </div>
+        <details class="qa">
+          <summary>✅ Solución — DER del Servicio I</summary>
+          ${APP.uml(`erDiagram
+    OPERADOR ||--o{ ESTACION : "opera (1,N)"
+    ESTACION ||--|{ CARGADOR : "tiene (1,N)"
+    CARGADOR ||--|{ CONECTOR : "tiene (1,N)"
+    TIPO_CONECTOR ||--o{ CONECTOR : clasifica
+    CONECTOR ||--o{ HISTORIAL_CONECTOR : registra
+    ESTACION ||--o{ HORARIO_ATENCION : "abre (1,N)"
+    ESTACION ||--o{ ESTACION_SERVICIO : ofrece
+    SERVICIO_COMPLEMENTARIO ||--o{ ESTACION_SERVICIO : "se ofrece en"
+    CARGADOR ||--o{ MANTENIMIENTO : recibe
+    TECNICO ||--o{ MANTENIMIENTO : realiza
+    ESTACION ||--o{ TARIFA : define
+    TIPO_CONECTOR ||--o{ TARIFA : "se tarifa por"
+    FRANJA_HORARIA ||--o{ TARIFA : aplica
+    OPERADOR {
+      int id_operador PK
+      string razon_social "NOT NULL"
+      string cuit "UNIQUE NOT NULL"
+      decimal pct_comision "DECIMAL(5,2)"
+    }
+    ESTACION {
+      int id_estacion PK
+      int id_operador FK "NOT NULL"
+      string nombre "NOT NULL"
+      string calle "NOT NULL - direccion EMBEBIDA"
+      string altura
+      string localidad "NOT NULL"
+      string provincia
+      string codigo_postal
+      decimal latitud "DECIMAL(9,6)"
+      decimal longitud "DECIMAL(9,6)"
+      string estado "CHECK (ACTIVA, INACTIVA, EN_OBRA)"
+    }
+    SERVICIO_COMPLEMENTARIO {
+      int id_servicio PK
+      string nombre "UNIQUE NOT NULL - bano, wifi, cafeteria"
+    }
+    ESTACION_SERVICIO {
+      int id_estacion PK "y FK"
+      int id_servicio PK "y FK"
+    }
+    HORARIO_ATENCION {
+      int id_horario PK
+      int id_estacion FK "NOT NULL"
+      int dia_semana "CHECK (1..7) NOT NULL"
+      time hora_desde "NOT NULL"
+      time hora_hasta "NOT NULL"
+    }
+    CARGADOR {
+      string nro_serie PK "clave natural"
+      int id_estacion FK "NOT NULL"
+      decimal potencia_max_kw "DECIMAL(8,2) NOT NULL"
+      string tipo_corriente "CHECK (AC, DC) NOT NULL"
+      string estado_operativo "CHECK (OPERATIVO, EN_REPARACION, BAJA)"
+      date fecha_instalacion
+    }
+    TIPO_CONECTOR {
+      int id_tipo_conector PK
+      string nombre "UNIQUE NOT NULL - TIPO2, CCS, CHADEMO"
+      decimal potencia_nominal_kw "DECIMAL(8,2) NOT NULL"
+      string descripcion
+    }
+    CONECTOR {
+      string nro_serie PK "y FK al cargador"
+      int nro_conector PK "numero dentro del cargador"
+      int id_tipo_conector FK "NOT NULL"
+      string disponibilidad_actual "CHECK (LIBRE, OCUPADO, FUERA_SERVICIO)"
+    }
+    HISTORIAL_CONECTOR {
+      int id_historial PK
+      string nro_serie FK "NOT NULL"
+      int nro_conector FK "NOT NULL"
+      string disponibilidad "NOT NULL"
+      datetime desde "NOT NULL"
+      datetime hasta "NULL si es el estado vigente"
+      string motivo
+    }
+    TECNICO {
+      int id_tecnico PK
+      string legajo "UNIQUE NOT NULL"
+      string nombre "NOT NULL"
+      string especialidad
+    }
+    MANTENIMIENTO {
+      int id_mantenimiento PK
+      string nro_serie FK "NOT NULL - cargador"
+      int id_tecnico FK "NOT NULL"
+      datetime fecha "NOT NULL"
+      string tipo "CHECK (PREVENTIVO, CORRECTIVO)"
+      string observaciones
+      decimal costo "DECIMAL(10,2)"
+    }
+    FRANJA_HORARIA {
+      int id_franja PK
+      string nombre "UNIQUE NOT NULL - PICO, VALLE, NOCTURNA"
+      time hora_desde "NOT NULL"
+      time hora_hasta "NOT NULL"
+    }
+    TARIFA {
+      int id_estacion PK "y FK"
+      int id_tipo_conector PK "y FK"
+      int id_franja PK "y FK"
+      date vigente_desde PK "parte de la clave: conserva el historico"
+      decimal precio_kwh "DECIMAL(10,4) NOT NULL CHECK > 0"
+      date vigente_hasta "NULL si es la vigente"
+    }`, "Servicio I — Red y Estaciones")}
+
+          <h3>Las 6 decisiones que se evalúan acá</h3>
+          <div class="table-wrap"><table class="data">
+            <thead><tr><th>Decisión</th><th>Qué hice y por qué</th></tr></thead>
+            <tbody>
+              <tr><td><b>1 · Jerarquía de 3 niveles</b></td><td><b>Estación → Cargador → Conector</b>, cada nivel con su propia tabla y FK al padre. <b>El error grave sería colapsarla</b> (poner los conectores como columnas del cargador, o colgar el conector directo de la estación perdiendo el cargador). La relación es <b>1,N obligatoria</b> en ambos saltos: no hay estación sin cargadores ni cargador sin conectores (<code>||--|{</code>).</td></tr>
+              <tr><td><b>2 · Dirección: ¿entidad o embebida?</b></td><td>La <b>embebo</b> en ESTACION (calle, altura, localidad, provincia, CP, lat/long). <b>Justificación:</b> es un <b>Value Object sin identidad propia</b> —no se consulta ni se referencia por sí misma, no se comparte entre estaciones y no tiene ciclo de vida independiente—, así que sacarla a una tabla sólo agrega un JOIN sin ganar nada. <b>Cuándo sí sería entidad:</b> si se reutilizara (un operador con varias estaciones en el mismo predio), si hubiera que normalizar localidad/provincia contra un catálogo oficial, o si se necesitara el <b>historial</b> de mudanzas. <b>Lo que puntúa no es cuál elegís: es que lo discutas.</b></td></tr>
+              <tr><td><b>3 · Las dos N:M</b></td><td><b>Servicios complementarios</b> → catálogo <code>SERVICIO_COMPLEMENTARIO</code> + intermedia <code>ESTACION_SERVICIO</code> con <b>PK compuesta</b>. Un campo <code>servicios VARCHAR</code> rompería <b>1FN</b>, y un CHECK con valores fijos impediría agregar servicios nuevos sin tocar el esquema. Los <b>horarios</b> en cambio <b>no son N:M</b>: son <b>1,N</b> (una estación tiene muchas franjas de atención, cada franja es de una sola estación), así que van en una tabla hija, no en una intermedia. <b>Ojo con esto: es un error común resolverlo como N:M.</b></td></tr>
+              <tr><td><b>4 · Tipo de conector como catálogo</b></td><td><code>TIPO_CONECTOR(nombre, potencia_nominal_kw)</code>. Si el tipo y su potencia quedaran como columnas del conector, <b>la potencia dependería del tipo y no del conector</b> → <b>dependencia transitiva, 3FN</b>. Es exactamente el error que el punto siguiente te pide detectar.</td></tr>
+              <tr><td><b>5 · Historial + estado actual</b></td><td><code>HISTORIAL_CONECTOR</code> con <code>desde/hasta</code> da la <b>trazabilidad</b>; <code>CONECTOR.disponibilidad_actual</code> es un <b>campo derivado</b> del último registro abierto. <b>Lo declaro como desnormalización por performance</b> (la búsqueda de conectores libres es la consulta más frecuente de toda la app), con el historial como <b>fuente de verdad</b> y un proceso de recálculo. <b>Sin declararlo, es una violación de 3FN.</b></td></tr>
+              <tr><td><b>6 · Tarifa con franja y vigencia</b></td><td>PK compuesta <code>(id_estacion, id_tipo_conector, id_franja, vigente_desde)</code>. <b>El enunciado pide conservar las tarifas históricas</b>, así que la fecha <b>es parte de la clave</b>: cada cambio es una fila nueva, no un UPDATE. La franja sale a su propia tabla porque <code>tarifa_pico</code>, <code>tarifa_valle</code> y <code>tarifa_nocturna</code> como columnas serían un <b>grupo repetitivo</b> (1FN) y agregar una franja exigiría alterar la tabla. <b>El grano es el tipo de conector, no el conector físico:</b> si la FK fuera al conector individual, habría que cargar la misma tarifa por cada enchufe de la estación.</td></tr>
+            </tbody>
+          </table></div>
+          <h3>Supuestos</h3>
+          <ul>
+            <li>Una estación pertenece a <b>un</b> operador; un operador puede tener <b>muchas</b> estaciones.</li>
+            <li><b>No existe estación sin cargadores ni cargador sin conectores</b> (modalidad 1): si el negocio admitiera dar de alta una estación “en obra” sin equipamiento, la modalidad pasaría a 0 y la relación sería <code>||--o{</code>.</li>
+            <li>El <b>número de serie</b> del cargador es una <b>clave natural</b> única en toda la red; el <b>número de conector</b> sólo identifica <b>dentro de su cargador</b>, por eso la PK del conector es <b>compuesta</b> y la FK hacia él también.</li>
+            <li>El <b>mantenimiento es sobre el cargador</b>. Si el enunciado dijera que se interviene un conector puntual, la FK sería la <b>compuesta</b> <code>(nro_serie, nro_conector)</code> — es el detalle que más se pasa por alto.</li>
+            <li>Las <b>sesiones de carga, reservas y conductores</b> son del Servicio II: no se modelan acá. Las referencias entre servicios serían <b>IDs lógicos</b>, no FK.</li>
+            <li>La <b>telemetría</b> de los conectores es del Servicio III y va a una <b>base de series temporales</b>.</li>
+          </ul>
+          <h3>Justificación (los 3 párrafos)</h3>
+          <p><b>a) Qué persistir.</b> Las entidades con identidad y ciclo de vida propio: Operador, Estación, Cargador,
+          Conector, Tipo de conector, Servicio complementario, Horario, Técnico, Mantenimiento, Franja y Tarifa.
+          <b>No persisto</b> lo derivable: la <b>potencia total</b> de una estación (es la suma de sus cargadores), la
+          <b>cantidad de conectores libres</b> (es un COUNT) ni la <b>tarifa vigente</b> (es la fila con
+          <code>vigente_hasta IS NULL</code>). Tampoco los DTOs ni las clases de comportamiento; la <b>dirección</b> se
+          persiste <b>embebida</b> por ser un Value Object, y las fotos de la estación van a <b>object storage</b>
+          guardando sólo la URL.</p>
+          <p><b>b) Impedance mismatches.</b> <b>Identidad:</b> PK subrogada salvo en Cargador, donde uso la <b>clave
+          natural</b> (nro. de serie), y PK <b>compuesta</b> en Conector, en la intermedia y en Tarifa; UNIQUE en las
+          claves naturales (<code>cuit</code>, <code>legajo</code>, nombres de catálogo). <b>Tipos:</b> VARCHAR con
+          longitud; <b>DECIMAL</b> para potencias y precios (no DOUBLE); TIME para las franjas horarias. <b>Cardinalidad:</b>
+          una sola FK del lado “muchos”; la única N:M (servicios) se parte en dos 1:N con tabla intermedia, porque
+          <b>el modelo relacional no admite N:M directa</b>. <b>Herencia:</b> si se modelara una jerarquía de cargadores
+          (AC / DC) con atributos propios, elegiría <b>SINGLE_TABLE con discriminador</b> por ser pocos atributos y
+          consultarse siempre juntos; con muchos atributos obligatorios por subtipo, <b>JOINED</b>. <b>Enums:</b>
+          conjuntos cerrados (estado, tipo de corriente) como <b>STRING con CHECK</b>; lo <b>administrable</b> por el
+          negocio (servicios, tipos de conector, franjas) como <b>tabla maestra</b> — ésa es la diferencia que hay que
+          justificar.</p>
+          <p><b>c) Qué desnormalizo.</b> Por <b>performance</b>: <code>CONECTOR.disponibilidad_actual</code>, derivado
+          del historial, porque buscar conectores libres es la consulta dominante; conservo el historial como fuente de
+          verdad y un proceso de recálculo. Por <b>consistencia</b>: en <b>este</b> servicio no hace falta congelar nada
+          —la tarifa histórica ya está resuelta <b>estructuralmente</b> con <code>vigente_desde</code> en la clave, que
+          es mejor que una copia—; <b>el congelamiento aparece en el Servicio II</b>, donde la sesión guarda el
+          <code>precio_kwh_aplicado</code>, porque el comprobante es inmutable.</p>
+        </details>
+
+        <h2>Punto 1 bis — DER del Servicio II (por si te toca el transaccional)</h2>
         <div class="card">
           <p>Realice el <b>modelo de datos del Servicio II (Reservas y Sesiones de Carga)</b>, indicando entidades,
           campos, <b>PK</b>, <b>FK</b>, <b>cardinalidad</b>, <b>modalidad</b> y <b>restricciones</b>. Indique los
@@ -208,6 +388,10 @@
         <div class="card">
           <p>Se le presenta el modelo ya construido del <b>Servicio I (Red y Estaciones)</b>. <b>¿Cumple con las tres
           primeras formas normales?</b> Indique <b>sí o no</b> y explique <b>en dos renglones</b> qué problema existe.</p>
+          <p class="mini"><b>Nota:</b> en el parcial te van a dar el DER de <b>otro</b> servicio, distinto del que
+          modelaste. Acá es a propósito el mismo: primero lo diseñaste bien en el Punto 1 y ahora tenés que
+          <b>detectar los errores</b> de una versión defectuosa del mismo dominio. Es el ejercicio más directo para
+          entrenar el ojo.</p>
           ${APP.code(`ESTACION (
    id_estacion            INTEGER      PK,
    nombre                 VARCHAR(60),

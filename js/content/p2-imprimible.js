@@ -253,6 +253,31 @@
               <tr><td>Microservicios (base por servicio)</td><td>Referencias entre servicios = <b>ID lógico, NO FK</b> (sin integridad referencial; se valida en la app)</td></tr>
             </tbody>
           </table></div>
+          <div class="callout key">
+            <div class="callout-title">LAS 6 DECISIONES DE UN DER DE GESTIÓN (es el que más se toma)</div>
+            <p class="mini"><b>① Jerarquía anidada:</b> si el dominio tiene <b>contenedor → equipo → unidad</b>
+            (punto → locker → casillero · estación → cargador → conector), son <b>tres tablas</b>, cada una con FK al
+            padre. <b>El error grave es colapsarla</b> o poner las unidades como columnas. La PK de la unidad suele ser
+            <b>compuesta</b> (<code>nro_serie_equipo + nro_unidad</code>), porque el número sólo identifica dentro de su
+            equipo — <b>y la FK hacia ella también debe ser compuesta</b>.
+            <b>② Dirección / dato estructurado:</b> ¿entidad o <b>embebida</b>? Embebida si es un <b>Value Object sin
+            identidad</b> que no se reutiliza ni se consulta solo; entidad si se comparte, se valida contra un catálogo
+            o necesita <b>historial</b>. <b>Lo que puntúa es que lo discutas, no cuál elijas.</b>
+            <b>③ N:M vs 1:N:</b> “servicios complementarios” (un servicio está en muchos lugares) → <b>catálogo +
+            tabla intermedia</b>; “horarios de atención” (cada franja es de un solo lugar) → <b>tabla hija 1:N</b>.
+            <b>Confundirlos es el error más común.</b>
+            <b>④ Atributos del tipo → catálogo:</b> medidas del tamaño, potencia del tipo de conector. Si quedan como
+            columnas de la unidad, <b>dependen del tipo y no de la unidad</b> → 2FN/3FN.
+            <b>⑤ Historial + estado actual:</b> tabla <code>HISTORIAL(…, desde, hasta, motivo)</code> para la
+            trazabilidad <b>más</b> el campo <code>estado_actual</code> en la unidad, <b>declarado como desnormalización
+            por performance</b>, con el historial como <b>fuente de verdad</b> y proceso de recálculo. Sin declararlo,
+            es violación de 3FN.
+            <b>⑥ Tarifa / precio con vigencia:</b> si piden <b>conservar el histórico</b>, <code>vigente_desde</code>
+            <b>es parte de la PK</b> (cada cambio es una fila, no un UPDATE) y <code>vigente_hasta</code> queda NULL en
+            la vigente. Si varía por franja, la <b>franja va a su tabla</b> (columnas <code>precio_pico</code>,
+            <code>precio_valle</code> serían grupo repetitivo). <b>Definí el grano:</b> la tarifa es por
+            <b>tipo</b>, no por unidad física.</p>
+          </div>
           <p class="mini"><b>Notación:</b> <code>1,1</code> exactamente uno · <code>0,1</code> cero o uno · <code>1,N</code> uno o muchos · <code>0,N</code> cero o muchos. Y <b>escribí la lectura en palabras</b> al lado: “un Domicilio tiene <b>cero o muchos</b> Dispositivos / un Dispositivo pertenece a <b>exactamente un</b> Domicilio”.</p>
           <div class="callout key">
             <div class="callout-title">LOS 3 PÁRRAFOS DE JUSTIFICACIÓN (vale 5-10 pts y es siempre igual)</div>

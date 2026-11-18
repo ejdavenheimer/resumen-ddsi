@@ -20,8 +20,61 @@
           <p class="lead">Todo este tema existe por una sola razón: “la persistencia de un sistema escrito bajo el paradigma de objetos, en una base de datos relacional, <b>no es directa</b>”.</p>
         </div>
 
+
         <div class="callout key">
-          <div class="callout-title">🔑 Definiciones</div>
+          <div class="callout-title">PRIMERO: ¿cuál es el problema? (sin palabras raras)</div>
+          <p class="mini"><b>Tu programa guarda la información de una forma y la base de datos la guarda de otra, y
+          no encajan.</b> Eso es todo. El resto son nombres.</p>
+          <p class="mini"><b>En el programa</b> tenés <b>objetos</b>, y un objeto puede <b>tener cosas adentro</b>:
+          otro objeto, una lista, un conjunto.</p>
+          <p class="mini"><b>En la base</b> tenés <b>filas y columnas</b>, y una celda <b>no puede tener cosas
+          adentro</b>: sólo un valor simple (un número, un texto, una fecha).</p>
+          <div class="grid-2">
+            <div class="card">
+              <p class="mini"><b>Un objeto Mascota</b></p>
+              <p class="mini" style="font-family:monospace;font-size:7.4pt">nombre = "Pepa"<br>
+              dueño = <b>→ otro objeto Usuario</b><br>
+              historial = <b>[ evento, evento, evento ]</b><br>
+              alergias = <b>{ "pollo", "maní" }</b></p>
+              <p class="mini">Tiene <b>un objeto adentro</b> y <b>dos listas adentro</b>.</p>
+            </div>
+            <div class="card">
+              <p class="mini"><b>La tabla mascota</b></p>
+              <div class="table-wrap"><table class="data">
+                <thead><tr><th>id</th><th>nombre</th><th>id_usuario</th></tr></thead>
+                <tbody><tr><td>7</td><td>Pepa</td><td>3</td></tr></tbody>
+              </table></div>
+              <p class="mini"><b>Plana.</b> El dueño se volvió <b>un número</b> (una FK) y las listas <b>tuvieron que
+              irse a otras tablas</b>.</p>
+            </div>
+          </div>
+          <p class="mini"><b>ORM = el traductor</b> (<i>Object-Relational Mapping</i>, mapeo objeto-relacional). Es la
+          técnica de convertir objetos en filas y filas en objetos — y también se les dice ORM a los
+          <b>frameworks que lo hacen</b> por vos, como <b>Hibernate</b>, para no escribir el SQL a mano.</p>
+          <p class="mini"><b>IMPEDANCE MISMATCH = el nombre del desencaje.</b> Son <b>las cosas que el mundo de los
+          objetos tiene y el mundo de las tablas no</b>, y que el traductor tiene que resolver como pueda. El término
+          viene de la electrónica (dos circuitos que no acoplan y pierden energía); acá significa simplemente
+          <b>“esto no entra tal cual, hay que decidir cómo lo meto”</b>.</p>
+          <p class="mini"><b>Son cuatro desencajes, y son cuatro decisiones que vas a tener que justificar en el
+          parcial:</b></p>
+          <div class="table-wrap"><table class="data">
+            <thead><tr><th>Desencaje</th><th>En el programa…</th><th>En la tabla…</th><th>La decisión que tomás</th></tr></thead>
+            <tbody>
+              <tr><td><b>1 · Identidad</b><br><span class="mini">¿quién es quién?</span></td><td>Dos objetos son “el mismo” si <b>ocupan el mismo lugar en memoria</b></td><td>Dos filas son la misma si tienen <b>la misma clave primaria</b></td><td><b>¿Qué uso de PK?</b> Un dato real del negocio (<b>clave natural</b>: CUIT, nro. de serie) o <b>un número inventado</b> que no significa nada (<b>clave subrogada</b>: el <code>id</code> autoincremental). <b>Por defecto, subrogada</b> + <code>UNIQUE</code> en el dato real, así no se pierde la restricción</td></tr>
+              <tr><td><b>2 · Tipos de dato</b><br><span class="mini">¿cómo lo escribo?</span></td><td><code>String nombre</code>, sin decir cuánto mide. Fechas, booleanos y <b>enums</b> que el lenguaje entiende solo</td><td>Hay que declarar <code>VARCHAR(80)</code>, elegir <code>DATE</code> o <code>DATETIME</code>, y el enum <b>no existe</b></td><td><b>Poner longitudes y precisión</b>, usar <b>DECIMAL</b> para plata (DOUBLE redondea mal) y guardar los enums <b>como texto</b> con un <code>CHECK</code> — nunca como número de posición</td></tr>
+              <tr><td><b>3 · Cardinalidad</b><br><span class="mini">¿para qué lado apunta?</span></td><td>Desde la Mascota llegás al Dueño <b>y desde el Dueño volvés a sus Mascotas</b>: se navega <b>en los dos sentidos</b></td><td>Hay <b>una sola FK</b>, y apunta <b>para un solo lado</b>. Las tablas no se navegan “de vuelta”</td><td><b>La FK va del lado “muchos”</b> y el ORM <b>simula</b> la vuelta (en Hibernate, <code>mappedBy</code>). Y las <b>N:M no existen</b>: se parten en dos 1:N con una <b>tabla intermedia</b></td></tr>
+              <tr><td><b>4 · Herencia</b><br><span class="mini">el más preguntado</span></td><td>Sensor y Actuador <b>heredan</b> de Dispositivo y comparten sus atributos</td><td><b>La herencia directamente NO EXISTE.</b> Una tabla no puede “heredar” de otra</td><td><b>Hay que aplastarla</b> y elegir cómo: <b>una sola tabla</b> con todo (SINGLE_TABLE), <b>una por clase</b> (JOINED / TABLE_PER_CLASS) o <b>ninguna para el padre</b> (MappedSuperclass). <b>Se elige Y se justifica</b></td></tr>
+            </tbody>
+          </table></div>
+          <p class="mini"><b>Cómo lo decís en el parcial:</b> “Resolví los <b>impedance mismatches</b> así:
+          <b>identidad</b> con PK subrogada y UNIQUE en la clave natural; <b>tipos</b> con longitudes declaradas y
+          DECIMAL para los importes; <b>cardinalidad</b> con una sola FK del lado muchos y tabla intermedia para las
+          N:M; y la <b>herencia</b> con [estrategia] porque [razón].” <b>Esa frase sola ya es medio punto de
+          justificación.</b></p>
+        </div>
+
+        <div class="callout key">
+          <div class="callout-title">🔑 Las definiciones textuales (por si las piden así)</div>
           <p><b>ORM (la técnica):</b> “técnica usada para convertir los tipos de datos con los que trabaja un lenguaje
           orientado a objetos a tipos de dato con los que trabaja un sistema de base de datos relacional”.</p>
           <p><b>ORM (la herramienta):</b> también se llaman ORMs a los <b>frameworks que implementan la técnica</b>.
@@ -86,6 +139,9 @@ entityManager.persist(pedido);          // ← la entidad no sabe nada de la bas
 List<Pedido> pendientes = pedidoRepository.buscarPendientes();`, { label: "Las dos arquitecturas", collapse: false })}
 
         <h2>Proceso de hidratación</h2>
+        <p class="mini"><b>HIDRATACIÓN, en criollo:</b> la base te devuelve <b>una fila</b> (números y textos sueltos); el ORM tiene que <b>armar el objeto</b> con eso. “Hidratar” es <b>rellenar el objeto vacío con los datos de la fila</b>, como quien infla un globo desvinflado. Son <b>dos pasos</b>: ① <b>crear</b> el objeto vacío (después de hacer el SELECT) y ② <b>llenarle los atributos</b> con los valores que vinieron.</p>
+        <p class="mini"><b>LAZY vs EAGER, en criollo:</b> cuando traés una Mascota, <b>¿le traés también sus 200 eventos médicos?</b> <b>EAGER</b> = sí, los traigo <b>por las dudas</b> (y si no los usás, trajiste 200 filas al pedo). <b>LAZY</b> = no, los dejo para después; <b>recién voy a buscarlos a la base si alguien los pide</b>. Por eso las <b>listas</b> son lazy por defecto y las referencias de a uno (<code>@ManyToOne</code>) son eager. <b>El riesgo del lazy</b> es el <b>N+1</b>: si listás 100 mascotas y dentro de un <code>for</code> le pedís el dueño a cada una, el ORM hace <b>1 consulta + 100 consultas</b> sin que lo veas. Se cura pidiendo las dos cosas juntas <b>en esa consulta puntual</b> (<code>JOIN FETCH</code>), no cambiando todo a eager.</p>
+        
         <div class="callout key">
           <div class="callout-title">🔑 Pregunta de teoría clásica: “¿cómo recupera un ORM un objeto desde la base?”</div>
           <p>Ejecuta el <b>proceso de hidratación</b>, que consiste en:</p>

@@ -103,13 +103,18 @@ body {
 /* Un ítem de grid tiene min-width:auto, así que una tabla ancha o un <pre> largo
    estiran la columna y desbordan la pantalla. min-width:0 lo impide. */
 .app > * { min-width: 0; }
-html, body { max-width: 100%; overflow-x: hidden; }
+/* OJO: overflow-x:hidden acá rompe position:sticky de la sidebar (crea un
+   contenedor de scroll). `clip` recorta igual pero NO crea scroll container,
+   así que el sticky sigue funcionando. */
+html, body { max-width: 100%; }
+body { overflow-x: clip; }
 
 .sidebar {
   background: var(--sidebar);
   color: var(--sidebar-ink);
   padding: 1.3rem 0.85rem 3rem;
-  position: sticky; top: 0; height: 100vh; overflow-y: auto;
+  position: sticky; top: 0; align-self: start;
+  height: 100vh; max-height: 100vh; overflow-y: auto; overscroll-behavior: contain;
   border-right: 1px solid rgba(255, 255, 255, 0.05);
 }
 .sidebar::-webkit-scrollbar { width: 8px; }
